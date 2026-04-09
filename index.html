@@ -4,11 +4,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Vetorizador — Plataforma comercial de inteligência geoespacial e documental. Vetorização assistida por IA, processamento de PDFs técnicos e exportação GIS." />
+  <meta name="description" content="Vetorizador — software desktop para operações geoespaciais e documentais com foco em produtividade, padronização de entrega e redução de retrabalho em fluxos GIS." />
+  <meta name="theme-color" content="#ff9800" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="Vetorizador | Inteligência Geoespacial e Documental" />
+  <meta property="og:description" content="Software desktop para equipes privadas que precisam produzir mais rápido, com governança técnica, revisão operacional e exportação pronta para GIS." />
+  <meta property="og:image" content="./og-preview.svg" />
+  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:image:alt" content="Capa do portfólio Vetorizador com destaque para inteligência geoespacial e documental." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Vetorizador | Inteligência Geoespacial e Documental" />
+  <meta name="twitter:description" content="Software desktop para produtividade geoespacial e documental com implantação simples, operação local e saída pronta para GIS." />
+  <meta name="twitter:image" content="./og-preview.svg" />
   <title>Vetorizador | Inteligência Geoespacial e Documental</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -29,7 +42,7 @@
         <li><a href="#licencas">Licenças</a></li>
       </ul>
       <div class="nav-cta">
-        <a href="#windows-store" class="btn-nav">Microsoft Store (em breve)</a>
+        <a href="mailto:marcos.nunes.lph@outlook.com?subject=Demo%20comercial%20Vetorizador" class="btn-nav">Agendar demo comercial</a>
       </div>
     </div>
   </nav>
@@ -38,46 +51,104 @@
   <section id="inicio" class="hero">
     <div class="hero-bg"></div>
     <div class="hero-inner">
-      <div class="badge-row">
-        <span class="badge">Web + Desktop</span>
-        <span class="badge">Rust / WASM</span>
-        <span class="badge">IA Assistiva</span>
-        <span class="badge">GeoJSON · Shapefile</span>
-        <span class="badge">Electron v36</span>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="badge-row">
+            <span class="badge">Web + Desktop</span>
+            <span class="badge">Rust / WASM</span>
+            <span class="badge">IA Assistiva</span>
+            <span class="badge">B2B Desktop</span>
+            <span class="badge">GeoJSON · Shapefile</span>
+            <span class="badge">Electron v36</span>
+          </div>
+          <p class="hero-kicker">Software operacional para times privados que precisam entregar mais</p>
+          <h1 class="hero-title">
+            Menos retrabalho.<br />
+            Mais <span class="gradient-text">produção geoespacial</span>
+          </h1>
+          <p class="hero-sub">
+            O Vetorizador reduz tempo de processamento entre mapa, shapefile e documento técnico, padroniza saída para GIS e encurta o caminho entre captura, revisão e entrega faturável.
+            A pilha roda localmente, simplifica implantação e preserva controle operacional em ambientes corporativos.
+          </p>
+          <div class="hero-cta">
+            <a href="mailto:marcos.nunes.lph@outlook.com?subject=Proposta%20comercial%20Vetorizador" class="btn-primary">Solicitar proposta</a>
+            <a href="mailto:marcos.nunes.lph@outlook.com?subject=Demo%20comercial%20Vetorizador" class="btn-outline">Agendar demonstração</a>
+          </div>
+          <p id="windows-store" class="store-note">Posicionamento comercial voltado a implantação privada: demonstração orientada a caso de uso, proposta de adoção e avaliação de encaixe operacional.</p>
+        </div>
+        <div class="hero-panel">
+          <div class="showcase-card showcase-main">
+            <div class="showcase-head">
+              <span class="showcase-eyebrow">Cenário ativo</span>
+              <span class="showcase-pill">Desktop Windows</span>
+            </div>
+            <h3>Painel de produção geoespacial</h3>
+            <p>Uma esteira única para reduzir fricção entre captura, revisão e exportação em operações que dependem de velocidade com rastreabilidade.</p>
+            <div class="showcase-map">
+              <div class="map-grid"></div>
+              <div class="map-region region-primary"></div>
+              <div class="map-region region-secondary"></div>
+              <div class="map-pin pin-a"></div>
+              <div class="map-pin pin-b"></div>
+            </div>
+            <div class="showcase-stats">
+              <div>
+                <strong>WASM soberano</strong>
+                <span>Polígonos gerados no núcleo Rust</span>
+              </div>
+              <div>
+                <strong>Implantação controlada</strong>
+                <span>Persistência local com sincronização específica quando necessária</span>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-rail">
+            <div class="showcase-card showcase-mini">
+              <span class="mini-label">Resultado</span>
+              <strong>Entrega mais rápida</strong>
+              <p>GeoJSON, Shapefile e PDF sem cadeia paralela de ferramentas.</p>
+            </div>
+            <div class="showcase-card showcase-mini accent-card">
+              <span class="mini-label">Implantação</span>
+              <strong>Desktop local, adoção simples</strong>
+              <p>Menos dependência de infraestrutura externa para colocar o time em operação.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <h1 class="hero-title">
-        Plataforma de Inteligência<br />
-        <span class="gradient-text">Geoespacial e Documental</span>
-      </h1>
-      <p class="hero-sub">
-        Transforme mapas e documentos técnicos em dados acionáveis com precisão operacional.
-        Vetorização determinística assistida por IA, processamento de PDFs e exportação GIS —
-        em uma solução desktop para Windows.
-      </p>
-      <div class="hero-cta">
-        <a href="#windows-store" class="btn-primary">Microsoft Store (em breve)</a>
-        <a href="https://github.com/marcosnunes/Vetorizador_Win_Desktop" target="_blank" rel="noopener noreferrer" class="btn-outline">Repositório GitHub</a>
-      </div>
-      <p id="windows-store" class="store-note">Publicação na Microsoft Store em preparação. Este botão receberá o link oficial assim que a loja estiver ativa.</p>
       <div class="hero-meta">
         <div class="meta-item">
           <span class="meta-num">3</span>
-          <span class="meta-label">Módulos integrados</span>
+          <span class="meta-label">frentes de receita</span>
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
           <span class="meta-num">6</span>
-          <span class="meta-label">Presets profissionais</span>
+          <span class="meta-label">presets operacionais</span>
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
-          <span class="meta-num">F1 ≥ 0,70</span>
-          <span class="meta-label">Meta de qualidade</span>
+          <span class="meta-num">ROI</span>
+          <span class="meta-label">menos retrabalho manual</span>
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
-          <span class="meta-num">≤ 60s</span>
-          <span class="meta-label">Por imagem</span>
+          <span class="meta-num">Local</span>
+          <span class="meta-label">implantação sem fricção</span>
+        </div>
+      </div>
+      <div class="proof-strip" aria-label="Indicadores de posicionamento do produto">
+        <div class="proof-item">
+          <span class="proof-title">Produtividade</span>
+          <span class="proof-copy">Menos tempo entre a captura da área e a geração do arquivo final utilizável.</span>
+        </div>
+        <div class="proof-item">
+          <span class="proof-title">Padronização</span>
+          <span class="proof-copy">Presets, revisão visual e governança técnica ajudam a estabilizar a entrega.</span>
+        </div>
+        <div class="proof-item">
+          <span class="proof-title">Implantação</span>
+          <span class="proof-copy">Desktop instalável e operação local para acelerar entrada em produção.</span>
         </div>
       </div>
     </div>
@@ -89,27 +160,27 @@
       <div class="section-header">
         <span class="section-tag">Módulos</span>
         <h2>Três produtos, uma plataforma</h2>
-        <p>Cada módulo resolve uma etapa crítica do fluxo territorial e documental. Juntos, entregam produtividade de ponta a ponta.</p>
+        <p>Os módulos foram organizados para capturar valor em mais de um ponto da operação: produção geoespacial, saneamento documental e extração estruturada de dados.</p>
       </div>
       <div class="modules-grid">
         <article class="module-card module-primary">
           <div class="module-badge">Core</div>
           <div class="module-icon">🗺️</div>
           <h3>GeoDoc Vetorizador</h3>
-          <p class="module-desc">Vetorização inteligente de áreas em mapa com revisão visual, presets profissionais e exportação GIS pronta para uso.</p>
+          <p class="module-desc">Onde o ganho operacional aparece primeiro: menos vetorização repetitiva, revisão mais rápida e arquivos de saída prontos para seguir no fluxo do cliente.</p>
           <ul class="module-features">
             <li>Seleção de ROI sobre mapa interativo Leaflet</li>
             <li>Núcleo determinístico em Rust/WASM</li>
             <li>6 presets: cobertura, urbano, rural, industrial, trapiche, manual</li>
             <li>IA assistiva para calibração e pós-filtragem</li>
             <li>Exportação GeoJSON e Shapefile</li>
-            <li>Relatório de APP em PDF</li>
+            <li>Relatório de APP — Área de Preservação Permanente</li>
           </ul>
         </article>
         <article class="module-card">
           <div class="module-icon">📄</div>
           <h3>PDFSpliter</h3>
-          <p class="module-desc">Ferramentas completas de produtividade documental para PDFs técnicos e administrativos.</p>
+          <p class="module-desc">Complementa a oferta com uma frente clara de produtividade documental, ampliando o ticket e o encaixe comercial em equipes administrativas e técnicas.</p>
           <ul class="module-features">
             <li>Divisão e recorte de PDFs por páginas</li>
             <li>União de múltiplos arquivos</li>
@@ -121,7 +192,7 @@
         <article class="module-card">
           <div class="module-icon">📍</div>
           <h3>PDFtoArcGIS</h3>
-          <p class="module-desc">Extração geoespacial de documentos técnicos — memoriais, laudos e plantas — com saída estruturada para SIG.</p>
+          <p class="module-desc">Abre espaço para casos de uso de maior valor agregado ao transformar documento técnico em dado estruturado, com auditoria e rastreabilidade.</p>
           <ul class="module-features">
             <li>OCR no frontend (Tesseract.js)</li>
             <li>Parser determinístico de coordenadas</li>
@@ -140,7 +211,7 @@
       <div class="section-header light">
         <span class="section-tag">Fluxo Operacional</span>
         <h2>Pipeline em 5 etapas</h2>
-        <p>Do mapa ao dado geoespacial com rastreabilidade completa em cada passo.</p>
+        <p>O pipeline favorece operação repetível e comercializável: entrada clara, processamento previsível, revisão rápida e exportação compatível com o ecossistema do cliente.</p>
       </div>
       <div class="pipeline">
         <div class="pipeline-step">
@@ -192,6 +263,7 @@
       <div class="section-header">
         <span class="section-tag">Funcionalidades</span>
         <h2>Capacidades da plataforma</h2>
+        <p>As capacidades abaixo sustentam a narrativa de venda: ganho de velocidade, redução de atrito entre áreas e menor dependência de stack paralela para fechar entregas.</p>
       </div>
       <div class="capabilities-grid">
         <div class="cap-card">
@@ -237,7 +309,7 @@
         <div class="cap-card">
           <span class="cap-icon">📊</span>
           <h4>Relatório de APP</h4>
-          <p>Geração de relatório de APP em PDF com contexto e métricas operacionais.</p>
+          <p>Geração de relatório da Área de Preservação Permanente com contexto territorial e métricas operacionais.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">📑</span>
@@ -264,7 +336,7 @@
       <div class="section-header">
         <span class="section-tag">Arquitetura Técnica</span>
         <h2>Tecnologia que suporta operação crítica</h2>
-        <p>Cada camada foi escolhida para garantir determinismo, auditabilidade e portabilidade.</p>
+        <p>A base técnica foi escolhida para reduzir risco de implantação, facilitar demonstração comercial e sustentar contratos em ambientes que exigem previsibilidade operacional.</p>
       </div>
       <div class="tech-stack">
         <div class="tech-layer">
@@ -294,9 +366,9 @@
             <span class="pill pill-yolo">YOLO (via AGPL)</span>
             <span class="pill pill-neutral">ONNX Runtime</span>
             <span class="pill pill-neutral">DBSCAN</span>
-            <span class="pill pill-neutral">Firebase Firestore</span>
+            <span class="pill pill-neutral">SegAssist API</span>
           </div>
-          <p>Segmentação assistiva YOLO em processo isolado. Assistência ML via Firestore. Núcleo WASM permanece soberano.</p>
+          <p>Segmentação assistiva YOLO em processo isolado, com calibração e pós-filtragem via serviços locais. O núcleo WASM permanece soberano na geração dos polígonos.</p>
         </div>
         <div class="tech-layer">
           <h4 class="tech-layer-title">Desktop e Backend</h4>
@@ -324,9 +396,9 @@
             <span class="pill pill-neutral">IndexedDB</span>
             <span class="pill pill-neutral">localStorage</span>
             <span class="pill pill-firebase">Firebase Auth</span>
-            <span class="pill pill-firebase">Firestore</span>
+            <span class="pill pill-firebase">Firestore (APP)</span>
           </div>
-          <p>Persistência local para continuidade operacional. Firestore apenas para artefatos de aprendizado compartilhado.</p>
+          <p>Persistência local para continuidade operacional e telemetria. Firestore restrito à sincronização da APP (Área de Preservação Permanente) compartilhada entre instâncias.</p>
         </div>
       </div>
     </div>
@@ -336,60 +408,61 @@
   <section id="mercado" class="section section-dark">
     <div class="container">
       <div class="section-header light">
-        <span class="section-tag">Mercado-alvo</span>
-        <h2>Para quem é a plataforma</h2>
+        <span class="section-tag">Mercado</span>
+        <h2>Onde a solução captura valor</h2>
+        <p>O melhor encaixe comercial está em empresas e operações privadas que precisam acelerar produção, reduzir retrabalho e padronizar a entrega técnica.</p>
       </div>
       <div class="market-grid">
         <div class="market-card">
-          <div class="market-icon">🏛️</div>
-          <h4>Governos e Órgãos Públicos</h4>
-          <p>Prefeituras e secretarias com demandas de cadastro territorial, regularização fundiária e planejamento urbano.</p>
-        </div>
-        <div class="market-card">
           <div class="market-icon">📐</div>
-          <h4>Empresas de Geotecnologia</h4>
-          <p>Consultorias especializadas que precisam acelerar produção de dados geoespaciais com rastreabilidade e controle.</p>
+          <h4>Consultorias geoespaciais</h4>
+          <p>Times que faturam por entrega e precisam aumentar throughput sem expandir proporcionalmente a equipe.</p>
         </div>
         <div class="market-card">
           <div class="market-icon">🏗️</div>
-          <h4>Engenharia e Infraestrutura</h4>
-          <p>Equipes que trabalham com plantas, memoriais, laudos e precisam converter documentos em dados SIG.</p>
+          <h4>Engenharia e infraestrutura</h4>
+          <p>Operações com plantas, memoriais e documentação técnica que hoje sofrem com fluxo manual demais entre áreas.</p>
         </div>
         <div class="market-card">
           <div class="market-icon">🌐</div>
-          <h4>Utilities e Regularização Fundiária</h4>
-          <p>Concessionárias, cartórios e empresas com grandes volumes documentais e territoriais.</p>
+          <h4>Utilities e ativos territoriais</h4>
+          <p>Empresas que lidam com grande volume de área, ativo e evidência documental e precisam operar com mais padrão.</p>
+        </div>
+        <div class="market-card">
+          <div class="market-icon">🧾</div>
+          <h4>Bureaus técnicos e backoffice</h4>
+          <p>Equipes que podem monetizar produtividade documental e geoespacial em contratos recorrentes e sob demanda.</p>
         </div>
       </div>
       <div class="value-props">
-        <h3>Proposta de valor por perfil</h3>
+        <h3>Argumentos de venda por perfil comprador</h3>
         <div class="vp-grid">
           <div class="vp-item">
             <span class="vp-icon">⏱️</span>
             <div>
-              <strong>Operadores de campo</strong>
-              <p>Redução de tempo em vetorização manual com revisão rápida antes da exportação.</p>
+              <strong>Liderança operacional</strong>
+              <p>Mais previsibilidade de prazo, menos gargalo em revisão e maior volume entregue por ciclo.</p>
             </div>
           </div>
           <div class="vp-item">
             <span class="vp-icon">📋</span>
             <div>
-              <strong>Equipes administrativas</strong>
-              <p>Processamento de PDFs técnicos sem ferramentas externas ou servidores adicionais.</p>
+              <strong>Comprador técnico</strong>
+              <p>Ferramenta com encaixe direto no fluxo atual, sem exigir arquitetura complexa para começar a operar.</p>
             </div>
           </div>
           <div class="vp-item">
             <span class="vp-icon">📊</span>
             <div>
-              <strong>Gestores operacionais</strong>
-              <p>Métricas de qualidade, rastreabilidade e histórico de execução para controle de processo.</p>
+              <strong>Financeiro e direção</strong>
+              <p>Melhor aproveitamento de equipe, redução de retrabalho e abertura de novas frentes de receita técnica.</p>
             </div>
           </div>
           <div class="vp-item">
             <span class="vp-icon">🔧</span>
             <div>
-              <strong>Equipes de TI e engenharia</strong>
-              <p>Runtime desktop instalável, endpoints embarcados e arquitetura manutenível com contratos estáveis.</p>
+              <strong>TI interna</strong>
+              <p>Implantação mais controlada, operação local e menor atrito com políticas corporativas e ambientes restritivos.</p>
             </div>
           </div>
         </div>
@@ -403,6 +476,7 @@
       <div class="section-header">
         <span class="section-tag">Diferenciais</span>
         <h2>Por que o Vetorizador</h2>
+        <p>O posicionamento aqui é comercial: uma solução que ajuda a vender ganho operacional, não apenas uma demonstração tecnológica.</p>
       </div>
       <div class="diff-grid">
         <div class="diff-card">
@@ -418,17 +492,17 @@
         <div class="diff-card">
           <div class="diff-num">03</div>
           <h4>Plataforma integrada</h4>
-          <p>Mapa, documentos e parser geoespacial em um único ambiente — sem troca de ferramentas no meio do fluxo.</p>
+          <p>Mapa, documentos e parser geoespacial no mesmo ambiente, reduzindo custo de coordenação entre ferramentas e pessoas.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">04</div>
           <h4>Operação desktop offline</h4>
-          <p>Electron com servidor local embarcado mantém operação plena em redes corporativas restritivas.</p>
+          <p>Desktop instalável reduz barreira de adoção e simplifica a conversa comercial com clientes que evitam dependência externa excessiva.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">05</div>
           <h4>Presets especializados por cenário</h4>
-          <p>Calibração invisível por preset — cobertura, urbano, rural, trapiche — com parâmetros ajustados por runs de referência.</p>
+          <p>Presets ajudam a encurtar curva de uso e tornam a entrega mais consistente entre operadores e contratos distintos.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">06</div>
@@ -499,18 +573,28 @@
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="container footer-inner">
-      <div class="footer-brand">
-        <span class="logo-icon">⬡</span>
-        <span>Vetorizador</span>
+      <div class="footer-top">
+        <div class="footer-intro">
+          <div class="footer-brand">
+            <span class="logo-icon">⬡</span>
+            <span>Vetorizador</span>
+          </div>
+          <p class="footer-tagline">Software desktop para acelerar produção geoespacial e documental em operações privadas.</p>
+          <p class="footer-note">Posicionado para consultorias, engenharia, utilities e operações técnicas que precisam reduzir retrabalho e padronizar entregas.</p>
+        </div>
+        <div class="footer-columns">
+          <div class="footer-column">
+            <span class="footer-heading">Contato</span>
+            <div class="footer-links">
+              <a href="mailto:marcos.nunes.lph@outlook.com">marcos.nunes.lph@outlook.com</a>
+              <a href="https://www.linkedin.com/in/marcos-nunes-lph" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <p class="footer-tagline">Plataforma de inteligência geoespacial e documental para operações territoriais.</p>
-      <div class="footer-links">
-        <a href="#windows-store">Microsoft Store (em breve)</a>
-        <a href="https://github.com/marcosnunes/Vetorizador_Win_Desktop" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="mailto:marcos.nunes.lph@outlook.com">marcos.nunes.lph@outlook.com</a>
-        <a href="https://www.linkedin.com/in/marcos-nunes-lph" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Marcos Roberto Nunes Lindolpho — Distribuído sob licença MIT</p>
       </div>
-      <p class="footer-copy">© 2026 Marcos Roberto Nunes Lindolpho — Distribuído sob licença MIT</p>
     </div>
   </footer>
 
