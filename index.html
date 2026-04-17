@@ -8,16 +8,16 @@
   <meta name="theme-color" content="#ff9800" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
-  <meta property="og:title" content="Vetorizador | Inteligência Geoespacial e Documental" />
+  <meta property="og:title" content="Vetorizador | Vetorização Geoespacial e Documental" />
   <meta property="og:description" content="Software desktop para equipes privadas que precisam produzir mais rápido, com governança técnica, revisão operacional e exportação pronta para GIS." />
   <meta property="og:image" content="./og-preview.svg" />
   <meta property="og:image:type" content="image/svg+xml" />
-  <meta property="og:image:alt" content="Capa do portfólio Vetorizador com destaque para inteligência geoespacial e documental." />
+  <meta property="og:image:alt" content="Capa do portfólio Vetorizador com destaque para vetorização geoespacial e documental." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Vetorizador | Inteligência Geoespacial e Documental" />
+  <meta name="twitter:title" content="Vetorizador | Vetorização Geoespacial e Documental" />
   <meta name="twitter:description" content="Software desktop para produtividade geoespacial e documental com implantação simples, operação local e saída pronta para GIS." />
   <meta name="twitter:image" content="./og-preview.svg" />
-  <title>Vetorizador | Inteligência Geoespacial e Documental</title>
+  <title>Vetorizador | Vetorização Geoespacial e Documental</title>
   <link rel="icon" href="./favicon.ico" sizes="any" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -56,7 +56,7 @@
           <div class="badge-row">
             <span class="badge">Web + Desktop</span>
             <span class="badge">Rust / WASM</span>
-            <span class="badge">IA Assistiva</span>
+            <span class="badge">WASM-only</span>
             <span class="badge">B2B Desktop</span>
             <span class="badge">GeoJSON · Shapefile</span>
             <span class="badge">Electron v36</span>
@@ -171,8 +171,8 @@
           <ul class="module-features">
             <li>Seleção de ROI sobre mapa interativo Leaflet</li>
             <li>Núcleo determinístico em Rust/WASM</li>
-            <li>6 presets: cobertura, urbano, rural, industrial, trapiche, manual</li>
-            <li>IA assistiva para calibração e pós-filtragem</li>
+            <li>Presets operacionais com ajuste determinístico por cenário</li>
+            <li>Fluxo ativo WASM-only sem dependência de inferência</li>
             <li>Exportação GeoJSON e Shapefile</li>
             <li>Relatório de APP — Área de Preservação Permanente</li>
           </ul>
@@ -242,7 +242,7 @@
           <div class="step-num">04</div>
           <div class="step-body">
             <h4>Pós-processar e revisar</h4>
-            <p>Guardrails por preset, IA assistiva, regularização geométrica e revisão visual.</p>
+            <p>Guardrails por preset, regularização geométrica e revisão visual.</p>
           </div>
         </div>
         <div class="pipeline-arrow">→</div>
@@ -287,9 +287,9 @@
           <p>Controle de sensibilidade de borda, suavização, clustering, área mínima e fusão.</p>
         </div>
         <div class="cap-card">
-          <span class="cap-icon">🤖</span>
-          <h4>IA assistiva sempre ativa</h4>
-          <p>Calibração automática de parâmetros e pós-filtragem quando modelo disponível.</p>
+          <span class="cap-icon">🧭</span>
+          <h4>Fluxo determinístico WASM-only</h4>
+          <p>Sem dependência de inferência externa no caminho principal de vetorização.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">🗺️</span>
@@ -361,22 +361,22 @@
           <p>Shell cartográfico Leaflet com painel de controle paramétrico e layers de resultado GeoJSON.</p>
         </div>
         <div class="tech-layer">
-          <h4 class="tech-layer-title">IA e Segmentação</h4>
+          <h4 class="tech-layer-title">Processamento geoespacial</h4>
           <div class="tech-pills">
-            <span class="pill pill-yolo">YOLO (via AGPL)</span>
-            <span class="pill pill-neutral">ONNX Runtime</span>
+            <span class="pill pill-neutral">Sobel</span>
+            <span class="pill pill-neutral">Otsu</span>
+            <span class="pill pill-neutral">Morfologia</span>
             <span class="pill pill-neutral">DBSCAN</span>
-            <span class="pill pill-neutral">SegAssist API</span>
           </div>
-          <p>Segmentação assistiva YOLO em processo isolado, com calibração e pós-filtragem via serviços locais. O núcleo WASM permanece soberano na geração dos polígonos.</p>
+          <p>Pipeline de imagem determinístico antes da extração no WASM, com parâmetros auditáveis por preset.</p>
         </div>
         <div class="tech-layer">
           <h4 class="tech-layer-title">Desktop e Backend</h4>
           <div class="tech-pills">
             <span class="pill pill-electron">Electron v36</span>
             <span class="pill pill-neutral">Node.js 20</span>
-            <span class="pill pill-neutral">Express.js</span>
-            <span class="pill pill-neutral">Python 3</span>
+            <span class="pill pill-neutral">HTTP local</span>
+            <span class="pill pill-neutral">APIs auxiliares</span>
           </div>
           <p>Runtime desktop com servidor HTTP embarcado, endpoints locais e operação autônoma sem internet.</p>
         </div>
@@ -484,8 +484,8 @@
         </div>
         <div class="diff-card">
           <div class="diff-num">02</div>
-          <h4>IA assistiva com governança</h4>
-          <p>IA calibra e filtra, mas nunca substitui o núcleo. Guardrails por preset evitam regressões em ambientes críticos.</p>
+          <h4>Arquitetura WASM-only</h4>
+          <p>Fluxo principal sem serviços de inferência, com guardrails por preset e comportamento previsível em produção.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">03</div>
@@ -531,12 +531,6 @@
           <h4>Núcleo vetoriza/ (Rust/WASM)</h4>
           <p>O módulo <code>vetoriza/</code> está disponível sob dupla licença MIT e Apache-2.0, a critério do usuário. Consulte os arquivos <code>LICENSE_MIT</code> e <code>LICENSE_APACHE</code> no repositório.</p>
         </div>
-        <div class="license-card license-agpl">
-          <div class="license-badge">AGPL-3.0</div>
-          <h4>Conformidade YOLO / Ultralytics</h4>
-          <p>O modelo YOLO é distribuído pelo projeto Ultralytics sob AGPL-3.0. A integração é feita via servidor isolado sem fork do framework. Redistribuição do framework modificado requer cumprimento integral da AGPL.</p>
-          <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" class="license-link">Ver AGPL-3.0 →</a>
-        </div>
       </div>
 
       <h3 class="third-party-title">Componentes de terceiros</h3>
@@ -549,7 +543,6 @@
             <tr><td>Leaflet</td><td><span class="lic-badge bsd">BSD-2</span></td><td>Mapa interativo</td></tr>
             <tr><td>Leaflet.Draw</td><td><span class="lic-badge mit">MIT</span></td><td>Desenho de ROI no mapa</td></tr>
             <tr><td>Turf.js</td><td><span class="lic-badge mit">MIT</span></td><td>Operações geoespaciais</td></tr>
-            <tr><td>Firebase JS SDK</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>Auth e Firestore</td></tr>
             <tr><td>Tesseract.js</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>OCR no frontend</td></tr>
             <tr><td>PDF.js</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>Renderização de PDF</td></tr>
             <tr><td>shpjs</td><td><span class="lic-badge mit">MIT</span></td><td>Leitura de Shapefile</td></tr>
@@ -561,7 +554,6 @@
             <tr><td>pdf-lib</td><td><span class="lic-badge mit">MIT</span></td><td>Manipulação de PDF</td></tr>
             <tr><td>jsPDF</td><td><span class="lic-badge mit">MIT</span></td><td>Geração de PDF</td></tr>
             <tr><td>pdf-merger-js</td><td><span class="lic-badge mit">MIT</span></td><td>União de PDFs</td></tr>
-            <tr><td>ONNX Runtime</td><td><span class="lic-badge mit">MIT</span></td><td>Inferência de modelos ML</td></tr>
           </tbody>
         </table>
       </div>
