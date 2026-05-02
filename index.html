@@ -368,7 +368,7 @@
         <div class="cap-card">
           <span class="cap-icon">🔀</span>
           <h4>Desambiguação de sobreposição</h4>
-          <p>Clique em área com polígonos sobrepostos abre modal de seleção com swatches de cor por fonte (vetorizado, desenhado, importado, SIGEF). A escolha é sempre explícita.</p>
+          <p>Clique em área com polígonos sobrepostos abre modal com cards informativos por fonte (vetorizado, desenhado, importado, SIGEF). A escolha é sempre explícita.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">🖱️</span>
@@ -378,7 +378,7 @@
         <div class="cap-card">
           <span class="cap-icon">🧲</span>
           <h4>Snap e auto-vertex por Shift</h4>
-          <p>Durante o desenho de polígonos de atributos, pontos magnéticos de snap são exibidos. Segurar Shift insere vértices automaticamente a cada ponto snap detectado, sem necessidade de clique.</p>
+          <p>Durante o desenho de polígonos de atributos, pontos magnéticos de snap são exibidos. Segurar Shift insere vértices automaticamente apenas em vértices reais da geometria-base, sem necessidade de clique.</p>
         </div>
       </div>
     </div>
@@ -412,7 +412,18 @@
             <span class="pill pill-neutral">Leaflet.Draw</span>
             <span class="pill pill-neutral">Turf.js</span>
           </div>
-          <p>Shell cartográfico Leaflet com painel de controle paramétrico e layers de resultado GeoJSON.</p>
+          <p>Shell cartográfico Leaflet com painel de controle paramétrico e layers de resultado GeoJSON, organizado por modularização incremental com helpers especializados (selection-policy, flow-diagnostics, app-boundary-manager) e políticas de UX centralizadas.</p>
+        </div>
+        <div class="tech-layer">
+          <h4 class="tech-layer-title">Observabilidade e Padrões de Código</h4>
+          <div class="tech-pills">
+            <span class="pill pill-neutral">window.DIAG (estruturado)</span>
+            <span class="pill pill-neutral">Categorias por domínio</span>
+            <span class="pill pill-neutral">Logging por fluxo</span>
+            <span class="pill pill-neutral">Guard clauses e try/catch</span>
+            <span class="pill pill-neutral">Padrão modular incremental</span>
+          </div>
+          <p>Diagnóstico em tempo real com categorias estruturadas (APP, FLOW, NET, BOUNDARY, PRESET, SCENE, GEO). Trilha de fluxo com start/success/error. Padrão de seleção centralizado: clique simples abre popup, Shift+clique faz multi-seleção sem popup, desambiguação explícita em sobreposições. Tolerância a falhas com guard clauses no início das funções e try/catch em fronteiras externas. Telemetria arquivada em IndexedDB com limpeza automática ao encerramento desktop.</p>
         </div>
         <div class="tech-layer">
           <h4 class="tech-layer-title">Processamento geoespacial</h4>
