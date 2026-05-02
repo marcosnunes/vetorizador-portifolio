@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Engenharia do Vetorizador — documentação técnica completa: arquitetura, módulos, pipeline, contratos e evolução." />
+  <title>Engenharia | Vetorizador</title>
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --bg2: #13131a;
+      --bg3: #1a1a24;
+      --border: rgba(255,152,0,0.12);
+      --border-light: rgba(255,255,255,0.07);
+      --amber: #ff9800;
+      --amber-dim: #e65100;
+      --amber-glow: rgba(255,152,0,0.15);
+      --cyan: #00e5ff;
+      --cyan-dim: rgba(0,229,255,0.12);
+      --text: #e8e8ec;
+      --text-mid: #9898ab;
+      --text-dim: #5a5a72;
+      --sidebar-w: 280px;
+      --topbar-h: 56px;
+      --radius: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar-h);
+      background: rgba(13,13,15,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 200;
+      gap: 16px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--amber);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .topbar-back:hover { opacity: 1; }
+    .topbar-sep { color: var(--text-dim); font-size: 13px; }
+
+    .topbar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-mid);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-badge {
+      background: var(--amber-glow);
+      border: 1px solid rgba(255,152,0,0.28);
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border-light);
+      color: var(--text-mid);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      margin-top: var(--topbar-h);
+      min-height: calc(100vh - var(--topbar-h));
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: calc(100vh - var(--topbar-h));
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: var(--topbar-h);
+      height: calc(100vh - var(--topbar-h));
+      overflow-y: auto;
+      flex-shrink: 0;
+      padding: 28px 0 40px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .sidebar-section {
+      padding: 0 20px;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 10px 4px 6px;
+      display: block;
+    }
+
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 4px;
+      border-radius: 7px;
+      color: var(--text-mid);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+      line-height: 1.35;
+    }
+
+    .sidebar nav a:hover {
+      background: var(--amber-glow);
+      color: var(--text);
+    }
+
+    .sidebar nav a.active {
+      background: var(--amber-glow);
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    .sidebar nav a .nav-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-divider {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      margin: 12px 20px;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 48px 56px 80px;
+      max-width: 900px;
+    }
+
+    /* ── CHAPTERS ── */
+    .chapter {
+      margin-bottom: 80px;
+      scroll-margin-top: calc(var(--topbar-h) + 24px);
+    }
+
+    .chapter-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .chapter h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 18px;
+    }
+
+    .chapter-lead {
+      font-size: 16px;
+      color: var(--text-mid);
+      margin-bottom: 32px;
+      max-width: 680px;
+      line-height: 1.75;
+    }
+
+    /* ── SECTION WITHIN CHAPTER ── */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #dde0ff;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section h3 .h3-tag {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .section h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--amber);
+      margin: 20px 0 8px;
+      letter-spacing: 0.01em;
+    }
+
+    p { color: var(--text); margin-bottom: 14px; }
+
+    /* ── CARDS ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: rgba(255,152,0,0.32); }
+
+    .card-icon { font-size: 22px; margin-bottom: 10px; display: block; }
+    .card h4 { margin: 0 0 6px; font-size: 14px; color: #fff; }
+    .card p { font-size: 13px; color: var(--text-mid); margin: 0; }
+
+    /* ── MODULE CARDS ── */
+    .module-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .module-card:hover { border-color: rgba(255,152,0,0.32); }
+
+    .module-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .module-card h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .module-card p {
+      font-size: 13px;
+      color: var(--text-mid);
+      margin: 0 0 12px;
+    }
+
+    .module-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-mid);
+    }
+
+    .tag-amber { background: var(--amber-glow); color: var(--amber); }
+    .tag-cyan  { background: var(--cyan-dim); color: var(--cyan); }
+    .tag-green { background: rgba(0,230,118,0.1); color: #00e676; }
+
+    /* ── PIPELINE ── */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 20px 0;
+    }
+
+    .pipeline-step {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+
+    .pipeline-step::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      bottom: -1px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--amber), transparent);
+      opacity: 0.3;
+    }
+
+    .pipeline-step:last-child::before { display: none; }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--amber-glow);
+      border: 2px solid rgba(255,152,0,0.4);
+      color: var(--amber);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-body {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      flex: 1;
+      margin-bottom: 12px;
+    }
+
+    .step-body h4 { margin: 0 0 4px; font-size: 14px; color: #fff; }
+    .step-body p { margin: 0; font-size: 13px; color: var(--text-mid); }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: rgba(255,152,0,0.08);
+      color: var(--amber);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-mid);
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(255,152,0,0.04); }
+
+    td code, th code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      background: rgba(0,229,255,0.08);
+      color: var(--cyan);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ── STATUS BADGES ── */
+    .badge-impl { background: rgba(0,230,118,0.1); color: #00e676; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .badge-partial { background: rgba(255,193,7,0.12); color: #ffc107; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .badge-pending { background: rgba(255,82,82,0.1); color: #ff5252; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+
+    /* ── CODE ── */
+    pre {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: #c9d1d9;
+      scrollbar-width: thin;
+    }
+
+    pre .kw { color: #ff9800; }
+    pre .fn { color: #00e5ff; }
+    pre .str { color: #a5d6a7; }
+    pre .cm { color: #5a5a72; font-style: italic; }
+    pre .num { color: #ce93d8; }
+    pre .type { color: #80cbc4; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(255,255,255,0.06);
+      color: var(--cyan);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 3px solid var(--amber);
+      background: var(--amber-glow);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      font-size: 13.5px;
+      color: var(--text);
+    }
+
+    .callout.callout-cyan { border-left-color: var(--cyan); background: var(--cyan-dim); }
+    .callout.callout-warn { border-left-color: #ffc107; background: rgba(255,193,7,0.08); }
+
+    .callout strong { color: var(--amber); }
+    .callout.callout-cyan strong { color: var(--cyan); }
+
+    /* ── STAT GRID ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .stat-item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      display: block;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 48px 48px 40px;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(255,152,0,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .cover h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .cover h1 span {
+      background: linear-gradient(90deg, #ff9800, #ffcc80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cover-desc {
+      font-size: 15px;
+      color: var(--text-mid);
+      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    .cover-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .cover-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .cover-meta-item span:first-child { color: var(--amber); }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 56px;
+    }
+
+    .toc h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border: none;
+      padding: 0;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 4px 24px;
+    }
+
+    .toc-list li a {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      color: var(--text-mid);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 5px 0;
+      transition: color 0.15s;
+    }
+
+    .toc-list li a:hover { color: var(--amber); }
+
+    .toc-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      flex-shrink: 0;
+      width: 24px;
+    }
+
+    /* ── BOUNDARY CARD ── */
+    .boundary-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 14px;
+    }
+
+    .boundary-card h4 { color: var(--amber); font-size: 14px; margin-bottom: 6px; }
+    .boundary-card p { font-size: 13px; color: var(--text-mid); margin: 0; }
+
+    /* ── FOOTER ── */
+    .mag-footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 32px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .mag-footer p { font-size: 13px; color: var(--text-dim); margin: 0; }
+    .mag-footer a { color: var(--amber); text-decoration: none; }
+    .mag-footer a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .main { padding: 32px 28px 60px; }
+      .cover { padding: 32px 28px 28px; }
+      .mag-footer { padding: 24px 28px; }
+    }
+
+    @media (max-width: 720px) {
+      :root { --sidebar-w: 0px; }
+
+      .sidebar {
+        position: fixed;
+        top: var(--topbar-h);
+        left: 0;
+        width: 280px;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.28s ease;
+        height: calc(100vh - var(--topbar-h));
+        box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .main { padding: 24px 18px 60px; }
+      .menu-toggle { display: flex; align-items: center; }
+      .card-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .cover { padding: 24px 20px 20px; }
+      .toc-list { grid-template-columns: 1fr; }
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--amber), var(--cyan));
+      z-index: 300;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+    <a href="../index.html" class="topbar-back">← Portfólio</a>
+    <span class="topbar-sep">/</span>
+    <span class="topbar-title">Engenharia</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-badge">Maio 2026 · win-desktop-main</span>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Introdução</span>
+      <nav>
+        <a href="#capa" class="active"><span class="nav-icon">📖</span>Capa</a>
+        <a href="#indice"><span class="nav-icon">📋</span>Índice</a>
+      </nav>
+    </div>
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section">
+      <span class="sidebar-label">Arquitetura</span>
+      <nav>
+        <a href="#visao-geral"><span class="nav-icon">🏗️</span>Visão Geral</a>
+        <a href="#subsystems"><span class="nav-icon">🔷</span>Subsistemas</a>
+        <a href="#pipeline-selecao"><span class="nav-icon">🖱️</span>Pipeline de Seleção</a>
+        <a href="#fronteiras"><span class="nav-icon">🔒</span>Fronteiras</a>
+        <a href="#padroes-gof"><span class="nav-icon">🎨</span>Padrões GoF</a>
+      </nav>
+    </div>
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section">
+      <span class="sidebar-label">Módulos</span>
+      <nav>
+        <a href="#modulos-core"><span class="nav-icon">⚙️</span>Core Frontend</a>
+        <a href="#modulos-suporte"><span class="nav-icon">🧩</span>Módulos de Suporte</a>
+        <a href="#modulos-desktop"><span class="nav-icon">🖥️</span>Desktop & APIs</a>
+      </nav>
+    </div>
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section">
+      <span class="sidebar-label">Pipeline</span>
+      <nav>
+        <a href="#fluxo-vetorizacao"><span class="nav-icon">🗺️</span>Vetorização</a>
+        <a href="#fluxo-sigef"><span class="nav-icon">🧾</span>SIGEF & Memorial</a>
+        <a href="#fluxo-desambiguacao"><span class="nav-icon">🔀</span>Desambiguação</a>
+        <a href="#fluxo-snap"><span class="nav-icon">🧲</span>Snap & Auto-vertex</a>
+      </nav>
+    </div>
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section">
+      <span class="sidebar-label">Dados & Contratos</span>
+      <nav>
+        <a href="#config-runtime"><span class="nav-icon">⚡</span>CONFIG & Runtime</a>
+        <a href="#persistencia"><span class="nav-icon">💾</span>Persistência Local</a>
+        <a href="#wasm-contract"><span class="nav-icon">🦀</span>Contrato WASM</a>
+        <a href="#diag"><span class="nav-icon">🔬</span>Diagnóstico</a>
+      </nav>
+    </div>
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section">
+      <span class="sidebar-label">Qualidade & Escala</span>
+      <nav>
+        <a href="#requisitos"><span class="nav-icon">✅</span>Rastreabilidade RF</a>
+        <a href="#rnf"><span class="nav-icon">📐</span>RNF</a>
+        <a href="#evolucao"><span class="nav-icon">🚀</span>Evolução & Escala</a>
+        <a href="#build"><span class="nav-icon">🔨</span>Build & Runbooks</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- CAPA -->
+    <div class="cover" id="capa">
+      <span class="cover-kicker">Documentação Técnica Completa</span>
+      <h1>Engenharia do<br /><span>Vetorizador</span></h1>
+      <p class="cover-desc">
+        Uma revista técnica sobre a arquitetura, módulos, contratos e evolução do Vetorizador —
+        software desktop para produção geoespacial e documental com núcleo determinístico Rust/WASM.
+      </p>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><span>📅</span><span>Maio 2026</span></div>
+        <div class="cover-meta-item"><span>🌿</span><span>win-desktop-main</span></div>
+        <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
+        <div class="cover-meta-item"><span>⚡</span><span>Electron v41 + Vite 7</span></div>
+        <div class="cover-meta-item"><span>📦</span><span>12 módulos ativos</span></div>
+      </div>
+    </div>
+
+    <!-- ÍNDICE -->
+    <div class="toc" id="indice">
+      <h3>Índice dos Capítulos</h3>
+      <ul class="toc-list">
+        <li><a href="#visao-geral"><span class="toc-num">01</span>Visão Geral da Arquitetura</a></li>
+        <li><a href="#subsystems"><span class="toc-num">02</span>Subsistemas</a></li>
+        <li><a href="#pipeline-selecao"><span class="toc-num">03</span>Pipeline de Seleção</a></li>
+        <li><a href="#fronteiras"><span class="toc-num">04</span>Fronteiras Arquiteturais</a></li>
+        <li><a href="#padroes-gof"><span class="toc-num">05</span>Padrões GoF</a></li>
+        <li><a href="#modulos-core"><span class="toc-num">06</span>Módulos Core</a></li>
+        <li><a href="#modulos-suporte"><span class="toc-num">07</span>Módulos de Suporte</a></li>
+        <li><a href="#modulos-desktop"><span class="toc-num">08</span>Desktop & APIs</a></li>
+        <li><a href="#fluxo-vetorizacao"><span class="toc-num">09</span>Fluxo de Vetorização</a></li>
+        <li><a href="#fluxo-sigef"><span class="toc-num">10</span>SIGEF & Memorial</a></li>
+        <li><a href="#fluxo-desambiguacao"><span class="toc-num">11</span>Desambiguação Global</a></li>
+        <li><a href="#fluxo-snap"><span class="toc-num">12</span>Snap & Auto-vertex</a></li>
+        <li><a href="#config-runtime"><span class="toc-num">13</span>CONFIG & Estado de Sessão</a></li>
+        <li><a href="#persistencia"><span class="toc-num">14</span>Persistência Local</a></li>
+        <li><a href="#wasm-contract"><span class="toc-num">15</span>Contrato WASM</a></li>
+        <li><a href="#diag"><span class="toc-num">16</span>Sistema de Diagnóstico</a></li>
+        <li><a href="#requisitos"><span class="toc-num">17</span>Rastreabilidade RF</a></li>
+        <li><a href="#rnf"><span class="toc-num">18</span>Requisitos Não Funcionais</a></li>
+        <li><a href="#evolucao"><span class="toc-num">19</span>Evolução & Escala</a></li>
+        <li><a href="#build"><span class="toc-num">20</span>Build & Runbooks</a></li>
+      </ul>
+    </div>
+
+    <!-- ═══ CAPÍTULO 1: VISÃO GERAL ═══ -->
+    <section class="chapter" id="visao-geral">
+      <span class="chapter-eyebrow">Capítulo 01</span>
+      <h2>Visão Geral da Arquitetura</h2>
+      <p class="chapter-lead">
+        O Vetorizador é um sistema composto por frontend web, runtime desktop em Electron, serviços locais em Node/Python e um núcleo determinístico de vetorização em Rust/WebAssembly. A arquitetura prioriza entrega operacional local-first.
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">Subsistemas</span></div>
+        <div class="stat-item"><span class="stat-num">12</span><span class="stat-label">Módulos ativos</span></div>
+        <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">Fontes de polígono</span></div>
+        <div class="stat-item"><span class="stat-num">WASM</span><span class="stat-label">Núcleo soberano</span></div>
+      </div>
+
+      <div class="section">
+        <h3>Fluxo arquitetural principal</h3>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <div class="step-num">1</div>
+            <div class="step-body"><h4>UI Leaflet + Controles</h4><p>Usuário localiza área, desenha ROI e configura preset.</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">2</div>
+            <div class="step-body"><h4>Pré-processamento JS</h4><p>Realce de contraste, Sobel, Otsu, morfologia e DBSCAN opcional.</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">3</div>
+            <div class="step-body"><h4>vetoriza_imagem (Rust/WASM)</h4><p>Núcleo determinístico converte imagem em polígonos GeoJSON.</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">4</div>
+            <div class="step-body"><h4>Seleção, revisão e desambiguação</h4><p>Guardrails por preset, regularização geométrica, modal de desambiguação entre fontes sobrepostas, Shift multi-select cruzado.</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">5</div>
+            <div class="step-body"><h4>Exportação / Persistência local</h4><p>GeoJSON, Shapefile, memorial DOCX ou relatório PDF. Runs e feedback persistidos em IndexedDB.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Princípio central:</strong> todo o fluxo ativo de vetorização é deterministico e WASM-only — sem dependência de inferência externa no caminho principal de geração de polígonos.
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 2: SUBSISTEMAS ═══ -->
+    <section class="chapter" id="subsystems">
+      <span class="chapter-eyebrow">Capítulo 02</span>
+      <h2>Subsistemas</h2>
+      <p class="chapter-lead">O produto é organizado em 6 subsistemas com responsabilidades bem delimitadas.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">🗺️</span>
+          <h4>Shell principal de interface</h4>
+          <p><code>index.html</code>, <code>style.css</code>, <code>app.js</code> — mapa, navegação entre modos, exibição de resultados e embed do PDFSpliter.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">⚙️</span>
+          <h4>Pipeline de vetorização</h4>
+          <p><code>app.js</code>, <code>geo-postprocess.js</code>, <code>scene-classifier.js</code>, <code>vetoriza/src/lib.rs</code> — captura ROI → WASM → pós-processamento → exportação.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">💾</span>
+          <h4>Persistência e estado</h4>
+          <p><code>app-boundary-manager.js</code> + trechos de <code>app.js</code> — IndexedDB operacional, localStorage, camada de referência APP local por instalação.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">📡</span>
+          <h4>Serviços embarcados e APIs</h4>
+          <p><code>api/pdf-to-geojson/*</code>, <code>api/shp-to-geojson/*</code> — OCR, PDFtoArcGIS, conversão SHP local.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🧾</span>
+          <h4>Confrontação SIGEF & Memorial</h4>
+          <p><code>sigef-wfs.js</code>, <code>sigef-memorial.js</code>, <code>app.js</code> — consulta WFS, seleção de parcelas, confronto de vértices, geração de DOCX e exportação SHP com cota Z.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">🖥️</span>
+          <h4>Runtime desktop</h4>
+          <p><code>desktop/main.cjs</code>, <code>desktop/app-server.cjs</code>, <code>desktop/preload.cjs</code> — janela Electron, servidor HTTP local, proxies e instalador Windows.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 3: PIPELINE DE SELEÇÃO ═══ -->
+    <section class="chapter" id="pipeline-selecao">
+      <span class="chapter-eyebrow">Capítulo 03</span>
+      <h2>Pipeline de Seleção de Polígonos</h2>
+      <p class="chapter-lead">
+        Todo clique em polígono no mapa passa por um pipeline unificado que opera sobre 4 fontes simultâneas com suporte a desambiguação e multi-seleção por Shift.
+      </p>
+
+      <div class="section">
+        <h3>As 4 fontes de candidatos</h3>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">🤖</span>
+            <h4>geojsonFeatures</h4>
+            <p>Polígonos vetorizados automaticamente pelo pipeline WASM.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">✏️</span>
+            <h4>manualPolygonFeatures</h4>
+            <p>Polígonos desenhados manualmente pelo usuário com Leaflet.Draw.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">📂</span>
+            <h4>Camada de referência (APP)</h4>
+            <p>Shapefile importado gerenciado pelo <code>app-boundary-manager</code>.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🏛️</span>
+            <h4>Parcelas SIGEF</h4>
+            <p>Features carregadas por consulta WFS ao Acervo Fundiário INCRA.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Helpers do pipeline <span class="h3-tag">novos</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Função</th><th>Papel</th></tr></thead>
+            <tbody>
+              <tr><td><code>aplicarSelecaoCandidataNoMapa(item, layer, evt)</code></td><td>Ponto único de despacho após desambiguação ou clique direto; roteia para SIGEF, referência importada ou polígono regular.</td></tr>
+              <tr><td><code>aplicarSelecaoSigefNoMapa(idx, multiSelect)</code></td><td>Toggle de seleção SIGEF com atualização de estilo e chamada a <code>atualizarExportSigefUi()</code>.</td></tr>
+              <tr><td><code>_buscarLayerPorFeatureId(featureId)</code></td><td>Localiza layer Leaflet pelo ID da feature em <code>drawnItems</code>.</td></tr>
+              <tr><td><code>_mostrarDicaMultiSelecao()</code></td><td>Exibe notificação educativa sobre Shift+clique (uma única vez por instalação).</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Variáveis globais críticas</h3>
+        <pre><span class="kw">let</span> <span class="fn">_selecaoMemorialAtiva</span> = <span class="num">false</span>;       <span class="cm">// true quando aguardando clique para memorial</span>
+<span class="kw">let</span> <span class="fn">_selecaoMemorialClickHandler</span> = <span class="num">null</span>;  <span class="cm">// handler registrado durante seleção de memorial</span>
+<span class="kw">let</span> <span class="fn">selectedFeatureId</span> = <span class="num">null</span>;            <span class="cm">// feature ativa (single)</span>
+<span class="kw">const</span> <span class="fn">selectedFeatureIds</span> = <span class="kw">new</span> <span class="type">Set</span>();     <span class="cm">// features selecionadas (multi)</span>
+<span class="kw">let</span> <span class="fn">sigefSelectedIds</span> = <span class="kw">new</span> <span class="type">Set</span>();         <span class="cm">// índices SIGEF selecionados</span>
+<span class="kw">let</span> <span class="fn">suppressMapClickDeselectUntil</span> = <span class="num">0</span>;   <span class="cm">// timestamp para suprimir deselect</span></pre>
+      </div>
+
+      <div class="callout callout-cyan">
+        <strong>Shift multi-select:</strong> funciona em todas as 4 fontes simultaneamente. Shift+clique adiciona ao conjunto sem desselecionar os demais. Na primeira seleção simples, uma notificação educativa é exibida (chave <code>vetorizador_multiselect_hint_v1</code>).
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 4: FRONTEIRAS ═══ -->
+    <section class="chapter" id="fronteiras">
+      <span class="chapter-eyebrow">Capítulo 04</span>
+      <h2>Fronteiras Arquiteturais</h2>
+      <p class="chapter-lead">Contratos que devem ser preservados em qualquer refatoração ou extensão do sistema.</p>
+
+      <div class="boundary-card">
+        <h4>🦀 Fronteira 1 — WASM soberano</h4>
+        <p><code>vetorizar_imagem</code> continua sendo a única fonte de extração geométrica. O fluxo ativo permanece determinístico (WASM-only). Saída obrigatória: GeoJSON <code>Polygon</code> com anel fechado, coordenadas normalizadas em pixels [0.0, 1.0].</p>
+      </div>
+      <div class="boundary-card">
+        <h4>💾 Fronteira 2 — Camada de referência local por instalação</h4>
+        <p>A camada de referência topográfica (APP) permanece local no desktop. No fluxo de memorial SIGEF, exatamente 1 polígono de referência é escolhido por clique (com desambiguação se necessário), com candidatos das 4 fontes disponíveis no mapa.</p>
+      </div>
+      <div class="boundary-card">
+        <h4>⚡ Fronteira 3 — CONFIG como contrato central</h4>
+        <p>Parâmetros do pipeline dependem de <code>CONFIG</code> em <code>app.js</code>. Qualquer novo parâmetro precisa refletir: controles de UI, <code>sincronizarControle</code>, <code>aplicarPreset</code> e <code>resetarParametros</code>.</p>
+      </div>
+      <div class="boundary-card">
+        <h4>🖥️ Fronteira 4 — Desktop como produto de primeira classe</h4>
+        <p>O instalador Windows não é acessório. O build desktop carrega frontend compilado, endpoints locais e artefatos WASM. Firebase/Firestore foram removidos; toda persistência é local-first.</p>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 5: PADRÕES GoF ═══ -->
+    <section class="chapter" id="padroes-gof">
+      <span class="chapter-eyebrow">Capítulo 05</span>
+      <h2>Padrões de Design GoF</h2>
+      <p class="chapter-lead">Padrões identificados por contrato reverso no codebase atual.</p>
+
+      <div class="section">
+        <h3>Singleton</h3>
+        <p>Evidências: <code>app-boundary-manager.js</code> mantém estado da camada de referência em escopo de módulo; <code>CONFIG</code> em <code>app.js</code> é fonte única de parâmetros; cache de módulos dinâmicos em <code>_modulosDinamicos</code>.</p>
+        <div class="callout callout-warn">
+          <strong>Limitação:</strong> uso acoplado a variáveis globais dificulta testes isolados e injeção de dependência. Melhoria recomendada: introduzir <code>AppContext</code> explícito.
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Strategy</h3>
+        <p>Evidências: seleção de comportamento por preset (<code>cobertura</code>, <code>uso_solo</code>, <code>manual</code>); guardrails por cenário em <code>geo-postprocess.js</code>; pontuação de cena em <code>scene-classifier.js</code>.</p>
+        <p>Status de melhoria: <code>PresetManager</code> já extraído com contrato estável. Estratégias de pipeline ainda espalhadas como condicionais em <code>app.js</code>.</p>
+      </div>
+
+      <div class="section">
+        <h3>Template Method</h3>
+        <p>Evidências: pipeline principal com sequência fixa (captura → Sobel → Otsu → morfologia → DBSCAN → WASM → pós-processamento → exportação); <code>scene-classifier.js</code> com roteiro estável; <code>vetoriza/src/lib.rs</code> com sequência determinística.</p>
+      </div>
+
+      <div class="section">
+        <h3>Factory Method</h3>
+        <p>Evidências: <code>createAppBoundaryManager()</code>, <code>createFeatureFlagManager()</code>, <code>createPresetManager(deps)</code>, <code>createStateManager()</code>, <code>createVectorizationPipeline({ executeCore })</code> — todos recebem dependências injetadas e retornam instâncias com API pública estável.</p>
+      </div>
+
+      <div class="section">
+        <h3>Observer</h3>
+        <p>Evidências: listeners de eventos Leaflet (<code>layer.on('click')</code>, <code>map.on('draw:created')</code>); interceptação de <code>console.*</code> pelo sistema de diagnóstico; <code>window.addEventListener</code> para erros globais e <code>beforeunload</code>.</p>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 6: MÓDULOS CORE ═══ -->
+    <section class="chapter" id="modulos-core">
+      <span class="chapter-eyebrow">Capítulo 06</span>
+      <h2>Módulos Core do Frontend</h2>
+
+      <div class="module-card">
+        <span class="module-name">app.js</span>
+        <h4>Orquestrador principal (~12 000 linhas)</h4>
+        <p>Inicialização do shell, estado global, pipeline de configuração, integração mapa-WASM-persistência. Pipeline de seleção unificado para 4 fontes. Helpers novos: <code>aplicarSelecaoCandidataNoMapa</code>, <code>aplicarSelecaoSigefNoMapa</code>, <code>_buscarLayerPorFeatureId</code>.</p>
+        <div class="module-tags">
+          <span class="tag tag-amber">crítico</span>
+          <span class="tag tag-cyan">seleção multi-fonte</span>
+          <span class="tag tag-cyan">shift multi-select</span>
+          <span class="tag tag-cyan">snap auto-vertex</span>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">index.html</span>
+        <h4>Shell da interface principal</h4>
+        <p>Containers, painéis, botões, modais. Ordem de carregamento: CDN libs → <code>vetoriza/pkg/vetoriza.js</code> → <code>app.js</code>. Modal <code>#seletorPoligonoModal</code> para desambiguação global.</p>
+        <div class="module-tags"><span class="tag">ordem de script crítica</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">geo-postprocess.js</span>
+        <h4>Pós-processamento geométrico</h4>
+        <p>Supressão de redundância geométrica, filtros por área/bbox/IoU, guardrails por preset, refinamento de features. Não depende de DOM.</p>
+        <div class="module-tags"><span class="tag tag-green">sem DOM</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">scene-classifier.js</span>
+        <h4>Classificação de cena</h4>
+        <p>Classifica a cena da ROI para apoiar seleção automática de preset e definir limites de comportamento determinístico por cenário.</p>
+        <div class="module-tags"><span class="tag tag-green">sem DOM</span></div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 7: MÓDULOS DE SUPORTE ═══ -->
+    <section class="chapter" id="modulos-suporte">
+      <span class="chapter-eyebrow">Capítulo 07</span>
+      <h2>Módulos de Suporte</h2>
+
+      <div class="module-card">
+        <span class="module-name">app-boundary-manager.js</span>
+        <h4>Gerenciador da camada de referência (APP)</h4>
+        <p>Concentra o ciclo de vida da camada de referência topográfica por instalação. Normaliza GeoJSON, persiste cache em localStorage (<code>vetorizador_app_boundary_v2</code>), exibe no mapa. O callback <code>onFeatureClick</code> delega para <code>lidarCliquePoligono</code> tornando a camada participante da desambiguação global.</p>
+        <div class="module-tags"><span class="tag tag-amber">local-first</span><span class="tag">factory</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">feature-flag-manager.js</span>
+        <h4>Gerenciador de feature flags</h4>
+        <p>Flags persistidas em localStorage, guardrails WASM-only, auditoria operacional, <code>BENCHMARK_APROVACAO_PRESET</code> por preset. Inicialização: <code>initFeatureFlagManager({ syncConfigField })</code>.</p>
+        <div class="module-tags"><span class="tag tag-cyan">wasm-only guardrail</span><span class="tag">auditoria</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">preset-manager.js</span>
+        <h4>Gerenciador de presets</h4>
+        <p><code>PRESET_DEFINITIONS</code>, <code>PRESET_PIPELINE_RULES</code>, <code>PRESET_POLY_QUALITY_DEFAULTS</code>, <code>CONFIG_RESET_DEFAULTS</code>. Factory: <code>createPresetManager(deps)</code>. Presets visíveis na UI: <code>cobertura</code> e <code>uso_solo</code>; perfil <code>manual</code> normalizado para <code>cobertura</code>.</p>
+        <div class="module-tags"><span class="tag">factory</span><span class="tag tag-amber">presets</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">state-manager.js</span>
+        <h4>Gerenciador de estado de sessão</h4>
+        <p>Centraliza estado mutável da sessão: <code>modoVetorizacao</code>, <code>geojsonFeatures</code>, <code>manualPolygonFeatures</code>, <code>activeRunId</code>, <code>activeRunStartedAt</code>, <code>currentSelectionMaskFeature</code>. Mantém estabilidade de referência dos arrays para compatibilidade de callsites.</p>
+        <div class="module-tags"><span class="tag">factory</span><span class="tag tag-cyan">estado central</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">vectorization-pipeline.js</span>
+        <h4>Fronteira explícita do pipeline</h4>
+        <p>Factory <code>createVectorizationPipeline({ executeCore })</code>. Expõe <code>processarAreaDesenhada</code> delegando a implementação core para <code>executeCore</code> injetado. Permite evolução do desacoplamento interno sem quebrar a interface pública.</p>
+        <div class="module-tags"><span class="tag">factory</span><span class="tag tag-green">fronteira limpa</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">diagnostic-logger.js</span>
+        <h4>Sistema de diagnóstico total</h4>
+        <p>Buffer circular de 8 000 entradas, interceptação de <code>console.*</code>, archive em IndexedDB, exportação consolidada. API:</p>
+        <pre><span class="fn">DIAG.log</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)       <span class="cm">// 3 params — SEMPRE</span>
+<span class="fn">DIAG.warn</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)      <span class="cm">// 3 params</span>
+<span class="fn">DIAG.error</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)     <span class="cm">// 3 params</span>
+<span class="fn">DIAG.funcEntry</span>(<span class="str">funcName</span>, data)
+<span class="fn">DIAG.uiEvent</span>(element, eventType, details)
+<span class="fn">DIAG.section</span>(<span class="str">cat</span>, <span class="str">name</span>, data)</pre>
+        <div class="module-tags"><span class="tag tag-amber">observabilidade</span><span class="tag">IndexedDB archive</span></div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 8: DESKTOP & APIs ═══ -->
+    <section class="chapter" id="modulos-desktop">
+      <span class="chapter-eyebrow">Capítulo 08</span>
+      <h2>Desktop & APIs Auxiliares</h2>
+
+      <div class="section">
+        <h3>Runtime desktop (Electron v41)</h3>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">🚀</span>
+            <h4>desktop/main.cjs</h4>
+            <p>Bootstrap Electron, ciclo de vida da aplicação, criação da janela principal, sandbox + contextIsolation.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🌐</span>
+            <h4>desktop/app-server.cjs</h4>
+            <p>Servidor HTTP local (porta 3210), exposição do frontend compilado, proxies para WFS INCRA, Nominatim e elevação SRTM.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🔌</span>
+            <h4>desktop/preload.cjs</h4>
+            <p>Ponte controlada entre renderer e capacidades do Electron.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Proxies do backend local</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Endpoint</th><th>Destino real</th><th>Motivo do proxy</th></tr></thead>
+            <tbody>
+              <tr><td><code>/api/proxy/nominatim-reverse</code></td><td>nominatim.openstreetmap.org</td><td>CORS/CSP no renderer</td></tr>
+              <tr><td><code>/api/proxy/incra-wfs</code></td><td>WFS SIGEF INCRA por UF</td><td>CORS/CSP no renderer</td></tr>
+              <tr><td><code>/api/proxy/elevation</code></td><td>api.opentopodata.org (SRTM 30m)</td><td>CORS/CSP no renderer</td></tr>
+              <tr><td><code>/api/pdf-to-geojson</code></td><td>— (local)</td><td>OCR + parser local</td></tr>
+              <tr><td><code>/api/shp-to-geojson</code></td><td>— (local)</td><td>Conversão shapefile</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>SIGEF & Memorial (módulos independentes)</h3>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">📡</span>
+            <h4>sigef-wfs.js</h4>
+            <p>Consulta WFS público INCRA, detecção automática de UF pela ROI, normalização GeoJSON, roteamento pelo proxy desktop.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">📜</span>
+            <h4>sigef-memorial.js</h4>
+            <p>Comparação de vértices (haversine 5 m), herança de coordenadas SIGEF, cota Z via SRTM, geração de DOCX e exportação SHP confrontado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 9: FLUXO VETORIZAÇÃO ═══ -->
+    <section class="chapter" id="fluxo-vetorizacao">
+      <span class="chapter-eyebrow">Capítulo 09</span>
+      <h2>Fluxo de Vetorização Automática</h2>
+
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="step-num">01</div>
+          <div class="step-body"><h4>Localizar e capturar</h4><p>Busca por endereço (Nominatim) ou coordenada. Desenho da ROI com Leaflet.Draw.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">02</div>
+          <div class="step-body"><h4>Pré-processar imagem</h4><p>Realce de contraste (<code>contrastBoost</code>), Sobel, Otsu, morfologia (<code>morphologySize</code>), DBSCAN opcional (<code>clusterEps</code>, <code>clusterMinPts</code>).</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">03</div>
+          <div class="step-body"><h4>vetorizar_imagem (WASM)</h4><p>Base64 PNG → núcleo Rust → <code>FeatureCollection</code> GeoJSON em pixel-space [0,1].</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">04</div>
+          <div class="step-body"><h4>Pós-processamento geométrico</h4><p><code>geo-postprocess.js</code>: NMS, filtro por área/bbox/IoU, guardrails por preset, simplificação, regularização.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">05</div>
+          <div class="step-body"><h4>Conversão pixel → coordenada</h4><p>Transformação de pixel-space para lat/lng com base nos <code>bounds</code> da ROI.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">06</div>
+          <div class="step-body"><h4>Revisão visual + exportação</h4><p>Polígonos exibidos no mapa com código de cor por qualidade. Exportação GeoJSON, Shapefile, relatório APP.</p></div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>preset uso_solo</strong> inclui etapas adicionais: classificação de cor por cluster (HSL/ExG), mapa de classes suavizado, componentes por classe com 8-conectividade, cookie-cutter entre classes e guardrails de orçamento para ROI grandes.
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 10: SIGEF & MEMORIAL ═══ -->
+    <section class="chapter" id="fluxo-sigef">
+      <span class="chapter-eyebrow">Capítulo 10</span>
+      <h2>Confrontação SIGEF & Memorial Descritivo</h2>
+
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="step-num">01</div>
+          <div class="step-body"><h4>Consulta WFS SIGEF</h4><p>UF detectada automaticamente pela ROI. Requisição via proxy local <code>/api/proxy/incra-wfs</code>. Parcelas carregadas como camada Leaflet selecionável.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">02</div>
+          <div class="step-body"><h4>Carregar imóvel de referência</h4><p>Shapefile compactado ZIP → conversão local → <code>app-boundary-manager</code>. Cache em <code>vetorizador_app_boundary_v2</code>.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">03</div>
+          <div class="step-body"><h4>Modo de seleção de referência</h4><p><code>_selecaoMemorialAtiva = true</code>, cursor crosshair. Clique no mapa ativa <code>_selecaoMemorialClickHandler</code>. Candidatos: 4 fontes de polígono. Sobreposição → modal de desambiguação.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">04</div>
+          <div class="step-body"><h4>Confronto de vértices</h4><p>Haversine ≤ 5 m → vértice certificado (herda coordenadas SIGEF, prefixo do campo <code>rt/RT</code>). Haversine > 5 m → vértice novo (prefixo <code>NV-001</code>).</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">05</div>
+          <div class="step-body"><h4>Cota Z</h4><p>Prioridade: metadados SIGEF → <code>coord[2]</code> do polígono → SRTM 30m via <code>/api/proxy/elevation</code>. <code>coord[2] === 0</code> tratado como ausente. Campo <code>altitudeSource</code>: <code>SIGEF</code>, <code>POLIGONO_CARREGADO</code> ou <code>SRTM</code>.</p></div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">06</div>
+          <div class="step-body"><h4>Geração e exportação</h4><p>Memorial DOCX com azimute, distância (haversine), área geodésica (ha) e cota Z por vértice. SHP confrontado com campos <code>COTA_N_MIN/MAX/MED</code>, <code>COTA_S_MIN/MAX/MED</code> e <code>COTA_FONTE</code>.</p></div>
+        </div>
+      </div>
+
+      <div class="callout callout-cyan">
+        <strong>Correções aplicadas em sigef-memorial.js:</strong> distância haversine (era <code>Math.hypot</code> em graus → 0,00 m); área geodésica (era <code>signedArea</code> em graus → 0,00 ha); tolerância de certificação (era 0,00005° ≈ 0,05 mm → agora 5 m); <code>Z=0</code> do WFS tratado como ausente.
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 11: DESAMBIGUAÇÃO ═══ -->
+    <section class="chapter" id="fluxo-desambiguacao">
+      <span class="chapter-eyebrow">Capítulo 11</span>
+      <h2>Desambiguação Global de Sobreposição</h2>
+      <p class="chapter-lead">
+        Quando um clique no mapa intercepta 2 ou mais polígonos de qualquer fonte, o modal de desambiguação é acionado automaticamente para garantir escolha explícita.
+      </p>
+
+      <div class="section">
+        <h3>Lógica de <code>escolherComDesambiguacaoGlobal()</code></h3>
+        <p>Promise-based. Recebe array de candidatos <code>{ key, source, feature, label, featureId?, boundaryIdx?, featureIdx? }</code>, ordena por área crescente (menor = mais específico primeiro) e exibe swatches de cor 44×44 px em grid. Cancela com <code>reject()</code>; escolha com <code>resolve(item)</code>.</p>
+        <p>DIAG registra 3 fases: <code>modal-aberto</code>, <code>escolhido</code> e <code>cancelado</code>.</p>
+      </div>
+
+      <div class="section">
+        <h3>Estilo de seleção</h3>
+        <p><code>aplicarEstiloSelecao(baseStyle, isSelected)</code> retorna: <code>color: '#00e5ff'</code>, <code>weight+2</code>, <code>opacity: 1</code>, <code>dashArray: null</code> (sem tracejado — borda sólida).</p>
+        <p>SIGEF selecionado: <code>SIGEF_STYLE_SELECTED = { color: '#b71c1c', fillColor: '#ef5350', fillOpacity: 0.50, weight: 3 }</code>.</p>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 12: SNAP & AUTO-VERTEX ═══ -->
+    <section class="chapter" id="fluxo-snap">
+      <span class="chapter-eyebrow">Capítulo 12</span>
+      <h2>Snap & Auto-vertex por Shift</h2>
+      <p class="chapter-lead">
+        Durante o desenho de polígonos de atributos, pontos magnéticos de snap são exibidos. Segurar Shift ativa inserção automática de vértices a cada ponto detectado.
+      </p>
+
+      <div class="section">
+        <h3>Variáveis de controle</h3>
+        <pre><span class="kw">let</span> <span class="fn">_snapShiftAutoActive</span> = <span class="num">false</span>;  <span class="cm">// Shift pressionado = auto-inserção ativa</span>
+<span class="kw">let</span> <span class="fn">_snapLastAutoPoint</span> = <span class="num">null</span>;     <span class="cm">// último ponto auto-inserido (deduplicação)</span></pre>
+      </div>
+
+      <div class="section">
+        <h3>Ciclo de vida</h3>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <div class="step-num">1</div>
+            <div class="step-body"><h4>mousemove</h4><p>Se <code>_snapShiftAutoActive && snap && snap !== _snapLastAutoPoint</code> → insere vértice automaticamente e atualiza <code>_snapLastAutoPoint</code>.</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">2</div>
+            <div class="step-body"><h4>keydown Shift</h4><p><code>_snapShiftAutoActive = true</code>. Hint atualizado: "Segure Shift = auto-snap". Cliques ignorados enquanto Shift estiver pressionado (evita duplicata).</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">3</div>
+            <div class="step-body"><h4>keyup Shift</h4><p><code>_snapShiftAutoActive = false</code>. Retorna ao modo manual.</p></div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">4</div>
+            <div class="step-body"><h4>_pararDesenhoPoligonoAtributos()</h4><p>Remove listener <code>keyup</code>, reinicia <code>_snapShiftAutoActive = false</code> e <code>_snapLastAutoPoint = null</code>.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 13: CONFIG & RUNTIME ═══ -->
+    <section class="chapter" id="config-runtime">
+      <span class="chapter-eyebrow">Capítulo 13</span>
+      <h2>CONFIG & Estado de Sessão</h2>
+
+      <div class="section">
+        <h3>Estrutura CONFIG (app.js)</h3>
+        <p>Fonte única de parâmetros do pipeline. Todo novo campo exige atualização em 4 lugares.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Papel</th></tr></thead>
+            <tbody>
+              <tr><td><code>edgeThreshold</code></td><td>number</td><td>Limiar de borda Sobel/Otsu</td></tr>
+              <tr><td><code>morphologySize</code></td><td>number</td><td>Kernel de morfologia (closing)</td></tr>
+              <tr><td><code>minArea</code></td><td>number</td><td>Área mínima candidata (pixels)</td></tr>
+              <tr><td><code>simplification</code></td><td>number</td><td>Tolerância Douglas-Peucker</td></tr>
+              <tr><td><code>contrastBoost</code></td><td>number</td><td>Fator de amplificação de contraste</td></tr>
+              <tr><td><code>minQualityScore</code></td><td>number</td><td>Score mínimo para aceite</td></tr>
+              <tr><td><code>mergeDistance</code></td><td>number</td><td>Distância de fusão</td></tr>
+              <tr><td><code>clusteringEnabled</code></td><td>boolean</td><td>Habilita agrupamento DBSCAN</td></tr>
+              <tr><td><code>clusterEps</code></td><td>number</td><td>Raio DBSCAN</td></tr>
+              <tr><td><code>clusterMinPts</code></td><td>number</td><td>Densidade mínima DBSCAN</td></tr>
+              <tr><td><code>presetProfile</code></td><td>string</td><td>Perfil ativo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Estado de sessão (state-manager.js)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Campo</th><th>Tipo</th><th>Papel</th></tr></thead>
+            <tbody>
+              <tr><td><code>modoVetorizacao</code></td><td><code>'auto'|'manual'</code></td><td>Modo operacional ativo</td></tr>
+              <tr><td><code>geojsonFeatures</code></td><td>array</td><td>Features de vetorização automática</td></tr>
+              <tr><td><code>manualPolygonFeatures</code></td><td>array</td><td>Features de desenho manual</td></tr>
+              <tr><td><code>activeRunId</code></td><td>string/null</td><td>ID da execução corrente</td></tr>
+              <tr><td><code>currentSelectionMaskFeature</code></td><td>Feature/null</td><td>Máscara de seleção ativa</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 14: PERSISTÊNCIA ═══ -->
+    <section class="chapter" id="persistencia">
+      <span class="chapter-eyebrow">Capítulo 14</span>
+      <h2>Persistência Local</h2>
+
+      <div class="section">
+        <h3>IndexedDB — vetorizador_learning_db</h3>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">📦</span>
+            <h4>runs</h4>
+            <p>Snapshot de execução: bounds, config, relatório, features. Apenas execuções <code>modoVetorizacao = auto</code>.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">💬</span>
+            <h4>feedback</h4>
+            <p>Validações do usuário e marcações de qualidade por feature. Índices: <code>runId</code> e <code>featureId</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>IndexedDB — vetorizador_diagnostic_archive_db</h3>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">📋</span>
+            <h4>entries</h4>
+            <p>Eventos de diagnóstico por sequência. Retenção controlada em modo <code>session-only</code>.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🗂️</span>
+            <h4>sessions</h4>
+            <p>Metadados de sessão de diagnóstico. Máx. 4 sessões + 24h de retenção.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Chaves localStorage</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Chave</th><th>Módulo</th><th>Propósito</th></tr></thead>
+            <tbody>
+              <tr><td><code>vetorizador_app_boundary_v2</code></td><td>app-boundary-manager</td><td>Cache da camada de referência (APP)</td></tr>
+              <tr><td><code>vetorizador_feature_flags_v1</code></td><td>feature-flag-manager</td><td>Feature flags persistidas</td></tr>
+              <tr><td><code>vetorizador_backend_refine_audit_v1</code></td><td>feature-flag-manager</td><td>Auditoria operacional de flags</td></tr>
+              <tr><td><code>vetorizador_assist_telemetry_v1</code></td><td>app.js</td><td>Telemetria leve de uso</td></tr>
+              <tr><td><code>vetorizador_multiselect_hint_v1</code></td><td>app.js</td><td>Flag notificação educativa Shift multi-select</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 15: CONTRATO WASM ═══ -->
+    <section class="chapter" id="wasm-contract">
+      <span class="chapter-eyebrow">Capítulo 15</span>
+      <h2>Contrato WASM</h2>
+      <p class="chapter-lead">Interface formal da função exportada pelo módulo Rust <code>vetoriza/src/lib.rs</code>.</p>
+
+      <div class="section">
+        <h3>Assinatura</h3>
+        <pre><span class="fn">vetorizar_imagem</span>(<span class="type">base64_png</span>: <span class="kw">string</span>) → <span class="kw">string</span> <span class="cm">// JSON serializado</span></pre>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Parâmetro</th><th>Tipo</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td><code>base64_png</code></td><td>string</td><td>PNG codificado Base64, sem prefixo data URI. Deve ser escala de cinza, sem alpha, pré-processado.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Saída — FeatureCollection GeoJSON</h3>
+        <pre>{
+  <span class="str">"type"</span>: <span class="str">"FeatureCollection"</span>,
+  <span class="str">"features"</span>: [{
+    <span class="str">"type"</span>: <span class="str">"Feature"</span>,
+    <span class="str">"geometry"</span>: {
+      <span class="str">"type"</span>: <span class="str">"Polygon"</span>,
+      <span class="str">"coordinates"</span>: [[[<span class="num">lon</span>, <span class="num">lat</span>], ..., [<span class="num">lon</span>, <span class="num">lat</span>]]]
+    },
+    <span class="str">"properties"</span>: {}
+  }]
+}</pre>
+      </div>
+
+      <div class="section">
+        <h3>Invariantes garantidos</h3>
+        <div class="card-grid">
+          <div class="card"><span class="card-icon">🔒</span><h4>Anel fechado</h4><p>Último ponto = primeiro ponto. Sempre.</p></div>
+          <div class="card"><span class="card-icon">📐</span><h4>Sem furos</h4><p>Cada <code>Polygon</code> tem exatamente um anel externo.</p></div>
+          <div class="card"><span class="card-icon">📏</span><h4>Pixel-space [0, 1]</h4><p>Coordenadas normalizadas. Conversão para lat/lng em <code>app.js</code>.</p></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Inicialização</h3>
+        <pre><span class="cm">// index.html — ordem crítica</span>
+&lt;<span class="kw">script</span> src=<span class="str">"vetoriza/pkg/vetoriza.js"</span>&gt;&lt;/<span class="kw">script</span>&gt;
+
+<span class="cm">// app.js</span>
+<span class="kw">await</span> <span class="fn">wasm_bindgen</span>(wasmUrl);
+<span class="fn">vetorizar_imagem</span> = wasm_bindgen.vetorizar_imagem;</pre>
+        <p>Rebuild WASM após mudanças em <code>vetoriza/src/lib.rs</code>: <code>wasm-pack build --target no-modules --release</code></p>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 16: DIAGNÓSTICO ═══ -->
+    <section class="chapter" id="diag">
+      <span class="chapter-eyebrow">Capítulo 16</span>
+      <h2>Sistema de Diagnóstico</h2>
+
+      <div class="section">
+        <h3>Capacidades</h3>
+        <div class="card-grid">
+          <div class="card"><span class="card-icon">🔄</span><h4>Buffer circular</h4><p>8 000 entradas em memória com sequência, timestamp e categoria.</p></div>
+          <div class="card"><span class="card-icon">🕵️</span><h4>Interceptação console</h4><p><code>console.log/warn/error/info</code> capturados automaticamente.</p></div>
+          <div class="card"><span class="card-icon">💾</span><h4>Archive IndexedDB</h4><p>Flush periódico para <code>vetorizador_diagnostic_archive_db</code>. Retenção session-only, máx. 4 sessões.</p></div>
+          <div class="card"><span class="card-icon">📤</span><h4>Exportação consolidada</h4><p>Botão único exporta: buffer + archive + contexto expandido em JSON auditável offline.</p></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Categorias de log registradas</h3>
+        <div class="module-tags" style="gap:8px; flex-wrap: wrap; margin-top: 8px;">
+          <span class="tag tag-cyan">FUNC</span>
+          <span class="tag tag-cyan">NET</span>
+          <span class="tag tag-cyan">ROI</span>
+          <span class="tag tag-cyan">PRESET</span>
+          <span class="tag tag-cyan">EXPORT</span>
+          <span class="tag tag-cyan">MAP</span>
+          <span class="tag tag-cyan">CONFIG</span>
+          <span class="tag tag-cyan">WASM</span>
+          <span class="tag tag-cyan">SESSION</span>
+          <span class="tag tag-amber">CONSOLE</span>
+          <span class="tag tag-amber">GLOBAL</span>
+          <span class="tag">UI</span>
+          <span class="tag">SECTION</span>
+          <span class="tag">BACKEND</span>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>Atenção:</strong> <code>DIAG.log()</code> aceita exatamente 3 parâmetros <code>(category, message, data)</code>. Chamadas com 4 parâmetros são incorretas e devem ser corrigidas.
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 17: RASTREABILIDADE RF ═══ -->
+    <section class="chapter" id="requisitos">
+      <span class="chapter-eyebrow">Capítulo 17</span>
+      <h2>Rastreabilidade de Requisitos Funcionais</h2>
+      <p class="chapter-lead">Referência: Abril 2026 · Branch <code>win-desktop-main</code></p>
+
+      <div class="stat-grid">
+        <div class="stat-item"><span class="stat-num">30</span><span class="stat-label">RF total</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#00e676">26</span><span class="stat-label">Implementados</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#ffc107">3</span><span class="stat-label">Parciais</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#ff5252">0</span><span class="stat-label">Pendentes</span></div>
+      </div>
+
+      <div class="table-wrap" style="margin-top: 24px;">
+        <table>
+          <thead><tr><th>ID</th><th>Nome</th><th>Status</th><th>Módulo</th></tr></thead>
+          <tbody>
+            <tr><td>RF-01</td><td>Busca cartográfica</td><td><span class="badge-impl">Implementado</span></td><td><code>app.js</code> → Nominatim</td></tr>
+            <tr><td>RF-03</td><td>Delimitação da ROI</td><td><span class="badge-impl">Implementado</span></td><td><code>app.js</code>, Leaflet.Draw</td></tr>
+            <tr><td>RF-04</td><td>Alternância de modo</td><td><span class="badge-impl">Implementado</span></td><td><code>state-manager.js</code></td></tr>
+            <tr><td>RF-06</td><td>Seleção de preset</td><td><span class="badge-impl">Implementado</span></td><td><code>preset-manager.js</code></td></tr>
+            <tr><td>RF-09</td><td>Pré-processamento da imagem</td><td><span class="badge-impl">Implementado</span></td><td><code>vectorization-pipeline.js</code></td></tr>
+            <tr><td>RF-10</td><td>Agrupamento DBSCAN</td><td><span class="badge-impl">Implementado</span></td><td><code>app.js</code></td></tr>
+            <tr><td>RF-11</td><td>Vetorização determinística</td><td><span class="badge-impl">Implementado</span></td><td><code>vetoriza/src/lib.rs</code></td></tr>
+            <tr><td>RF-12</td><td>Pós-processamento geométrico</td><td><span class="badge-impl">Implementado</span></td><td><code>geo-postprocess.js</code></td></tr>
+            <tr><td>RF-13</td><td>Operação WASM-only</td><td><span class="badge-partial">Parcial</span></td><td><code>feature-flag-manager.js</code></td></tr>
+            <tr><td>RF-16</td><td>Exportação GeoJSON</td><td><span class="badge-impl">Implementado</span></td><td><code>app.js</code></td></tr>
+            <tr><td>RF-17</td><td>Exportação Shapefile</td><td><span class="badge-impl">Implementado</span></td><td><code>app.js</code>, shpwrite</td></tr>
+            <tr><td>RF-19</td><td>Camada de referência</td><td><span class="badge-impl">Implementado</span></td><td><code>app-boundary-manager.js</code></td></tr>
+            <tr><td>RF-20</td><td>Persistência local runs</td><td><span class="badge-impl">Implementado</span></td><td>IndexedDB <code>vetorizador_learning_db</code></td></tr>
+            <tr><td>RF-23</td><td>Operação sem autenticação</td><td><span class="badge-impl">Implementado</span></td><td><code>app.js</code>, <code>app-boundary-manager.js</code></td></tr>
+            <tr><td>RF-25</td><td>Resiliência offline</td><td><span class="badge-impl">Implementado</span></td><td>IndexedDB + localStorage</td></tr>
+            <tr><td>RF-26</td><td>Módulo PDF</td><td><span class="badge-impl">Implementado</span></td><td><code>pdfspliter/</code> via iframe</td></tr>
+            <tr><td>RF-28</td><td>Runtime desktop</td><td><span class="badge-impl">Implementado</span></td><td><code>desktop/main.cjs</code></td></tr>
+            <tr><td>RF-30</td><td>Telemetria e auditoria</td><td><span class="badge-partial">Parcial</span></td><td><code>diagnostic-logger.js</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 18: RNF ═══ -->
+    <section class="chapter" id="rnf">
+      <span class="chapter-eyebrow">Capítulo 18</span>
+      <h2>Requisitos Não Funcionais</h2>
+
+      <div class="stat-grid">
+        <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">RNF total</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#00e676">11</span><span class="stat-label">Implementados</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#ffc107">3</span><span class="stat-label">Parciais</span></div>
+      </div>
+
+      <div class="table-wrap" style="margin-top: 24px;">
+        <table>
+          <thead><tr><th>ID</th><th>Nome</th><th>Status</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td>RNF-01</td><td>Consistência geométrica</td><td><span class="badge-impl">Implementado</span></td><td>Polígonos fechados garantidos pelo WASM</td></tr>
+            <tr><td>RNF-02</td><td>Determinismo do núcleo</td><td><span class="badge-impl">Implementado</span></td><td>WASM como única fonte de extração</td></tr>
+            <tr><td>RNF-03</td><td>Desempenho operacional</td><td><span class="badge-partial">Parcial</span></td><td>Meta &lt; 60s/imagem documentada; sem benchmark automatizado formal</td></tr>
+            <tr><td>RNF-04</td><td>Qualidade mínima</td><td><span class="badge-partial">Parcial</span></td><td>F1 ≥ 0,70 e IoU ≥ 0,60 definidos; sem regressão automatizada</td></tr>
+            <tr><td>RNF-05</td><td>Continuidade offline</td><td><span class="badge-impl">Implementado</span></td><td>Fluxos locais independentes de conectividade</td></tr>
+            <tr><td>RNF-07</td><td>Observabilidade</td><td><span class="badge-partial">Parcial</span></td><td>Logger 14+ categorias; testes por fluxo ainda pendentes</td></tr>
+            <tr><td>RNF-08</td><td>Portabilidade</td><td><span class="badge-impl">Implementado</span></td><td>Browser moderno + Electron Windows</td></tr>
+            <tr><td>RNF-10</td><td>Manutenibilidade</td><td><span class="badge-impl">Implementado</span></td><td>5 módulos extraídos; desacoplamento fino fase 2 pendente</td></tr>
+            <tr><td>RNF-11</td><td>Segurança operacional</td><td><span class="badge-impl">Implementado</span></td><td>Dados sensíveis permanecem locais no desktop</td></tr>
+            <tr><td>RNF-14</td><td>Auditabilidade</td><td><span class="badge-impl">Implementado</span></td><td>Logs de decisão, auditoria de flags, telemetria local</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 19: EVOLUÇÃO & ESCALA ═══ -->
+    <section class="chapter" id="evolucao">
+      <span class="chapter-eyebrow">Capítulo 19</span>
+      <h2>Evolução & Escala</h2>
+
+      <div class="section">
+        <h3>Etapas de modularização</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Etapa</th><th>Status</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td>Etapa 1 — Modularização</td><td><span class="badge-impl">Concluída</span></td><td>5 módulos extraídos de <code>app.js</code>: AppBoundaryManager, FeatureFlagManager, PresetManager, StateManager, VectorizationPipeline</td></tr>
+              <tr><td>Etapa 1 fase 2</td><td><span class="badge-partial">Pendente</span></td><td>StateManager fase 2 (callsites remanescentes); VectorizationPipeline fase 2 (extração do core por subetapas)</td></tr>
+              <tr><td>Etapa 2 — Contratos</td><td><span class="badge-impl">Concluída</span></td><td>4 contratos em <code>docs/contratos/</code>: wasm-contract, storage-keys, api-schemas, app-boundary</td></tr>
+              <tr><td>Etapa 3 — Observabilidade</td><td><span class="badge-partial">Em andamento</span></td><td>QA de fluxo operacional; exportação de auditoria consolidada; autoajuste desativado até validação fechar</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>O que precisa ser protegido</h3>
+        <div class="card-grid">
+          <div class="card"><span class="card-icon">🦀</span><h4>WASM soberano</h4><p>O pipeline principal precisa continuar operável e auditável com o WASM como fonte de extração geométrica.</p></div>
+          <div class="card"><span class="card-icon">🖥️</span><h4>Desktop relevante</h4><p>Canal de distribuição ativo. Build desktop deve continuar levando WASM + frontend + APIs locais.</p></div>
+          <div class="card"><span class="card-icon">💾</span><h4>Local-first</h4><p>Persistência local prioritária. Sem dependências de autenticação ou sincronização remota no fluxo operacional.</p></div>
+          <div class="card"><span class="card-icon">📂</span><h4>APP por instalação</h4><p>Camada de referência topográfica permanece local por instalação no desktop.</p></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Principais passivos arquiteturais</h3>
+        <div class="callout callout-warn">
+          <strong>app.js ainda grande demais.</strong> Estado, UI, persistência e regras de negócio se cruzam no mesmo módulo. A direção é gradual: módulos de domínio mais explícitos, contratos por subsistema, menos dependência de globais <code>window.*</code>.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CAPÍTULO 20: BUILD & RUNBOOKS ═══ -->
+    <section class="chapter" id="build">
+      <span class="chapter-eyebrow">Capítulo 20</span>
+      <h2>Build & Runbooks</h2>
+
+      <div class="section">
+        <h3>Comandos principais</h3>
+        <pre><span class="fn">npm install</span>           <span class="cm"># instalar dependências</span>
+<span class="fn">npm run dev</span>           <span class="cm"># servidor de desenvolvimento Vite</span>
+<span class="fn">npm run lint</span>          <span class="cm"># ESLint</span>
+<span class="fn">npm run build</span>         <span class="cm"># build produção</span>
+<span class="fn">npm run preview</span>       <span class="cm"># preview do build</span>
+<span class="fn">npm run desktop:dev</span>   <span class="cm"># Electron + Vite em desenvolvimento</span>
+<span class="fn">npm run desktop:start</span> <span class="cm"># Electron sobre build existente</span>
+<span class="fn">npm run dist:win</span>      <span class="cm"># empacotamento Windows (.exe)</span></pre>
+      </div>
+
+      <div class="section">
+        <h3>Rebuild do WASM</h3>
+        <p>Sempre que houver mudança em <code>vetoriza/src/lib.rs</code>:</p>
+        <pre><span class="kw">cd</span> vetoriza
+<span class="fn">wasm-pack build</span> --target no-modules --release</pre>
+        <p>Após o rebuild, validar novamente o build do frontend com <code>npm run lint && npm run build</code>.</p>
+      </div>
+
+      <div class="section">
+        <h3>Runbooks de diagnóstico rápido</h3>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">🔨</span>
+            <h4>Build falha</h4>
+            <p>Verificar: erros de lint → warnings do bundler → artefatos WASM ausentes → <code>type="module"</code> no Vite → <code>node_modules</code>.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🦀</span>
+            <h4>WASM não carrega</h4>
+            <p>Verificar: presença de <code>vetoriza/pkg/vetoriza.js</code> e <code>vetoriza_bg.wasm</code> → ordem de script → disponibilidade de <code>wasm_bindgen.vetorizar_imagem</code>.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🌐</span>
+            <h4>API local falha</h4>
+            <p>Verificar: <code>desktop/app-server.cjs</code> → portas ocupadas → <code>api/local.settings.json</code> → endpoints de health.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🧾</span>
+            <h4>SIGEF não carrega</h4>
+            <p>Verificar: disponibilidade do WFS INCRA por UF → proxy <code>/api/proxy/incra-wfs</code> → metadados de consulta em <code>sigefQueryMetadata</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-cyan">
+        <strong>Fluxo recomendado:</strong> desenvolvimento com <code>npm run dev</code> → validar com <code>npm run lint && npm run build</code> → testar desktop com <code>npm run desktop:dev</code> → empacotar com <code>npm run dist:win</code>.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="mag-footer">
+  <p>Vetorizador · Documentação de Engenharia · Maio 2026</p>
+  <p><a href="../index.html">← Voltar ao portfólio</a> · Copyright © 2026 Marcos Roberto Nunes Lindolpho</p>
+</footer>
+
+<script>
+  // Progress bar
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
+  }, { passive: true });
+
+  // Mobile sidebar toggle
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('menuToggle');
+  toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.addEventListener('click', (e) => {
+    if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggle) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Active sidebar link on scroll
+  const chapters = document.querySelectorAll('.chapter, .cover, .toc');
+  const navLinks = document.querySelectorAll('.sidebar nav a');
+  const topH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 56;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: `-${topH + 20}px 0px -60% 0px`, threshold: 0 });
+
+  document.querySelectorAll('[id]').forEach(el => {
+    if ([...navLinks].some(a => a.getAttribute('href') === '#' + el.id)) observer.observe(el);
+  });
+
+  // Close sidebar on link click (mobile)
+  navLinks.forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+</script>
+</body>
+</html>

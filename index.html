@@ -40,6 +40,7 @@
         <li><a href="#tecnologia">Tecnologia</a></li>
         <li><a href="#mercado">Mercado</a></li>
         <li><a href="#licencas">Licenças</a></li>
+        <li><a href="engenharia/index.html">Engenharia</a></li>
       </ul>
       <div class="nav-cta">
         <a href="mailto:marcos.nunes.lph@outlook.com?subject=Demo%20comercial%20Vetorizador" class="btn-nav">Agendar demo comercial</a>
@@ -173,6 +174,9 @@
             <li>Núcleo determinístico em Rust/WASM</li>
             <li>Presets operacionais com ajuste determinístico por cenário</li>
             <li>Fluxo ativo WASM-only sem dependência de inferência</li>
+            <li>Desambiguação de polígonos sobrepostos por modal (4 fontes)</li>
+            <li>Shift+clique para multi-seleção cruzada entre fontes</li>
+            <li>Confrontação SIGEF com memorial descritivo e cota Z</li>
             <li>Exportação GeoJSON e Shapefile</li>
             <li>Relatório de APP — Área de Preservação Permanente</li>
           </ul>
@@ -241,8 +245,8 @@
         <div class="pipeline-step">
           <div class="step-num">04</div>
           <div class="step-body">
-            <h4>Pós-processar e revisar</h4>
-            <p>Guardrails por preset, regularização geométrica e revisão visual.</p>
+            <h4>Selecionar, revisar e desambiguar</h4>
+            <p>Guardrails por preset, regularização geométrica e revisão visual. Clique em sobreposição abre modal de desambiguação entre fontes. Shift+clique para multi-seleção cruzada.</p>
           </div>
         </div>
         <div class="pipeline-arrow">→</div>
@@ -284,12 +288,12 @@
         <div class="cap-card">
           <span class="cap-icon">🧾</span>
           <h4>Confrontação SIGEF</h4>
-          <p>Consulta automática no Acervo Fundiário (WFS), seleção visual de parcelas e confronto com o imóvel de referência.</p>
+          <p>Consulta automática no Acervo Fundiário (WFS), seleção visual de parcelas e confronto com o imóvel de referência. O polígono de referência é escolhido por clique no mapa com desambiguação automática entre fontes sobrepostas.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">📝</span>
-          <h4>Memorial descritivo híbrido</h4>
-          <p>Gera DOCX com vértices herdados do SIGEF e novos vértices a certificar com prefixo configurável.</p>
+          <h4>Memorial descritivo</h4>
+          <p>Gera DOCX com vértices certificados herdados do SIGEF e novos vértices a certificar com prefixo configurável. Candidatos a referência incluem todas as camadas ativas no mapa.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">📦</span>
@@ -341,6 +345,21 @@
           <h4>Runtime desktop</h4>
           <p>Instalador Windows com servidor local, endpoints embarcados e operação offline.</p>
         </div>
+        <div class="cap-card">
+          <span class="cap-icon">🔀</span>
+          <h4>Desambiguação de sobreposição</h4>
+          <p>Clique em área com polígonos sobrepostos abre modal de seleção com swatches de cor por fonte (vetorizado, desenhado, importado, SIGEF). A escolha é sempre explícita.</p>
+        </div>
+        <div class="cap-card">
+          <span class="cap-icon">🖱️</span>
+          <h4>Multi-seleção Shift+clique</h4>
+          <p>Shift+clique acumula seleção em todas as fontes simultaneamente — vetorizados, desenhados, importados e SIGEF — com notificação educativa na primeira seleção.</p>
+        </div>
+        <div class="cap-card">
+          <span class="cap-icon">🧲</span>
+          <h4>Snap e auto-vertex por Shift</h4>
+          <p>Durante o desenho de polígonos de atributos, pontos magnéticos de snap são exibidos. Segurar Shift insere vértices automaticamente a cada ponto snap detectado, sem necessidade de clique.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -388,7 +407,7 @@
         <div class="tech-layer">
           <h4 class="tech-layer-title">Desktop e Backend</h4>
           <div class="tech-pills">
-            <span class="pill pill-electron">Electron v36</span>
+            <span class="pill pill-electron">Electron v41</span>
             <span class="pill pill-neutral">Node.js 20</span>
             <span class="pill pill-neutral">HTTP local</span>
             <span class="pill pill-neutral">APIs auxiliares</span>
@@ -504,8 +523,8 @@
         </div>
         <div class="diff-card">
           <div class="diff-num">03</div>
-          <h4>Plataforma integrada</h4>
-          <p>Mapa, documentos e parser geoespacial no mesmo ambiente, reduzindo custo de coordenação entre ferramentas e pessoas.</p>
+          <h4>Plataforma integrada multi-fonte</h4>
+          <p>Mapa, documentos e parser geoespacial no mesmo ambiente. Polígonos vetorizados, desenhados, importados e SIGEF interagem no mesmo pipeline de seleção, desambiguação e exportação.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">04</div>
@@ -571,6 +590,22 @@
             <tr><td>pdf-merger-js</td><td><span class="lic-badge mit">MIT</span></td><td>União de PDFs</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ENGENHARIA CTA ===== -->
+  <section class="section engenharia-cta-section">
+    <div class="container">
+      <div class="engenharia-cta-card">
+        <div class="engenharia-cta-icon">📐</div>
+        <div class="engenharia-cta-body">
+          <h2 class="engenharia-cta-title">Documentação de Engenharia</h2>
+          <p class="engenharia-cta-desc">
+            Arquitetura, módulos, pipeline WASM, contratos técnicos, rastreabilidade de requisitos, padrões GoF e runbooks — toda a engenharia do Vetorizador em uma revista técnica completa.
+          </p>
+          <a href="engenharia/index.html" class="btn-primary engenharia-cta-btn">Ler documentação técnica →</a>
+        </div>
       </div>
     </div>
   </section>

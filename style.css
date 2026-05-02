@@ -1100,6 +1100,69 @@ body {
 .lic-badge.apache { background: #dbeafe; color: #1d4ed8; }
 .lic-badge.bsd { background: #f0fdf4; color: #166534; }
 
+/* ── ENGENHARIA CTA ── */
+.engenharia-cta-section {
+  padding-bottom: 0;
+}
+
+.engenharia-cta-card {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: linear-gradient(135deg, #13131a 0%, #1a1a24 100%);
+  border: 1px solid rgba(255, 152, 0, 0.22);
+  border-radius: 14px;
+  padding: 40px 48px;
+  transition: border-color 0.2s;
+}
+
+.engenharia-cta-card:hover {
+  border-color: rgba(255, 152, 0, 0.48);
+}
+
+.engenharia-cta-icon {
+  font-size: 52px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.engenharia-cta-body {
+  flex: 1;
+}
+
+.engenharia-cta-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.engenharia-cta-desc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 560px;
+  margin-bottom: 22px;
+  line-height: 1.7;
+}
+
+.engenharia-cta-btn {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .engenharia-cta-card {
+    flex-direction: column;
+    padding: 28px 24px;
+    gap: 20px;
+    text-align: center;
+  }
+  .engenharia-cta-desc { max-width: 100%; }
+}
+
 .footer {
   background: var(--dark);
   padding: 64px 0 30px;
