@@ -550,6 +550,28 @@ body {
   padding: 96px 0;
 }
 
+.demo-section {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 152, 0, 0.14), transparent 44%),
+    radial-gradient(circle at 85% 75%, rgba(239, 108, 0, 0.12), transparent 46%),
+    linear-gradient(180deg, #fff9ef 0%, #fff3e2 100%);
+}
+
+.demo-video-shell {
+  border: 1px solid rgba(230, 81, 0, 0.18);
+  border-radius: 22px;
+  overflow: hidden;
+  background: #0f0f0f;
+  box-shadow: 0 26px 54px rgba(25, 16, 6, 0.2);
+}
+
+.demo-video {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
 .section-dark {
   background: var(--dark);
   color: var(--white);
