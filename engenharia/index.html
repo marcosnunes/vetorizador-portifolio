@@ -44,6 +44,10 @@
       min-height: 100vh;
     }
 
+    body.sidebar-open {
+      overflow: hidden;
+    }
+
     /* ── TOPBAR ── */
     .topbar {
       position: fixed;
@@ -116,10 +120,14 @@
       border: 1px solid var(--border-light);
       color: var(--text-mid);
       cursor: pointer;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 6px;
       font-size: 18px;
       line-height: 1;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
     }
 
     /* ── LAYOUT ── */
@@ -127,6 +135,18 @@
       display: flex;
       margin-top: var(--topbar-h);
       min-height: calc(100vh - var(--topbar-h));
+    }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: var(--topbar-h) 0 0 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 140;
+    }
+
+    .sidebar-backdrop.open {
+      display: block;
     }
 
     /* ── SIDEBAR ── */
@@ -411,6 +431,7 @@
     /* ── TABLE ── */
     .table-wrap {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin: 16px 0;
       border-radius: var(--radius);
       border: 1px solid var(--border);
@@ -720,6 +741,40 @@
       .stat-grid { grid-template-columns: repeat(2, 1fr); }
       .cover { padding: 24px 20px 20px; }
       .toc-list { grid-template-columns: 1fr; }
+      .cover-meta { flex-direction: column; gap: 10px; }
+      .chapter { margin-bottom: 56px; }
+      .chapter-lead { font-size: 15px; }
+      pre { font-size: 11.5px; padding: 14px 14px; }
+      .topbar { padding: 0 12px; gap: 8px; }
+      .topbar-title { display: none; }
+      .topbar-sep { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .topbar-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+      }
+
+      .topbar-back {
+        font-size: 12px;
+      }
+
+      .main {
+        padding: 20px 14px 52px;
+      }
+
+      .cover {
+        padding: 20px 14px 16px;
+      }
+
+      .section h3 {
+        font-size: 16px;
+      }
+
+      .topbar-right {
+        display: none;
+      }
     }
 
     /* ── PROGRESS BAR ── */
@@ -754,6 +809,8 @@
 
 <!-- LAYOUT -->
 <div class="layout">
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
@@ -868,7 +925,7 @@
       <span class="chapter-eyebrow">Capítulo 01</span>
       <h2>Visão Geral da Arquitetura</h2>
       <p class="chapter-lead">
-        O Vetorizador é um sistema composto por frontend web, runtime desktop em Electron, serviços locais em Node/Python e um núcleo determinístico de vetorização em Rust/WebAssembly. A arquitetura prioriza entrega operacional local-first.
+        O Vetorizador é um sistema desktop composto por renderer local em Electron, serviços locais em Node/Python e um núcleo determinístico de vetorização em Rust/WebAssembly. A arquitetura prioriza entrega operacional local-first.
       </p>
 
       <div class="stat-grid">
@@ -1615,7 +1672,7 @@
             <tr><td>RNF-04</td><td>Qualidade mínima</td><td><span class="badge-partial">Parcial</span></td><td>F1 ≥ 0,70 e IoU ≥ 0,60 definidos; sem regressão automatizada</td></tr>
             <tr><td>RNF-05</td><td>Continuidade offline</td><td><span class="badge-impl">Implementado</span></td><td>Fluxos locais independentes de conectividade</td></tr>
             <tr><td>RNF-07</td><td>Observabilidade</td><td><span class="badge-impl">Implementado</span></td><td>186 call sites migrados para <code>window.DIAG?.*</code>; categorias APP, GEO, SCENE, PRESET, BOUNDARY; fallback para libs externas</td></tr>
-            <tr><td>RNF-08</td><td>Portabilidade</td><td><span class="badge-impl">Implementado</span></td><td>Browser moderno + Electron Windows</td></tr>
+            <tr><td>RNF-08</td><td>Portabilidade</td><td><span class="badge-impl">Implementado</span></td><td>Runtime Electron para Windows (desktop)</td></tr>
             <tr><td>RNF-10</td><td>Manutenibilidade</td><td><span class="badge-impl">Implementado</span></td><td>5 módulos extraídos; desacoplamento fino fase 2 pendente</td></tr>
             <tr><td>RNF-11</td><td>Segurança operacional</td><td><span class="badge-impl">Implementado</span></td><td>Dados sensíveis permanecem locais no desktop</td></tr>
             <tr><td>RNF-14</td><td>Auditabilidade</td><td><span class="badge-impl">Implementado</span></td><td>Logs de decisão, auditoria de flags, telemetria local</td></tr>
@@ -1739,10 +1796,24 @@
   // Mobile sidebar toggle
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('menuToggle');
-  toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+  function setSidebarOpen(open) {
+    sidebar.classList.toggle('open', open);
+    sidebarBackdrop.classList.toggle('open', open);
+    document.body.classList.toggle('sidebar-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  }
+
+  toggle.addEventListener('click', () => {
+    setSidebarOpen(!sidebar.classList.contains('open'));
+  });
+
+  sidebarBackdrop.addEventListener('click', () => setSidebarOpen(false));
+
   document.addEventListener('click', (e) => {
     if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggle) {
-      sidebar.classList.remove('open');
+      setSidebarOpen(false);
     }
   });
 
@@ -1767,7 +1838,7 @@
   });
 
   // Close sidebar on link click (mobile)
-  navLinks.forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+  navLinks.forEach(a => a.addEventListener('click', () => setSidebarOpen(false)));
 </script>
 </body>
 </html>
