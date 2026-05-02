@@ -1155,7 +1155,7 @@
       <div class="module-card">
         <span class="module-name">diagnostic-logger.js</span>
         <h4>Sistema de diagnóstico total</h4>
-        <p>Buffer circular de 8 000 entradas, interceptação de <code>console.*</code>, archive em IndexedDB, exportação consolidada. API:</p>
+        <p>Buffer circular de 8 000 entradas. Módulos internos emitem diretamente via <code>window.DIAG?.*</code> com categorias estruturadas (186 call sites). Interceptação de <code>console.*</code> captura libs externas como fallback. Archive em IndexedDB, exportação consolidada. API:</p>
         <pre><span class="fn">DIAG.log</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)       <span class="cm">// 3 params — SEMPRE</span>
 <span class="fn">DIAG.warn</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)      <span class="cm">// 3 params</span>
 <span class="fn">DIAG.error</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)     <span class="cm">// 3 params</span>
@@ -1520,7 +1520,7 @@
         <h3>Capacidades</h3>
         <div class="card-grid">
           <div class="card"><span class="card-icon">🔄</span><h4>Buffer circular</h4><p>8 000 entradas em memória com sequência, timestamp e categoria.</p></div>
-          <div class="card"><span class="card-icon">🕵️</span><h4>Interceptação console</h4><p><code>console.log/warn/error/info</code> capturados automaticamente.</p></div>
+          <div class="card"><span class="card-icon">�</span><h4>Telemetria direta</h4><p>Módulos internos chamam <code>window.DIAG?.*</code> diretamente (186 call sites). <code>console.*</code> interceptado como fallback para libs externas (Leaflet, Turf, shpwrite).</p></div>
           <div class="card"><span class="card-icon">💾</span><h4>Archive IndexedDB</h4><p>Flush periódico para <code>vetorizador_diagnostic_archive_db</code>. Retenção session-only, máx. 4 sessões.</p></div>
           <div class="card"><span class="card-icon">📤</span><h4>Exportação consolidada</h4><p>Botão único exporta: buffer + archive + contexto expandido em JSON auditável offline.</p></div>
         </div>
@@ -1529,14 +1529,17 @@
       <div class="section">
         <h3>Categorias de log registradas</h3>
         <div class="module-tags" style="gap:8px; flex-wrap: wrap; margin-top: 8px;">
-          <span class="tag tag-cyan">FUNC</span>
+          <span class="tag tag-cyan">APP</span>
+          <span class="tag tag-cyan">GEO</span>
+          <span class="tag tag-cyan">SCENE</span>
+          <span class="tag tag-cyan">PRESET</span>
+          <span class="tag tag-cyan">BOUNDARY</span>
+          <span class="tag tag-cyan">WASM</span>
           <span class="tag tag-cyan">NET</span>
           <span class="tag tag-cyan">ROI</span>
-          <span class="tag tag-cyan">PRESET</span>
           <span class="tag tag-cyan">EXPORT</span>
           <span class="tag tag-cyan">MAP</span>
           <span class="tag tag-cyan">CONFIG</span>
-          <span class="tag tag-cyan">WASM</span>
           <span class="tag tag-cyan">SESSION</span>
           <span class="tag tag-amber">CONSOLE</span>
           <span class="tag tag-amber">GLOBAL</span>
@@ -1611,7 +1614,7 @@
             <tr><td>RNF-03</td><td>Desempenho operacional</td><td><span class="badge-partial">Parcial</span></td><td>Meta &lt; 60s/imagem documentada; sem benchmark automatizado formal</td></tr>
             <tr><td>RNF-04</td><td>Qualidade mínima</td><td><span class="badge-partial">Parcial</span></td><td>F1 ≥ 0,70 e IoU ≥ 0,60 definidos; sem regressão automatizada</td></tr>
             <tr><td>RNF-05</td><td>Continuidade offline</td><td><span class="badge-impl">Implementado</span></td><td>Fluxos locais independentes de conectividade</td></tr>
-            <tr><td>RNF-07</td><td>Observabilidade</td><td><span class="badge-partial">Parcial</span></td><td>Logger 14+ categorias; testes por fluxo ainda pendentes</td></tr>
+            <tr><td>RNF-07</td><td>Observabilidade</td><td><span class="badge-impl">Implementado</span></td><td>186 call sites migrados para <code>window.DIAG?.*</code>; categorias APP, GEO, SCENE, PRESET, BOUNDARY; fallback para libs externas</td></tr>
             <tr><td>RNF-08</td><td>Portabilidade</td><td><span class="badge-impl">Implementado</span></td><td>Browser moderno + Electron Windows</td></tr>
             <tr><td>RNF-10</td><td>Manutenibilidade</td><td><span class="badge-impl">Implementado</span></td><td>5 módulos extraídos; desacoplamento fino fase 2 pendente</td></tr>
             <tr><td>RNF-11</td><td>Segurança operacional</td><td><span class="badge-impl">Implementado</span></td><td>Dados sensíveis permanecem locais no desktop</td></tr>
@@ -1635,7 +1638,7 @@
               <tr><td>Etapa 1 — Modularização</td><td><span class="badge-impl">Concluída</span></td><td>5 módulos extraídos de <code>app.js</code>: AppBoundaryManager, FeatureFlagManager, PresetManager, StateManager, VectorizationPipeline</td></tr>
               <tr><td>Etapa 1 fase 2</td><td><span class="badge-partial">Pendente</span></td><td>StateManager fase 2 (callsites remanescentes); VectorizationPipeline fase 2 (extração do core por subetapas)</td></tr>
               <tr><td>Etapa 2 — Contratos</td><td><span class="badge-impl">Concluída</span></td><td>4 contratos em <code>docs/contratos/</code>: wasm-contract, storage-keys, api-schemas, app-boundary</td></tr>
-              <tr><td>Etapa 3 — Observabilidade</td><td><span class="badge-partial">Em andamento</span></td><td>QA de fluxo operacional; exportação de auditoria consolidada; autoajuste desativado até validação fechar</td></tr>
+              <tr><td>Etapa 3 — Observabilidade</td><td><span class="badge-impl">Concluída</span></td><td>186 call sites migrados para <code>window.DIAG?.*</code> com categorias estruturadas; telemetria direta sem DevTools; exportação consolidada no painel lateral desktop</td></tr>
             </tbody>
           </table>
         </div>
