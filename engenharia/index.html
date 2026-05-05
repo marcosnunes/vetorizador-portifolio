@@ -889,7 +889,7 @@
         <div class="cover-meta-item"><span>🌿</span><span>win-desktop-main</span></div>
         <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
         <div class="cover-meta-item"><span>⚡</span><span>Electron v41 + Vite 7</span></div>
-        <div class="cover-meta-item"><span>📦</span><span>12 módulos ativos</span></div>
+        <div class="cover-meta-item"><span>📦</span><span>14 módulos ativos</span></div>
       </div>
     </div>
 
@@ -930,7 +930,7 @@
 
       <div class="stat-grid">
         <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">Subsistemas</span></div>
-        <div class="stat-item"><span class="stat-num">12</span><span class="stat-label">Módulos ativos</span></div>
+        <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">Módulos ativos</span></div>
         <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">Fontes de polígono</span></div>
         <div class="stat-item"><span class="stat-num">WASM</span><span class="stat-label">Núcleo soberano</span></div>
       </div>
@@ -1210,6 +1210,20 @@
       </div>
 
       <div class="module-card">
+        <span class="module-name">selection-policy.js</span>
+        <h4>Política de seleção (UX)</h4>
+        <p>Centraliza regras de UX de seleção no mapa. Exporta <code>shouldOpenPopupForSelection({ multiSelect })</code> — retorna <code>true</code> apenas quando não é Shift+clique. Ponto único de decisão sobre abertura de popup para todas as 4 fontes.</p>
+        <div class="module-tags"><span class="tag tag-cyan">ux policy</span><span class="tag tag-green">sem DOM</span></div>
+      </div>
+
+      <div class="module-card">
+        <span class="module-name">flow-diagnostics.js</span>
+        <h4>Telemetria de fluxos operacionais</h4>
+        <p>Exporta <code>flowStart(name, details)</code>, <code>flowSuccess(name, details)</code> e <code>flowError(name, error)</code> para rastreamento padronizado de início/sucesso/erro de fluxos via <code>window.DIAG?.section('FLOW', ...)</code>. Dependência opcional — inerte quando DIAG não está disponível.</p>
+        <div class="module-tags"><span class="tag tag-amber">observabilidade</span><span class="tag tag-green">sem DOM</span></div>
+      </div>
+
+      <div class="module-card">
         <span class="module-name">diagnostic-logger.js</span>
         <h4>Sistema de diagnóstico total</h4>
         <p>Buffer circular de 8 000 entradas. Módulos internos emitem diretamente via <code>window.DIAG?.*</code> com categorias estruturadas (186 call sites). Interceptação de <code>console.*</code> captura libs externas como fallback. Archive em IndexedDB, exportação consolidada. API:</p>
@@ -1256,10 +1270,12 @@
             <thead><tr><th>Endpoint</th><th>Destino real</th><th>Motivo do proxy</th></tr></thead>
             <tbody>
               <tr><td><code>/api/proxy/nominatim-reverse</code></td><td>nominatim.openstreetmap.org</td><td>CORS/CSP no renderer</td></tr>
+              <tr><td><code>/api/proxy/nominatim-search</code></td><td>nominatim.openstreetmap.org</td><td>CORS/CSP no renderer</td></tr>
               <tr><td><code>/api/proxy/incra-wfs</code></td><td>WFS SIGEF INCRA por UF</td><td>CORS/CSP no renderer</td></tr>
               <tr><td><code>/api/proxy/elevation</code></td><td>api.opentopodata.org (SRTM 30m)</td><td>CORS/CSP no renderer</td></tr>
               <tr><td><code>/api/pdf-to-geojson</code></td><td>— (local)</td><td>OCR + parser local</td></tr>
               <tr><td><code>/api/shp-to-geojson</code></td><td>— (local)</td><td>Conversão shapefile</td></tr>
+              <tr><td><code>/api/sigef-imoveis</code></td><td>— (local)</td><td>Consulta e download SIGEF WFS</td></tr>
             </tbody>
           </table>
         </div>
@@ -1503,6 +1519,7 @@
             <thead><tr><th>Chave</th><th>Módulo</th><th>Propósito</th></tr></thead>
             <tbody>
               <tr><td><code>vetorizador_app_boundary_v2</code></td><td>app-boundary-manager</td><td>Cache da camada de referência (APP)</td></tr>
+              <tr><td><code>vetorizador_app_boundary_v1</code></td><td>app-boundary-manager</td><td>Chave legada — lida apenas para migração automática para _v2</td></tr>
               <tr><td><code>vetorizador_feature_flags_v1</code></td><td>feature-flag-manager</td><td>Feature flags persistidas</td></tr>
               <tr><td><code>vetorizador_backend_refine_audit_v1</code></td><td>feature-flag-manager</td><td>Auditoria operacional de flags</td></tr>
               <tr><td><code>vetorizador_assist_telemetry_v1</code></td><td>app.js</td><td>Telemetria leve de uso</td></tr>
