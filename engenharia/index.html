@@ -888,7 +888,7 @@
         <div class="cover-meta-item"><span>📅</span><span>Maio 2026</span></div>
         <div class="cover-meta-item"><span>🌿</span><span>win-desktop-main</span></div>
         <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
-        <div class="cover-meta-item"><span>⚡</span><span>Electron v41 + Vite 7</span></div>
+        <div class="cover-meta-item"><span>⚡</span><span>Electron v41 + Vite 8</span></div>
         <div class="cover-meta-item"><span>📦</span><span>14 módulos ativos</span></div>
       </div>
     </div>
@@ -956,7 +956,7 @@
           </div>
           <div class="pipeline-step">
             <div class="step-num">5</div>
-            <div class="step-body"><h4>Exportação / Persistência local</h4><p>GeoJSON, Shapefile, memorial DOCX ou relatório PDF. Runs e feedback persistidos em IndexedDB.</p></div>
+            <div class="step-body"><h4>Exportação / Persistência local</h4><p>GeoJSON, Shapefile, memorial DOCX ou relatório PDF. No confronto SIGEF, ZIP com SHP de polígono + pontos de vértice (DE/PARA). Runs e feedback persistidos em IndexedDB.</p></div>
           </div>
         </div>
       </div>
@@ -996,7 +996,7 @@
         <div class="card">
           <span class="card-icon">🧾</span>
           <h4>Confrontação SIGEF & Memorial</h4>
-          <p><code>sigef-wfs.js</code>, <code>sigef-memorial.js</code>, <code>app.js</code> — consulta WFS, seleção de parcelas, confronto de vértices, geração de DOCX e exportação SHP com cota Z.</p>
+          <p><code>sigef-wfs.js</code>, <code>sigef-memorial.js</code>, <code>app.js</code> — consulta WFS, importação SHP SIGEF (polígono ou pontos), seleção/desambiguação de referência, confronto de vértices, geração de DOCX e exportação SHP dupla (polígono + pontos) com cota Z.</p>
         </div>
         <div class="card">
           <span class="card-icon">🖥️</span>
@@ -1226,7 +1226,7 @@
       <div class="module-card">
         <span class="module-name">diagnostic-logger.js</span>
         <h4>Sistema de diagnóstico total</h4>
-        <p>Buffer circular de 8 000 entradas. Módulos internos emitem diretamente via <code>window.DIAG?.*</code> com categorias estruturadas (186 call sites). Interceptação de <code>console.*</code> captura libs externas como fallback. Archive em IndexedDB, exportação consolidada. API:</p>
+        <p>Buffer circular de 8 000 entradas. Módulos internos emitem diretamente via <code>window.DIAG?.*</code> com categorias estruturadas. Cobertura ampliada para importação SIGEF, desambiguação de rótulos, memorial e exportação SHP confrontado (com <code>flowStart/flowSuccess/flowError</code>). Interceptação de <code>console.*</code> captura libs externas como fallback. Archive em IndexedDB, exportação consolidada. API:</p>
         <pre><span class="fn">DIAG.log</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)       <span class="cm">// 3 params — SEMPRE</span>
 <span class="fn">DIAG.warn</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)      <span class="cm">// 3 params</span>
 <span class="fn">DIAG.error</span>(<span class="str">cat</span>, <span class="str">msg</span>, data)     <span class="cm">// 3 params</span>
