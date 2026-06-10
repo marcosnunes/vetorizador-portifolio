@@ -803,7 +803,7 @@
     <span class="topbar-title">Engenharia</span>
   </div>
   <div class="topbar-right">
-    <span class="topbar-badge">Maio 2026 · win-desktop-main</span>
+    <span class="topbar-badge">Junho 2026 · win-desktop-main</span>
   </div>
 </header>
 
@@ -885,10 +885,10 @@
         software desktop para produção geoespacial e documental com núcleo determinístico Rust/WASM.
       </p>
       <div class="cover-meta">
-        <div class="cover-meta-item"><span>📅</span><span>Maio 2026</span></div>
+        <div class="cover-meta-item"><span>📅</span><span>Junho 2026</span></div>
         <div class="cover-meta-item"><span>🌿</span><span>win-desktop-main</span></div>
         <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
-        <div class="cover-meta-item"><span>⚡</span><span>Electron v41 + Vite 8</span></div>
+        <div class="cover-meta-item"><span>⚡</span><span>Electron v42 + Vite 8</span></div>
         <div class="cover-meta-item"><span>📦</span><span>14 módulos ativos</span></div>
       </div>
     </div>
@@ -991,7 +991,7 @@
         <div class="card">
           <span class="card-icon">📡</span>
           <h4>Serviços embarcados e APIs</h4>
-          <p><code>api/pdf-to-geojson/*</code>, <code>api/shp-to-geojson/*</code> — OCR, PDFtoArcGIS, conversão SHP local.</p>
+          <p><code>api/pdf-to-geojson/*</code>, <code>api/shp-to-geojson/*</code> — PDFtoArcGIS determinístico, parsing local e conversão SHP.</p>
         </div>
         <div class="card">
           <span class="card-icon">🧾</span>
@@ -1243,7 +1243,7 @@
       <h2>Desktop & APIs Auxiliares</h2>
 
       <div class="section">
-        <h3>Runtime desktop (Electron v41)</h3>
+        <h3>Runtime desktop (Electron v42)</h3>
         <div class="card-grid">
           <div class="card">
             <span class="card-icon">🚀</span>
@@ -1273,7 +1273,7 @@
               <tr><td><code>/api/proxy/nominatim-search</code></td><td>nominatim.openstreetmap.org</td><td>CORS/CSP no renderer</td></tr>
               <tr><td><code>/api/proxy/incra-wfs</code></td><td>WFS SIGEF INCRA por UF</td><td>CORS/CSP no renderer</td></tr>
               <tr><td><code>/api/proxy/elevation</code></td><td>api.opentopodata.org (SRTM 30m)</td><td>CORS/CSP no renderer</td></tr>
-              <tr><td><code>/api/pdf-to-geojson</code></td><td>— (local)</td><td>OCR + parser local</td></tr>
+              <tr><td><code>/api/pdf-to-geojson</code></td><td>— (local)</td><td>Parser/normalização local (OCR executado no frontend)</td></tr>
               <tr><td><code>/api/shp-to-geojson</code></td><td>— (local)</td><td>Conversão shapefile</td></tr>
               <tr><td><code>/api/sigef-imoveis</code></td><td>— (local)</td><td>Consulta e download SIGEF WFS</td></tr>
             </tbody>
@@ -1788,7 +1788,7 @@
       </div>
 
       <div class="callout callout-cyan">
-        <strong>Fluxo recomendado:</strong> desenvolvimento com <code>npm run dev</code> → validar com <code>npm run lint && npm run build</code> → testar desktop com <code>npm run desktop:dev</code> → empacotar com <code>npm run dist:win</code>.
+        <strong>Fluxo recomendado:</strong> desenvolvimento com <code>npm run dev</code> → validar com <code>npm run lint && npm run build</code> → testar desktop com <code>npm run desktop:dev</code> → empacotar com <code>npm run dist:win</code> ou <code>npm run dist:win:store</code>.
       </div>
     </section>
 
@@ -1797,7 +1797,7 @@
 
 <!-- FOOTER -->
 <footer class="mag-footer">
-  <p>Vetorizador · Documentação de Engenharia · Maio 2026</p>
+  <p>Vetorizador · Documentação de Engenharia · Junho 2026</p>
   <p><a href="../index.html">← Voltar ao portfólio</a> · Copyright © 2026 Marcos Roberto Nunes Lindolpho</p>
 </footer>
 
