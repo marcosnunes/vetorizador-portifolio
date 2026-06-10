@@ -1137,7 +1137,7 @@
 
       <div class="module-card">
         <span class="module-name">app.js</span>
-        <h4>Orquestrador principal (~12 000 linhas)</h4>
+        <h4>Orquestrador principal</h4>
         <p>Inicialização do shell, estado global, pipeline de configuração, integração mapa-WASM-persistência. Pipeline de seleção unificado para 4 fontes. Helpers novos: <code>aplicarSelecaoCandidataNoMapa</code>, <code>aplicarSelecaoSigefNoMapa</code>, <code>_buscarLayerPorFeatureId</code>.</p>
         <div class="module-tags">
           <span class="tag tag-amber">crítico</span>
@@ -1731,7 +1731,7 @@
       <div class="section">
         <h3>Principais passivos arquiteturais</h3>
         <div class="callout callout-warn">
-          <strong>app.js ainda grande demais.</strong> Estado, UI, persistência e regras de negócio se cruzam no mesmo módulo. A direção é gradual: módulos de domínio mais explícitos, contratos por subsistema, menos dependência de globais <code>window.*</code>.
+          <strong>Evolução arquitetural contínua.</strong> O produto segue em modularização progressiva para manter previsibilidade operacional, contratos claros por subsistema e menor acoplamento entre camadas.
         </div>
       </div>
     </section>

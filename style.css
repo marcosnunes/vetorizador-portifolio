@@ -1130,7 +1130,8 @@ body {
 
 /* ── ENGENHARIA CTA ── */
 .engenharia-cta-section {
-  padding-bottom: 0;
+  padding-top: 64px;
+  padding-bottom: 44px;
 }
 
 .engenharia-cta-card {
@@ -1182,6 +1183,11 @@ body {
 }
 
 @media (max-width: 720px) {
+  .engenharia-cta-section {
+    padding-top: 48px;
+    padding-bottom: 32px;
+  }
+
   .engenharia-cta-card {
     flex-direction: column;
     padding: 28px 24px;
