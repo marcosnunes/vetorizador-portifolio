@@ -38,6 +38,6 @@
     <text x="42" y="320" fill="#ffffff" font-size="16" font-family="Manrope, Segoe UI, sans-serif" font-weight="700">WASM soberano</text>
     <text x="42" y="342" fill="#c9c1b8" font-size="13" font-family="Manrope, Segoe UI, sans-serif">Núcleo Rust</text>
     <text x="188" y="320" fill="#ffffff" font-size="16" font-family="Manrope, Segoe UI, sans-serif" font-weight="700">APP compartilhada</text>
-    <text x="188" y="342" fill="#f8d1a4" font-size="13" font-family="Manrope, Segoe UI, sans-serif">Firestore controlado</text>
+    <text x="188" y="342" fill="#f8d1a4" font-size="13" font-family="Manrope, Segoe UI, sans-serif">Disponível na Windows Store</text>
   </g>
 </svg>
