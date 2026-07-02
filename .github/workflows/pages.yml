@@ -29,8 +29,23 @@ jobs:
         run: |
           rm -rf dist
           mkdir -p dist
-          rsync -a --exclude='.git' --exclude='.github' --exclude='dist' ./ dist/
+          cp -R assets dist/
+          cp -R engenharia dist/
+          cp CNAME dist/
+          cp favicon.ico dist/
+          cp index.html dist/
+          cp og-preview.svg dist/
+          cp privacy-policy.html dist/
+          cp style.css dist/
           touch dist/.nojekyll
+
+      - name: Inspect artifact payload
+        run: |
+          echo "Files in dist:"
+          find dist -maxdepth 3 -type f | sort
+          echo ""
+          echo "Total dist size:"
+          du -sh dist
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
