@@ -811,10 +811,17 @@
 <div class="layout">
 
   <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+      <div class="callout callout-cyan">
+        <strong>Contrato geométrico uso_solo:</strong> a saída final deve manter partição espacial integral da ROI, reduzir sobreposição residual e preservar contornos por diferença de vizinhança de cor. A classificação semântica pode ser revisada manualmente após a geração geométrica.
+      </div>
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-section">
+        <div class="pipeline-step">
+          <div class="step-num">04.1</div>
+          <div class="step-body"><h4>Qualidade geométrica (uso_solo)</h4><p>Refino de contorno por diferença de vizinhança, balanceamento de área por região colorida e partição final para minimizar sobreposição sem perder cobertura da ROI.</p></div>
+        </div>
       <span class="sidebar-label">Introdução</span>
       <nav>
         <a href="#capa" class="active"><span class="nav-icon">📖</span>Capa</a>
@@ -955,6 +962,10 @@
             <div class="step-body"><h4>Seleção, revisão e desambiguação</h4><p>Guardrails por preset, regularização geométrica, modal de desambiguação entre fontes sobrepostas, Shift multi-select cruzado.</p></div>
           </div>
           <div class="pipeline-step">
+            <div class="step-num">4A</div>
+            <div class="step-body"><h4>Qualidade geométrica (uso_solo)</h4><p>Rota classMap prioritária com calibração por paleta RGB, refino por vizinhança de cor e topologia condicionada por orçamento para manter cobertura da ROI sem bloquear a UI.</p></div>
+          </div>
+          <div class="pipeline-step">
             <div class="step-num">5</div>
             <div class="step-body"><h4>Exportação / Persistência local</h4><p>GeoJSON, Shapefile, memorial DOCX ou relatório PDF. No confronto SIGEF, ZIP com SHP de polígono + pontos de vértice (DE/PARA). Runs e feedback persistidos em IndexedDB.</p></div>
           </div>
@@ -963,6 +974,9 @@
 
       <div class="callout">
         <strong>Princípio central:</strong> todo o fluxo ativo de vetorização é deterministico e WASM-only — sem dependência de inferência externa no caminho principal de geração de polígonos.
+      </div>
+      <div class="callout callout-cyan">
+        <strong>Contrato geométrico uso_solo:</strong> a saída final deve manter partição espacial integral da ROI, reduzir sobreposição residual e preservar contornos por diferença de vizinhança de cor. A classificação semântica pode ser revisada manualmente após a geração geométrica.
       </div>
     </section>
 
@@ -1318,7 +1332,7 @@
         </div>
         <div class="pipeline-step">
           <div class="step-num">04</div>
-          <div class="step-body"><h4>Pós-processamento geométrico</h4><p><code>geo-postprocess.js</code>: NMS, filtro por área/bbox/IoU, guardrails por preset, simplificação, regularização.</p></div>
+          <div class="step-body"><h4>Pós-processamento geométrico</h4><p><code>geo-postprocess.js</code>: NMS, filtro por área/bbox/IoU, guardrails por preset, simplificação, regularização e orçamento para evitar etapas topológicas caras em lote.</p></div>
         </div>
         <div class="pipeline-step">
           <div class="step-num">05</div>
@@ -1331,7 +1345,7 @@
       </div>
 
       <div class="callout callout-warn">
-        <strong>preset uso_solo</strong> inclui etapas adicionais: classificação de cor por cluster (HSL/ExG), mapa de classes suavizado, componentes por classe com 8-conectividade, cookie-cutter entre classes e guardrails de orçamento para ROI grandes.
+        <strong>preset uso_solo</strong> executa rota classMap como caminho principal: K-means + calibração por paleta RGB + ajuste por vizinhança de cor + tesselação direta. Fallback por máscara/WASM é apenas de contingência e a topologia pesada só roda dentro do orçamento de tempo/features.
       </div>
     </section>
 
