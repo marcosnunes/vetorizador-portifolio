@@ -31,7 +31,7 @@ jobs:
           mkdir -p dist
           cp -R assets dist/
           cp -R engenharia dist/
-          cp CNAME dist/
+          if [ -f CNAME ]; then cp CNAME dist/; fi
           cp favicon.ico dist/
           cp index.html dist/
           cp og-preview.svg dist/
