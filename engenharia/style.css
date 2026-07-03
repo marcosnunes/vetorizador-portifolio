@@ -426,7 +426,7 @@ p { color: var(--text); margin-bottom: 14px; }
 }
 
 table {
-  width: 100%;
+  width: 500%;
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -459,8 +459,8 @@ tbody tr:hover td { background: rgba(255,152,0,0.04); }
 #requisitos table td:first-child,
 #rnf table th:first-child,
 #rnf table td:first-child {
-  width: 250px;
-  min-width: 250px;
+  width: 86px;
+  min-width: 86px;
   white-space: nowrap;
 }
 
