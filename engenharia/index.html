@@ -116,7 +116,7 @@
           <div class="cover-meta-item"><span>🌿</span><span>win-desktop-main</span></div>
           <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
           <div class="cover-meta-item"><span>⚡</span><span>Electron v43 + Vite 8</span></div>
-          <div class="cover-meta-item"><span>📦</span><span>14 módulos ativos</span></div>
+          <div class="cover-meta-item"><span>📦</span><span>33 módulos catalogados</span></div>
         </div>
       </div>
 
@@ -159,7 +159,7 @@
 
         <div class="stat-grid">
           <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">Subsistemas</span></div>
-          <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">Módulos ativos</span></div>
+          <div class="stat-item"><span class="stat-num">33</span><span class="stat-label">Módulos catalogados</span></div>
           <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">Fontes de polígono</span></div>
           <div class="stat-item"><span class="stat-num">WASM</span><span class="stat-label">Núcleo soberano</span></div>
         </div>
@@ -1188,7 +1188,7 @@
             </div>
             <div class="card"><span class="card-icon">�</span>
               <h4>Telemetria direta</h4>
-              <p>Módulos internos chamam <code>window.DIAG?.*</code> diretamente (186 call sites).
+              <p>Módulos internos chamam <code>window.DIAG?.*</code> diretamente (281 call sites).
                 <code>console.*</code> interceptado como fallback para libs externas (Leaflet, Turf, shpwrite).</p>
             </div>
             <div class="card"><span class="card-icon">💾</span>
@@ -1239,10 +1239,10 @@
         <p class="chapter-lead">Referência: Julho 2026 · <code>win-desktop-main</code></p>
 
         <div class="stat-grid">
-          <div class="stat-item"><span class="stat-num">30</span><span class="stat-label">RF total</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#00e676">28</span><span
+          <div class="stat-item"><span class="stat-num">18</span><span class="stat-label">RF mapeados</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#00e676">18</span><span
               class="stat-label">Implementados</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#ffc107">1</span><span
+          <div class="stat-item"><span class="stat-num" style="color:#ffc107">0</span><span
               class="stat-label">Parciais</span></div>
           <div class="stat-item"><span class="stat-num" style="color:#ff5252">0</span><span
               class="stat-label">Pendentes</span></div>
@@ -1378,10 +1378,10 @@
         <h2>Requisitos Não Funcionais</h2>
 
         <div class="stat-grid">
-          <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">RNF total</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#00e676">11</span><span
+          <div class="stat-item"><span class="stat-num">10</span><span class="stat-label">RNF mapeados</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#00e676">8</span><span
               class="stat-label">Implementados</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#ffc107">3</span><span
+          <div class="stat-item"><span class="stat-num" style="color:#ffc107">2</span><span
               class="stat-label">Parciais</span></div>
         </div>
 
@@ -1430,7 +1430,7 @@
                 <td>RNF-07</td>
                 <td>Observabilidade</td>
                 <td><span class="badge-impl">Implementado</span></td>
-                <td>186 call sites migrados para <code>window.DIAG?.*</code>; categorias APP, GEO, SCENE, PRESET,
+                <td>281 call sites migrados para <code>window.DIAG?.*</code>; categorias APP, GEO, SCENE, PRESET,
                   BOUNDARY; fallback para libs externas</td>
               </tr>
               <tr>
@@ -1500,7 +1500,7 @@
                 <tr>
                   <td>Etapa 3 — Observabilidade</td>
                   <td><span class="badge-impl">Concluída</span></td>
-                  <td>186 call sites migrados para <code>window.DIAG?.*</code> com categorias estruturadas; telemetria
+                  <td>281 call sites migrados para <code>window.DIAG?.*</code> com categorias estruturadas; telemetria
                     direta sem DevTools; exportação consolidada no painel lateral desktop</td>
                 </tr>
               </tbody>
