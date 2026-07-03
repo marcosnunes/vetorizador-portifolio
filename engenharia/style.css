@@ -459,8 +459,8 @@ tbody tr:hover td { background: rgba(255,152,0,0.04); }
 #requisitos table td:first-child,
 #rnf table th:first-child,
 #rnf table td:first-child {
-  width: 86px;
-  min-width: 86px;
+  width: 150px;
+  min-width: 150px;
   white-space: nowrap;
 }
 
