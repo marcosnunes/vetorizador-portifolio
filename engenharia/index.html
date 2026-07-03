@@ -1239,8 +1239,8 @@
         <p class="chapter-lead">Referência: Julho 2026 · <code>win-desktop-main</code></p>
 
         <div class="stat-grid">
-          <div class="stat-item"><span class="stat-num">18</span><span class="stat-label">RF mapeados</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#00e676">18</span><span
+          <div class="stat-item"><span class="stat-num">30</span><span class="stat-label">RF mapeados</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#00e676">30</span><span
               class="stat-label">Implementados</span></div>
           <div class="stat-item"><span class="stat-num" style="color:#ffc107">0</span><span
               class="stat-label">Parciais</span></div>
@@ -1266,22 +1266,46 @@
                 <td><code>app.js</code> → Nominatim</td>
               </tr>
               <tr>
+                <td>RF-02</td>
+                <td>Captura de coordenada</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code>, <code>index.html</code></td>
+              </tr>
+              <tr>
                 <td>RF-03</td>
-                <td>Delimitação da ROI</td>
+                <td>Delimitação da área de interesse</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>app.js</code>, Leaflet.Draw</td>
               </tr>
               <tr>
                 <td>RF-04</td>
-                <td>Alternância de modo</td>
+                <td>Alternância de modo operacional</td>
                 <td><span class="badge-impl">Implementado</span></td>
-                <td><code>state-manager.js</code></td>
+                <td><code>app.js</code>, <code>state-manager.js</code></td>
+              </tr>
+              <tr>
+                <td>RF-05</td>
+                <td>Desenho manual de feição topográfica</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code>, Leaflet.Draw</td>
               </tr>
               <tr>
                 <td>RF-06</td>
-                <td>Seleção de preset</td>
+                <td>Seleção de preset profissional</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>preset-manager.js</code></td>
+              </tr>
+              <tr>
+                <td>RF-07</td>
+                <td>Ajuste avançado de parâmetros</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code>, <code>index.html</code></td>
+              </tr>
+              <tr>
+                <td>RF-08</td>
+                <td>Captura da ROI</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code>, <code>vectorization-pipeline.js</code></td>
               </tr>
               <tr>
                 <td>RF-09</td>
@@ -1314,6 +1338,18 @@
                 <td><code>feature-flag-manager.js</code>, <code>app.js</code>, <code>vetoriza/src/lib.rs</code></td>
               </tr>
               <tr>
+                <td>RF-14</td>
+                <td>Exibição de resultados</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code>, <code>index.html</code></td>
+              </tr>
+              <tr>
+                <td>RF-15</td>
+                <td>Edição e rejeição operacional</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code></td>
+              </tr>
+              <tr>
                 <td>RF-16</td>
                 <td>Exportação GeoJSON</td>
                 <td><span class="badge-impl">Implementado</span></td>
@@ -1326,8 +1362,14 @@
                 <td><code>app.js</code>, shpwrite</td>
               </tr>
               <tr>
+                <td>RF-18</td>
+                <td>Relatório de interseção com camada de referência</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code></td>
+              </tr>
+              <tr>
                 <td>RF-19</td>
-                <td>Camada de referência</td>
+                <td>Carregamento e limpeza de camada de referência</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>app-boundary-manager.js</code></td>
               </tr>
@@ -1338,10 +1380,28 @@
                 <td>IndexedDB <code>vetorizador_learning_db</code></td>
               </tr>
               <tr>
+                <td>RF-21</td>
+                <td>Persistência local de feedback operacional</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app.js</code> → IndexedDB</td>
+              </tr>
+              <tr>
+                <td>RF-22</td>
+                <td>Serviço de persistência local da camada de referência</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app-boundary-manager.js</code></td>
+              </tr>
+              <tr>
                 <td>RF-23</td>
-                <td>Operação sem autenticação</td>
+                <td>Operação sem autenticação remota</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>app.js</code>, <code>app-boundary-manager.js</code></td>
+              </tr>
+              <tr>
+                <td>RF-24</td>
+                <td>Restauração da camada de referência no bootstrap</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>app-boundary-manager.js</code></td>
               </tr>
               <tr>
                 <td>RF-25</td>
@@ -1356,10 +1416,22 @@
                 <td><code>pdfspliter/</code> via iframe</td>
               </tr>
               <tr>
+                <td>RF-27</td>
+                <td>Conversão documental geoespacial</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>api/pdf-to-geojson</code>, <code>api/shp-to-geojson</code></td>
+              </tr>
+              <tr>
                 <td>RF-28</td>
                 <td>Runtime desktop</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>desktop/main.cjs</code></td>
+              </tr>
+              <tr>
+                <td>RF-29</td>
+                <td>Saúde operacional local</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td><code>desktop/app-server.cjs</code></td>
               </tr>
               <tr>
                 <td>RF-30</td>
@@ -1378,8 +1450,8 @@
         <h2>Requisitos Não Funcionais</h2>
 
         <div class="stat-grid">
-          <div class="stat-item"><span class="stat-num">10</span><span class="stat-label">RNF mapeados</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#00e676">8</span><span
+          <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">RNF mapeados</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#00e676">12</span><span
               class="stat-label">Implementados</span></div>
           <div class="stat-item"><span class="stat-num" style="color:#ffc107">2</span><span
               class="stat-label">Parciais</span></div>
@@ -1427,6 +1499,12 @@
                 <td>Fluxos locais independentes de conectividade</td>
               </tr>
               <tr>
+                <td>RNF-06</td>
+                <td>Usabilidade por perfis distintos</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td>Modo simples (presets) e avançado (sliders) na mesma UX</td>
+              </tr>
+              <tr>
                 <td>RNF-07</td>
                 <td>Observabilidade</td>
                 <td><span class="badge-impl">Implementado</span></td>
@@ -1440,6 +1518,12 @@
                 <td>Runtime Electron para Windows (desktop)</td>
               </tr>
               <tr>
+                <td>RNF-09</td>
+                <td>Robustez a falhas de dependência</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td>Fallback e mensagens de erro para WASM e libs de exportação</td>
+              </tr>
+              <tr>
                 <td>RNF-10</td>
                 <td>Manutenibilidade</td>
                 <td><span class="badge-impl">Implementado</span></td>
@@ -1450,6 +1534,18 @@
                 <td>Segurança operacional</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td>Dados sensíveis permanecem locais no desktop</td>
+              </tr>
+              <tr>
+                <td>RNF-12</td>
+                <td>Compatibilidade de integração</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td>GeoJSON e Shapefile compatíveis com ecossistemas GIS</td>
+              </tr>
+              <tr>
+                <td>RNF-13</td>
+                <td>Escalabilidade funcional moderada</td>
+                <td><span class="badge-impl">Implementado</span></td>
+                <td>Presets e endpoints com expansão incremental por contrato</td>
               </tr>
               <tr>
                 <td>RNF-14</td>
