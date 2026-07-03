@@ -426,7 +426,7 @@ p { color: var(--text); margin-bottom: 14px; }
 }
 
 table {
-  width: 300%;
+  width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
