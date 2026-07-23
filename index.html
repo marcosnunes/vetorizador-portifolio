@@ -202,7 +202,10 @@
             <li>Clique simples abre propriedades; Shift+clique só seleciona</li>
             <li>Confrontação SIGEF com memorial descritivo e cota Z</li>
             <li>Importação SIGEF por SHP de polígono ou SHP de pontos (coluna "de")</li>
+            <li>Importação SIGEF por CSV (GEOMETRIA_WKT ou colunas X/Y/Z e E/Long, N/Lat, h)</li>
             <li>Memorial DOCX nomeado pelo polígono efetivamente selecionado</li>
+            <li>Exportação da planilha memorial XLSX com coluna GEOMETRIA_WKT</li>
+            <li>Prioridade de nome SIGEF por QRCODE em ambiguidade de múltiplas camadas CSV</li>
             <li>Exportação GeoJSON e Shapefile</li>
             <li>Exportação do confronto em ZIP com SHP de polígono + SHP de pontos (DE/PARA)</li>
             <li>Relatório de APP — Área de Preservação Permanente</li>
@@ -281,7 +284,7 @@
           <div class="step-num">05</div>
           <div class="step-body">
             <h4>Exportar</h4>
-            <p>GeoJSON, Shapefile ou relatório PDF. No confronto SIGEF, saída ZIP com SHP de polígono + pontos de vértice (DE/PARA), além de memorial DOCX nomeado pelo polígono selecionado.</p>
+            <p>GeoJSON, Shapefile ou relatório PDF. No confronto SIGEF, saída ZIP com SHP de polígono + pontos de vértice (DE/PARA), memorial DOCX e planilha memorial XLSX com GEOMETRIA_WKT.</p>
           </div>
         </div>
       </div>
@@ -315,12 +318,12 @@
         <div class="cap-card">
           <span class="cap-icon">🧾</span>
           <h4>Confrontação SIGEF</h4>
-          <p>Consulta automática no Acervo Fundiário (WFS), seleção visual de parcelas e confronto com o imóvel de referência. O polígono de referência é escolhido por clique no mapa com desambiguação automática entre fontes sobrepostas.</p>
+          <p>Consulta via ROI no Acervo Fundiário (WFS) e importação local de camadas SIGEF (SHP/CSV), com seleção visual de parcelas e confronto com o imóvel de referência. O polígono de referência é escolhido por clique no mapa com desambiguação automática entre fontes sobrepostas.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">📝</span>
           <h4>Memorial descritivo</h4>
-          <p>Gera DOCX com vértices certificados herdados do SIGEF e novos vértices a certificar com prefixo configurável. Candidatos a referência incluem todas as camadas ativas no mapa.</p>
+          <p>Gera DOCX e XLSX com vértices certificados herdados das camadas SIGEF ativas. Em ambiguidade de múltiplos CSVs, prioriza pontos com QRCODE; vértices sem correspondência usam sequência do número-base digitado.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">📦</span>

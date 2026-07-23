@@ -152,7 +152,7 @@
         <span class="chapter-eyebrow">Capítulo 01</span>
         <h2>Visão Geral da Arquitetura</h2>
         <p class="chapter-lead">
-          O Vetorizador é um sistema desktop composto por renderer local em Electron, serviços locais em Node/Python e
+          O Vetorizador é um sistema desktop composto por renderer local em Electron, serviços locais em Node.js e
           um núcleo determinístico de vetorização em Rust/WebAssembly. A arquitetura prioriza entrega operacional
           local-first.
         </p>
@@ -208,8 +208,8 @@
               <div class="step-num">5</div>
               <div class="step-body">
                 <h4>Exportação / Persistência local</h4>
-                <p>GeoJSON, Shapefile, memorial DOCX ou relatório PDF. No confronto SIGEF, ZIP com SHP de polígono +
-                  pontos de vértice (DE/PARA). Runs e feedback persistidos em IndexedDB.</p>
+                <p>GeoJSON, Shapefile, memorial DOCX, planilha XLSX ou relatório PDF. No confronto SIGEF, ZIP com SHP
+                  de polígono + pontos de vértice (DE/PARA). Runs e feedback persistidos em IndexedDB.</p>
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@
           <div class="card">
             <span class="card-icon">🗺️</span>
             <h4>Shell principal de interface</h4>
-            <p><code>index.html</code>, <code>style.css</code>, <code>app.js</code> — mapa, navegação entre modos,
+              <p>Features carregadas por consulta WFS ao Acervo Fundiário INCRA ou por importação local SHP/CSV.</p>
               exibição de resultados e embed do PDFSpliter.</p>
           </div>
           <div class="card">
@@ -260,9 +260,9 @@
           <div class="card">
             <span class="card-icon">🧾</span>
             <h4>Confrontação SIGEF & Memorial</h4>
-            <p><code>sigef-wfs.js</code>, <code>sigef-memorial.js</code>, <code>app.js</code> — consulta WFS, importação
-              SHP SIGEF (polígono ou pontos), seleção/desambiguação de referência, confronto de vértices, geração de
-              DOCX e exportação SHP dupla (polígono + pontos) com cota Z.</p>
+            <p><code>sigef-wfs.js</code>, <code>sigef-memorial.js</code>, <code>app.js</code> — consulta WFS,
+              importação SIGEF por SHP/CSV, seleção/desambiguação de referência, confronto de vértices com prioridade
+              por QRCODE em ambiguidades, geração de DOCX/XLSX e exportação SHP dupla (polígono + pontos) com cota Z.</p>
           </div>
           <div class="card">
             <span class="card-icon">🖥️</span>
@@ -303,7 +303,7 @@
             <div class="card">
               <span class="card-icon">🏛️</span>
               <h4>Parcelas SIGEF</h4>
-              <p>Features carregadas por consulta WFS ao Acervo Fundiário INCRA.</p>
+              <p>Features carregadas por consulta WFS ao Acervo Fundiário INCRA e por importação local SHP/CSV.</p>
             </div>
           </div>
         </div>
@@ -672,8 +672,8 @@
             <div class="card">
               <span class="card-icon">📜</span>
               <h4>sigef-memorial.js</h4>
-              <p>Comparação de vértices (haversine 5 m), herança de coordenadas SIGEF, cota Z via SRTM, geração de DOCX
-                e exportação SHP confrontado.</p>
+              <p>Comparação de vértices (haversine 5 m), herança de coordenadas SIGEF com prioridade por QRCODE em
+                ambiguidades, cota Z via SRTM, geração de DOCX/XLSX e exportação SHP confrontado.</p>
             </div>
           </div>
         </div>
@@ -749,9 +749,9 @@
           <div class="pipeline-step">
             <div class="step-num">01</div>
             <div class="step-body">
-              <h4>Consulta WFS SIGEF</h4>
-              <p>UF detectada automaticamente pela ROI. Requisição via proxy local <code>/api/proxy/incra-wfs</code>.
-                Parcelas carregadas como camada Leaflet selecionável.</p>
+              <h4>Camada SIGEF ativa (WFS ou arquivo local)</h4>
+              <p>O confronto opera com camada SIGEF ativa por consulta WFS (ROI + UF detectada automaticamente, via
+                proxy local <code>/api/proxy/incra-wfs</code>) ou por importação local SHP/CSV.</p>
             </div>
           </div>
           <div class="pipeline-step">
@@ -775,8 +775,9 @@
             <div class="step-num">04</div>
             <div class="step-body">
               <h4>Confronto de vértices</h4>
-              <p>Haversine ≤ 5 m → vértice certificado (herda coordenadas SIGEF, prefixo do campo <code>rt/RT</code>).
-                Haversine > 5 m → vértice novo (prefixo <code>NV-001</code>).</p>
+              <p>Haversine ≤ 5 m → vértice certificado (herda coordenadas/nome SIGEF). Com múltiplas camadas SIGEF
+                ativas, ambiguidades de ponto priorizam candidatos com QRCODE e depois menor distância. Haversine > 5 m
+                → vértice novo (sequência derivada do número-base digitado no prefixo).</p>
             </div>
           </div>
           <div class="pipeline-step">
@@ -793,17 +794,19 @@
             <div class="step-num">06</div>
             <div class="step-body">
               <h4>Geração e exportação</h4>
-              <p>Memorial DOCX com azimute, distância (haversine), área geodésica (ha) e cota Z por vértice. SHP
-                confrontado com campos <code>COTA_N_MIN/MAX/MED</code>, <code>COTA_S_MIN/MAX/MED</code> e
-                <code>COTA_FONTE</code>.</p>
+              <p>Memorial DOCX e planilha XLSX com azimute, distância (haversine), área geodésica (ha) e cota Z por
+                vértice. O XLSX exporta coordenadas em DMS e inclui <code>GEOMETRIA_WKT</code>. SHP confrontado com
+                campos <code>COTA_N_MIN/MAX/MED</code>, <code>COTA_S_MIN/MAX/MED</code> e <code>COTA_FONTE</code>.</p>
             </div>
           </div>
         </div>
 
         <div class="callout callout-cyan">
-          <strong>Correções aplicadas em sigef-memorial.js:</strong> distância haversine (era <code>Math.hypot</code> em
-          graus → 0,00 m); área geodésica (era <code>signedArea</code> em graus → 0,00 ha); tolerância de certificação
-          (era 0,00005° ≈ 0,05 mm → agora 5 m); <code>Z=0</code> do WFS tratado como ausente.
+          <strong>Correções aplicadas em sigef-memorial.js:</strong> distância haversine (era <code>Math.hypot</code>
+          em graus → 0,00 m); área geodésica (era <code>signedArea</code> em graus → 0,00 ha); tolerância de
+          certificação (era 0,00005° ≈ 0,05 mm → agora 5 m); <code>Z=0</code> do WFS tratado como ausente; prioridade
+          por QRCODE na resolução de nomes SIGEF em cenários com múltiplas camadas CSV; fallback de prefixo apenas para
+          vértices sem correspondência SIGEF.
         </div>
       </section>
 
