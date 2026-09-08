@@ -58,7 +58,7 @@
           <div class="badge-row">
             <span class="badge">Desktop Windows</span>
             <span class="badge">Rust / WASM</span>
-            <span class="badge">WASM-only</span>
+            <span class="badge">Assistivo-local</span>
             <span class="badge">B2B Desktop</span>
             <span class="badge">GeoJSON · Shapefile</span>
             <span class="badge">Electron v43</span>
@@ -96,8 +96,8 @@
             </div>
             <div class="showcase-stats">
               <div>
-                <strong>WASM soberano</strong>
-                <span>Polígonos gerados no núcleo Rust</span>
+                <strong>WASM como base</strong>
+                <span>Polígonos extraídos no núcleo Rust, com refinamento local opcional</span>
               </div>
               <div>
                 <strong>Implantação controlada</strong>
@@ -122,7 +122,7 @@
       <div class="hero-meta">
         <div class="meta-item">
           <span class="meta-num">3</span>
-          <span class="meta-label">frentes de receita</span>
+          <span class="meta-label">módulos de operação</span>
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
@@ -195,7 +195,7 @@
             <li>Refino de contorno por diferença de vizinhança (bordas mais fiéis)</li>
             <li>Pós-processamento para reduzir sobreposição residual entre regiões</li>
             <li>Presets operacionais com ajuste determinístico por cenário</li>
-            <li>Fluxo ativo WASM-only sem dependência de inferência</li>
+            <li>Runtime assistivo-local com fallback heurístico e determinístico</li>
             <li>Desambiguação de polígonos sobrepostos por modal (4 fontes)</li>
             <li>Shift+clique para multi-seleção cruzada entre fontes</li>
             <li>Contorno cian unificado para qualquer polígono selecionado</li>
@@ -337,8 +337,8 @@
         </div>
         <div class="cap-card">
           <span class="cap-icon">🧭</span>
-          <h4>Fluxo determinístico WASM-only</h4>
-          <p>Sem dependência de inferência externa no caminho principal de vetorização.</p>
+          <h4>Runtime assistivo-local</h4>
+          <p>Extração base determinística em WASM, refinamento local opcional e fallback controlado quando não há modelo configurado.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">🗺️</span>
@@ -363,7 +363,7 @@
         <div class="cap-card">
           <span class="cap-icon">📑</span>
           <h4>Processamento de PDF</h4>
-          <p>Divisão, união, reordenação e conversão de PDFs sem servidor externo.</p>
+          <p>Divisão, união, reordenação e conversão de PDFs no frontend; o PDFtoArcGIS usa backend local embarcado quando necessário.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">📍</span>
@@ -373,7 +373,7 @@
         <div class="cap-card">
           <span class="cap-icon">🖥️</span>
           <h4>Runtime desktop</h4>
-          <p>Instalador Windows com servidor local, endpoints embarcados e operação offline.</p>
+          <p>Instalador Windows com servidor local e endpoints embarcados; busca, WFS e elevação usam rede apenas quando esses fluxos são acionados.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">🔀</span>
@@ -453,7 +453,7 @@
             <span class="pill pill-neutral">HTTP local</span>
             <span class="pill pill-neutral">APIs auxiliares</span>
           </div>
-          <p>Runtime desktop com servidor HTTP embarcado, endpoints locais e operação autônoma sem internet.</p>
+          <p>Runtime desktop com servidor HTTP embarcado e endpoints locais. O processamento permanece local, enquanto integrações cartográficas externas são opcionais.</p>
         </div>
         <div class="tech-layer">
           <h4 class="tech-layer-title">Processamento Documental</h4>
@@ -559,8 +559,8 @@
         </div>
         <div class="diff-card">
           <div class="diff-num">02</div>
-          <h4>Arquitetura WASM-only</h4>
-          <p>Fluxo principal sem serviços de inferência, com guardrails por preset e comportamento previsível em produção.</p>
+          <h4>Arquitetura assistivo-local</h4>
+          <p>Extração geométrica base em WASM, inferência assistiva no runtime embarcado quando configurada e fallback controlado por preset.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">03</div>
@@ -569,8 +569,8 @@
         </div>
         <div class="diff-card">
           <div class="diff-num">04</div>
-          <h4>Operação desktop offline</h4>
-          <p>Desktop instalável reduz barreira de adoção e simplifica a conversa comercial com clientes que evitam dependência externa excessiva.</p>
+          <h4>Operação desktop local</h4>
+          <p>Desktop instalável reduz barreira de adoção; fluxos de mapa, SIGEF e elevação podem consultar serviços externos quando necessários.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">05</div>
@@ -580,7 +580,7 @@
         <div class="diff-card">
           <div class="diff-num">06</div>
           <h4>OCR e parser no frontend</h4>
-          <p>Documentos técnicos processados localmente — sem envio de dados sensíveis para servidores externos.</p>
+          <p>OCR é executado no frontend e o parsing ocorre no backend local embarcado, sem OCR produtivo em serviço remoto.</p>
         </div>
       </div>
     </div>
