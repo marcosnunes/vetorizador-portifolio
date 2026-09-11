@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="ABB do PDFtoArcGIS e ABB completo do Vetorizador — documentação técnica do fluxo de leitura PDF/SHP, OCR, IA assistiva e exportação." />
+  <title>ABB | Vetorizador</title>
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div id="progress-bar"></div>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+      <a href="../index.html" class="topbar-back">← Portfólio</a>
+      <span class="topbar-sep">/</span>
+      <span class="topbar-title">Engenharia · ABB</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-badge">ABB · PDFtoArcGIS + Vetorizador</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Introdução</span>
+        <nav>
+          <a href="#capa" class="active"><span class="nav-icon">📖</span>Capa</a>
+          <a href="#indice"><span class="nav-icon">📋</span>Índice</a>
+        </nav>
+      </div>
+      <hr class="sidebar-divider" />
+      <div class="sidebar-section">
+        <span class="sidebar-label">ABB</span>
+        <nav>
+          <a href="#pdf-abb"><span class="nav-icon">📄</span>PDFtoArcGIS</a>
+          <a href="#shp-abb"><span class="nav-icon">🧭</span>SHP carregado</a>
+          <a href="#vetorizador-abb"><span class="nav-icon">🌍</span>Vetorizador</a>
+          <a href="#assistive-abb"><span class="nav-icon">⚙️</span>Assistiva</a>
+        </nav>
+      </div>
+      <hr class="sidebar-divider" />
+      <div class="sidebar-section">
+        <span class="sidebar-label">Documentação</span>
+        <nav>
+          <a href="index.html"><span class="nav-icon">←</span>Revista</a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="cover" id="capa">
+        <span class="cover-kicker">Árvore Binária de Busca</span>
+        <h1>ABB do<br /><span>PDFtoArcGIS & Vetorizador</span></h1>
+        <p class="cover-desc">
+          Fluxos de decisão para leitura de PDF, reconhecimento de coordenadas, parsing de SHP,
+          assistência local e consolidação do pipeline de extração geométrica.
+        </p>
+        <div class="cover-meta">
+          <div class="cover-meta-item"><span>🧭</span><span>PDF/SHP</span></div>
+          <div class="cover-meta-item"><span>⚡</span><span>OCR + IA</span></div>
+          <div class="cover-meta-item"><span>📦</span><span>GeoJSON</span></div>
+          <div class="cover-meta-item"><span>🧬</span><span>ABB</span></div>
+        </div>
+      </section>
+
+      <section class="toc" id="indice">
+        <h3>Índice de Fluxos</h3>
+        <ul class="toc-list">
+          <li><a href="#pdf-abb"><span class="toc-num">01</span>ABB do PDFtoArcGIS</a></li>
+          <li><a href="#shp-abb"><span class="toc-num">02</span>ABB do fluxo SHP</a></li>
+          <li><a href="#vetorizador-abb"><span class="toc-num">03</span>ABB completo do Vetorizador</a></li>
+          <li><a href="#assistive-abb"><span class="toc-num">04</span>ABB assistiva local</a></li>
+        </ul>
+      </section>
+
+      <section class="chapter" id="pdf-abb">
+        <span class="chapter-eyebrow">Capítulo 01</span>
+        <h2>ABB do fluxo PDFtoArcGIS</h2>
+        <p class="chapter-lead">
+          O fluxo inicia com o texto extraído do PDF e o texto local alimenta uma árvore binária de decisão:
+          reconhecer o documento como texto coordenável, ativar OCR de reforço ou seguir com o parser/layout.
+        </p>
+
+        <div class="code-block">
+<pre><code>PDF carregado
+└── Extrair texto local
+    ├── Confiança de coordenadas alta?
+    │   ├── Sim → OCR reforço dispensado
+    │   └── Não → OCR reforço ativado
+    └── Parser/layout + fallback
+        ├── callWorkspaceAiExtractor
+        │   ├── pdf-roi-ocr
+        │   ├── pdf-matricula-coordinates
+        │   └── POST /api/pdf-to-geojson
+        └── fallback local + retry por texto focado</code></pre>
+        </div>
+
+        <div class="section">
+          <h3>Decisão dominante</h3>
+          <p>
+            O ramo principal é definido pela pergunta: o texto extraído contém sinal coordenável suficiente para
+            produzir a rota determinística? Se houver evidência, o OCR de reforço pode ser desligado. Caso contrário,
+            a branch de OCR é aberta e o melhor resultado é escolhido pela comparação de confiança.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter" id="shp-abb">
+        <span class="chapter-eyebrow">Capítulo 02</span>
+        <h2>ABB do fluxo SHP carregado</h2>
+        <p class="chapter-lead">
+          O fluxo de arquivo geoespacial é orientado pela existência de geometria polygonal e pela capacidade de
+          recuperar o CRS de forma explícita ou por inferência.
+        </p>
+
+        <div class="code-block">
+<pre><code>SHP carregado
+└── readShapefileArchive
+    ├── carregar .shp/.prj/.dbf
+    └── validar camada principal
+        ├── hasPolygonGeometry?
+        │   ├── Sim → normalizar ring
+        │   └── Não → rejeitar
+        └── CRS explícito?
+            ├── Sim → aplicar CRS
+            └── Não → heurística e fallback</code></pre>
+        </div>
+
+        <div class="section">
+          <h3>Fecho geométrico</h3>
+          <p>
+            Se a camada contém estrutura confiável e pelo menos três vértices válidos, a geometria é preparada
+            para revisão e exportação. Caso contrário, o fluxo oferece diagnóstico para entrada inadequada.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter" id="vetorizador-abb">
+        <span class="chapter-eyebrow">Capítulo 03</span>
+        <h2>ABB completo do Vetorizador</h2>
+        <p class="chapter-lead">
+          A visão holística combina a origem do arquivo, o manipulado no shell, o fluxo de extração e o produto de
+          saída com o mesmo contrato de `GeoJSON Polygon` fechado.
+        </p>
+
+        <div class="code-block">
+<pre><code>Vetorizador
+└── Arquivo de entrada
+    ├── PDF → PDFtoArcGIS
+    │   ├── OCR frontend
+    │   ├── parser/layout + fallback
+    │   └── IA assistiva local
+    └── SHP → SHPtoGeoJSON
+        ├── reader/local normalizer
+        ├── CRS + ring
+        └── exportação/revisão
+
+└── GeoJSON Polygon fechado
+    └── validação + revisão + exportação</code></pre>
+        </div>
+      </section>
+
+      <section class="chapter" id="assistive-abb">
+        <span class="chapter-eyebrow">Capítulo 04</span>
+        <h2>ABB do motor assistivo local</h2>
+        <p class="chapter-lead">
+          A assistência local funciona como um reforço de contexto para OCR e extração de coordenadas, com rota
+          dedicada ao PDF e snippets de texto candidatos.
+        </p>
+
+        <div class="code-block">
+<pre><code>Assistive Local Runtime
+└── askLocalAssistivePdfTask
+    ├── pdf-roi-ocr
+    │   └── melhora texto OCR
+    └── pdf-matricula-coordinates
+        └── recupera linhas coordenáveis
+
+└── POST /api/desktop/assist-inference</code></pre>
+        </div>
+      </section>
+
+      <section class="chapter">
+        <span class="chapter-eyebrow">Conclusão</span>
+        <h2>Arquitetura de decisão</h2>
+        <p class="chapter-lead">
+          A ABB do Vetorizador deve ser lida como uma árvore de decisões baseada em tipo de entrada, sinal
+          coordenável, presença de CRS e capacidade do assistivo local em enriquecer a leitura.
+        </p>
+        <div class="callout">
+          <strong>Contrato:</strong> a saída central continua sendo GeoJSON Polygon fechado com anel de coordenadas,
+          com o processamento de referência deixando o OCR no frontend e o parser normalizador no backend local.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

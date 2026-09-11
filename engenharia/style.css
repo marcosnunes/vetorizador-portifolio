@@ -231,6 +231,33 @@ body.sidebar-open {
   max-width: 900px;
 }
 
+/* ── CODE BLOCKS / ABB ── */
+.code-block {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin: 26px 0;
+  overflow-x: auto;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.code-block pre {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+.code-block code {
+  background: transparent;
+  color: var(--text);
+}
+
 /* ── CHAPTERS ── */
 .chapter {
   margin-bottom: 80px;
