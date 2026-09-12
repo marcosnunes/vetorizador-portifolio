@@ -61,7 +61,8 @@
             <span class="badge">Assistivo-local</span>
             <span class="badge">B2B Desktop</span>
             <span class="badge">GeoJSON · Shapefile</span>
-            <span class="badge">Electron v43</span>
+            <span class="badge">Electron v44</span>
+            <span class="badge">PaddleOCR local</span>
             <span class="badge">WinApp CLI</span>
             <span class="badge">NSIS + MSIX</span>
           </div>
@@ -220,6 +221,8 @@
             <li>União de múltiplos arquivos</li>
             <li>Conversão JPG ↔ PDF</li>
             <li>Divisão por critério customizado</li>
+            <li>OCR local compartilhado para páginas e tabelas</li>
+            <li>Exportação do resultado OCR para Word/DOCX</li>
             <li>Operação 100% local no desktop</li>
           </ul>
         </article>
@@ -228,11 +231,12 @@
           <h3>PDFtoArcGIS</h3>
           <p class="module-desc">Abre espaço para casos de uso de maior valor agregado ao transformar documento técnico em dado estruturado, com auditoria e rastreabilidade.</p>
           <ul class="module-features">
-            <li>OCR no frontend (Tesseract.js)</li>
+            <li>OCR local com PaddleOCR e leitura estruturada de tabelas</li>
             <li>Parser determinístico de coordenadas</li>
-            <li>Saída GeoJSON para ArcGIS e QGIS</li>
+            <li>Saída GeoJSON Polygon com anel fechado</li>
+            <li>Exportação SHP, CSV validado e relatório</li>
             <li>Fallback offline para Windows</li>
-            <li>Pipeline auditável sem IA generativa</li>
+            <li>IA assistiva local para reforço de interpretação</li>
           </ul>
         </article>
       </div>
@@ -458,12 +462,12 @@
         <div class="tech-layer">
           <h4 class="tech-layer-title">Processamento Documental</h4>
           <div class="tech-pills">
-            <span class="pill pill-neutral">Tesseract.js</span>
+            <span class="pill pill-neutral">PaddleOCR local</span>
             <span class="pill pill-neutral">PDF.js</span>
             <span class="pill pill-neutral">pdf-lib</span>
             <span class="pill pill-neutral">jsPDF</span>
           </div>
-          <p>OCR frontend, renderização, manipulação e geração de PDF sem envio de dados ao servidor.</p>
+          <p>OCR local compartilhado, renderização, manipulação e geração de PDF sem envio de dados a serviços externos.</p>
         </div>
         <div class="tech-layer">
           <h4 class="tech-layer-title">Persistência Local</h4>
@@ -579,8 +583,8 @@
         </div>
         <div class="diff-card">
           <div class="diff-num">06</div>
-          <h4>OCR e parser no frontend</h4>
-          <p>OCR é executado no frontend e o parsing ocorre no backend local embarcado, sem OCR produtivo em serviço remoto.</p>
+          <h4>OCR local e parser determinístico</h4>
+          <p>O PaddleOCR roda localmente em runtime Python embarcado, preserva linhas e caixas de texto, e o parsing ocorre no backend local com validação geométrica.</p>
         </div>
       </div>
     </div>
@@ -618,7 +622,7 @@
             <tr><td>Leaflet</td><td><span class="lic-badge bsd">BSD-2</span></td><td>Mapa interativo</td></tr>
             <tr><td>Leaflet.Draw</td><td><span class="lic-badge mit">MIT</span></td><td>Desenho de ROI no mapa</td></tr>
             <tr><td>Turf.js</td><td><span class="lic-badge mit">MIT</span></td><td>Operações geoespaciais</td></tr>
-            <tr><td>Tesseract.js</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>OCR no frontend</td></tr>
+            <tr><td>PaddleOCR / PaddlePaddle</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>OCR local compartilhado</td></tr>
             <tr><td>PDF.js</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>Renderização de PDF</td></tr>
             <tr><td>shpjs</td><td><span class="lic-badge mit">MIT</span></td><td>Leitura de Shapefile</td></tr>
             <tr><td>shp-write</td><td><span class="lic-badge mit">MIT</span></td><td>Exportação de Shapefile</td></tr>
