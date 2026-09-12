@@ -58,13 +58,14 @@
           <div class="badge-row">
             <span class="badge">Desktop Windows</span>
             <span class="badge">Rust / WASM</span>
-            <span class="badge">Assistivo-local</span>
+            <span class="badge">Base WASM + assistiva local</span>
             <span class="badge">B2B Desktop</span>
             <span class="badge">GeoJSON · Shapefile</span>
             <span class="badge">Electron v44</span>
             <span class="badge">PaddleOCR local</span>
             <span class="badge">WinApp CLI</span>
             <span class="badge">NSIS + MSIX</span>
+            <span class="badge">Atualizado em setembro/2026</span>
           </div>
           <p class="hero-kicker">Software operacional para times privados que precisam entregar mais</p>
           <h1 class="hero-title">
@@ -196,7 +197,7 @@
             <li>Refino de contorno por diferença de vizinhança (bordas mais fiéis)</li>
             <li>Pós-processamento para reduzir sobreposição residual entre regiões</li>
             <li>Presets operacionais com ajuste determinístico por cenário</li>
-            <li>Runtime assistivo-local com fallback heurístico e determinístico</li>
+            <li>Base geométrica em WASM com reforço assistivo local opcional e fallback determinístico</li>
             <li>Desambiguação de polígonos sobrepostos por modal (4 fontes)</li>
             <li>Shift+clique para multi-seleção cruzada entre fontes</li>
             <li>Contorno cian unificado para qualquer polígono selecionado</li>
@@ -452,7 +453,7 @@
         <div class="tech-layer">
           <h4 class="tech-layer-title">Desktop e Backend</h4>
           <div class="tech-pills">
-            <span class="pill pill-electron">Electron v43</span>
+            <span class="pill pill-electron">Electron v44</span>
             <span class="pill pill-neutral">Node.js 20</span>
             <span class="pill pill-neutral">HTTP local</span>
             <span class="pill pill-neutral">APIs auxiliares</span>
@@ -563,8 +564,8 @@
         </div>
         <div class="diff-card">
           <div class="diff-num">02</div>
-          <h4>Arquitetura assistivo-local</h4>
-          <p>Extração geométrica base em WASM, inferência assistiva no runtime embarcado quando configurada e fallback controlado por preset.</p>
+          <h4>Arquitetura local-first</h4>
+          <p>Extração geométrica base em WASM com assistiva local opcional no runtime embarcado, sempre mantendo fallback controlado por preset e sem substituir a geração determinística principal.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">03</div>
