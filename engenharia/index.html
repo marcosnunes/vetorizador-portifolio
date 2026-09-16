@@ -639,7 +639,12 @@
                 </tr>
                 <tr>
                   <td><code>/api/proxy/incra-wfs</code></td>
-                  <td>WFS SIGEF INCRA por UF</td>
+                  <td>WFS Acervo Fundiário INCRA por UF e tema</td>
+                  <td>CORS/CSP no renderer</td>
+                </tr>
+                <tr>
+                  <td><code>/api/proxy/sicar-wfs</code></td>
+                  <td>WFS GeoServer SICAR (CAR) por UF</td>
                   <td>CORS/CSP no renderer</td>
                 </tr>
                 <tr>
@@ -668,19 +673,23 @@
         </div>
 
         <div class="section">
-          <h3>SIGEF & Memorial (módulos independentes)</h3>
+          <h3>INCRA, SIGEF, SICAR & Memorial (módulos independentes)</h3>
           <div class="card-grid">
             <div class="card">
               <span class="card-icon">📡</span>
               <h4>sigef-wfs.js</h4>
-              <p>Consulta WFS público INCRA, detecção automática de UF pela ROI, normalização GeoJSON, roteamento pelo
-                proxy desktop.</p>
+              <p>Consulta WFS completa ao Acervo Fundiário INCRA (SIGEF Público/Privado, SNCI, Assentamentos, Quilombolas, Terra Legal), detecção automática de UF pela ROI, normalização GeoJSON e proxy local.</p>
+            </div>
+            <div class="card">
+              <span class="card-icon">🌿</span>
+              <h4>sicar-wfs.js</h4>
+              <p>Consulta WFS público ao SICAR (Cadastro Ambiental Rural), detecção de UF por centróide da ROI, extração de código CAR e conversão GML para GeoJSON.</p>
             </div>
             <div class="card">
               <span class="card-icon">📜</span>
               <h4>sigef-memorial.js</h4>
               <p>Comparação de vértices (haversine 5 m), herança de coordenadas SIGEF com prioridade por QRCODE em
-                ambiguidades, cota Z via SRTM, geração de DOCX/XLSX e exportação SHP confrontado.</p>
+                ambiguidades, cota Z via SRTM, geração de DOCX/XLSX e exportação SHP confrontado com sanitização de nomes curtos.</p>
             </div>
           </div>
         </div>
