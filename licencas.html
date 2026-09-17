@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Licenças e componentes de terceiros do Vetorizador" />
+  <meta name="theme-color" content="#ff9800" />
+  <title>Licenças | Vetorizador</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="policy-page">
+  <main class="policy-main">
+    <div class="container policy-container">
+      <a class="policy-back" href="index.html">← Voltar ao portfólio</a>
+
+      <header class="policy-header">
+        <span class="policy-kicker">Documentação legal</span>
+        <h1>Licenças do Vetorizador</h1>
+        <p>
+          Esta página reúne a declaração de licença principal do produto, a licença do núcleo de vetorização e os principais componentes de terceiros que compõem a solução.
+        </p>
+        <p class="policy-updated">Última atualização: 17/09/2026</p>
+      </header>
+
+      <section class="policy-card">
+        <h2>1. Licença principal do projeto</h2>
+        <p>
+          O código-fonte principal do Vetorizador é distribuído sob a <strong>licença MIT</strong>.
+        </p>
+
+        <pre class="license-pre">MIT License
+
+Copyright (c) 2026 Marcos Roberto Nunes Lindolpho
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+
+        <p>
+          O texto completo está em <code>LICENSE</code> na raiz do repositório.
+        </p>
+
+        <h2>2. Núcleo de vetorização — <code>vetoriza/</code></h2>
+        <p>
+          O módulo <code>vetoriza/</code> está disponível sob <strong>dupla licença MIT e Apache-2.0</strong>, a critério do usuário.
+        </p>
+        <ul>
+          <li>Texto da licença MIT: <code>vetoriza/LICENSE_MIT</code></li>
+          <li>Texto da licença Apache-2.0: <code>vetoriza/LICENSE_APACHE</code></li>
+        </ul>
+
+        <h2>3. Componentes de terceiros</h2>
+        <div class="license-table-wrap">
+          <table class="license-table">
+            <thead>
+              <tr>
+                <th>Biblioteca</th>
+                <th>Licença</th>
+                <th>Uso no produto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Leaflet</td><td><span class="lic-badge bsd">BSD-2</span></td><td>Mapa interativo principal</td></tr>
+              <tr><td>Leaflet.Draw</td><td><span class="lic-badge mit">MIT</span></td><td>Desenho de ROI no mapa</td></tr>
+              <tr><td>Turf.js</td><td><span class="lic-badge mit">MIT</span></td><td>Operações geoespaciais</td></tr>
+              <tr><td>PaddleOCR</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>OCR local compartilhado</td></tr>
+              <tr><td>PDF.js</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>Renderização de PDF</td></tr>
+              <tr><td>shpjs</td><td><span class="lic-badge mit">MIT</span></td><td>Leitura de Shapefile</td></tr>
+              <tr><td>shp-write</td><td><span class="lic-badge mit">MIT</span></td><td>Exportação de Shapefile</td></tr>
+              <tr><td>Electron</td><td><span class="lic-badge mit">MIT</span></td><td>Runtime desktop para Windows</td></tr>
+              <tr><td>electron-builder</td><td><span class="lic-badge mit">MIT</span></td><td>Empacotamento Windows</td></tr>
+              <tr><td>Vite</td><td><span class="lic-badge mit">MIT</span></td><td>Bundler e desenvolvimento</td></tr>
+              <tr><td>wasm-bindgen</td><td><span class="lic-badge mit">MIT/Apache</span></td><td>Bindings JavaScript ↔ WebAssembly</td></tr>
+              <tr><td>wasm-pack</td><td><span class="lic-badge mit">MIT/Apache</span></td><td>Build do módulo Rust para WASM</td></tr>
+              <tr><td>pdf-lib</td><td><span class="lic-badge mit">MIT</span></td><td>Manipulação e geração de PDF</td></tr>
+              <tr><td>jsPDF</td><td><span class="lic-badge mit">MIT</span></td><td>Geração de PDF</td></tr>
+              <tr><td>pdf-merger-js</td><td><span class="lic-badge mit">MIT</span></td><td>União de arquivos PDF</td></tr>
+              <tr><td>canvg</td><td><span class="lic-badge mit">MIT</span></td><td>Renderização SVG em canvas</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>4. Dependências de desenvolvimento</h2>
+        <ul>
+          <li>ESLint — MIT</li>
+          <li>@eslint/js — MIT</li>
+          <li>globals — MIT</li>
+          <li>png-to-ico — MIT</li>
+          <li>PaddlePaddle — Apache-2.0</li>
+        </ul>
+
+        <h2>5. Notas sobre redistribuição</h2>
+        <ol>
+          <li>Mantenha o aviso de copyright e a licença MIT nas cópias do código-fonte principal.</li>
+          <li>Se redistribuir o módulo <code>vetoriza/</code>, inclua os arquivos <code>LICENSE_MIT</code> e <code>LICENSE_APACHE</code>.</li>
+          <li>Respeite as licenças individuais de cada dependência de terceiros listadas acima.</li>
+        </ol>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-mirror" aria-hidden="true"></div>
+        <div class="footer-intro">
+          <div class="footer-brand">
+            <span class="logo-icon">⬡</span>
+            <span>Vetorizador</span>
+          </div>
+          <p class="footer-tagline">Software desktop para acelerar produção geoespacial e documental em operações privadas.</p>
+          <p class="footer-note">Posicionado para consultorias, engenharia, utilities e operações técnicas que precisam reduzir retrabalho e padronizar entregas.</p>
+        </div>
+        <div class="footer-column">
+          <span class="footer-heading">Legal</span>
+          <div class="footer-links">
+            <a href="index.html#inicio">Sobre</a>
+            <a href="licencas.html">Licenças</a>
+            <a href="privacy-policy.html">Política de privacidade</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Marcos Roberto Nunes Lindolpho — Distribuído sob licença MIT</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
