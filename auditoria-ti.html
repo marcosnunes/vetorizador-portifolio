@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dossiê técnico de segurança, arquitetura e conformidade do Vetorizador PRO para homologação de TI." />
+  <meta name="theme-color" content="#ff9800" />
+  <title>Auditoria de TI | Vetorizador</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="policy-page audit-page">
+  <main class="policy-main">
+    <div class="container policy-container audit-container">
+      <a class="policy-back" href="index.html">← Voltar ao portfólio</a>
+
+      <header class="policy-header audit-header">
+        <span class="policy-kicker">Segurança e conformidade</span>
+        <h1>Dossiê de Auditoria para Homologação de TI</h1>
+        <p>Informações técnicas para avaliação corporativa da arquitetura, superfície de rede, persistência, segurança, licenciamento e instalação do Vetorizador PRO.</p>
+        <div class="audit-meta" aria-label="Identificação do dossiê">
+          <span><strong>Versão:</strong> 1.3.6</span>
+          <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
+          <span><strong>Atualizado:</strong> 19/09/2026</span>
+        </div>
+      </header>
+
+      <article class="policy-card audit-card">
+        <section>
+          <h2>1. Sumário executivo</h2>
+          <p>O Vetorizador PRO é um aplicativo desktop para Windows, construído sobre Electron, que auxilia na extração assistida de polígonos a partir de imagens de mapa, PDFs de matrícula e shapefiles, com apoio de um núcleo determinístico em Rust/WebAssembly.</p>
+          <p>A aplicação adota persistência local-first: não há backend em nuvem próprio, telemetria enviada ao fabricante nem sincronização remota dos dados do usuário. As comunicações externas são chamadas pontuais a serviços públicos governamentais e de geocodificação, detalhadas na Seção 3.</p>
+        </section>
+
+        <section>
+          <h2>2. Arquitetura da solução</h2>
+          <ul>
+            <li><strong>Runtime:</strong> Electron 44.x, com Chromium e Node.js empacotados.</li>
+            <li><strong>Frontend:</strong> HTML, CSS e JavaScript compilados via Vite, com <code>contextIsolation: true</code>, <code>nodeIntegration: false</code> e <code>sandbox: true</code>.</li>
+            <li><strong>Núcleo geométrico:</strong> módulo Rust compilado para WebAssembly, executado localmente.</li>
+            <li><strong>Backend embarcado:</strong> servidor HTTP Node.js vinculado somente a <code>127.0.0.1</code>, sem exposição à rede.</li>
+            <li><strong>IA assistiva local:</strong> OCR e visão computacional executados no dispositivo, sem serviço de IA em nuvem.</li>
+            <li><strong>Sem backend proprietário remoto:</strong> arquivos e resultados operacionais não são enviados ao fabricante.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>3. Superfície de comunicação externa</h2>
+          <p>As chamadas usam a pilha de rede do Chromium por meio de <code>electron.net</code>, respeitando proxy e PAC configurados no Windows.</p>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Destino</th><th>Protocolo</th><th>Finalidade</th><th>Dados enviados</th></tr></thead>
+              <tbody>
+                <tr><td><code>geoserver.car.gov.br</code></td><td>HTTPS/443</td><td>Consulta WFS pública do SICAR</td><td>Bounding box e UF</td></tr>
+                <tr><td><code>acervofundiario.incra.gov.br</code></td><td>HTTPS/443</td><td>Consulta WFS do SIGEF/INCRA</td><td>Bounding box e UF</td></tr>
+                <tr><td><code>nominatim.openstreetmap.org</code></td><td>HTTPS/443</td><td>Geocodificação</td><td>Texto de busca ou latitude/longitude</td></tr>
+                <tr><td><code>api.opentopodata.org</code></td><td>HTTPS/443</td><td>Consulta altimétrica SRTM</td><td>Lista de coordenadas</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="audit-check-list">
+            <li>Imagens, PDFs, shapefiles e geometrias vetorizadas não são enviados a esses serviços.</li>
+            <li>O servidor local não é acessível por outras máquinas da rede.</li>
+            <li>Não há analytics, telemetria, crash reporting ou verificação remota de licença.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>4. Persistência e tratamento de dados</h2>
+          <ul>
+            <li>Execuções, presets, camadas e delimitações de APP são mantidos localmente em IndexedDB e localStorage.</li>
+            <li>Não existe sincronização, backup remoto ou banco central do fabricante.</li>
+            <li>GeoJSON, Shapefile, DOCX, PDF e planilhas são gerados localmente, sob ação do usuário.</li>
+            <li>Documentos e dados geoespaciais permanecem sob controle da instalação local.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>5. Segurança do runtime Electron</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Controle</th><th>Configuração</th><th>Efeito</th></tr></thead>
+              <tbody>
+                <tr><td><code>contextIsolation</code></td><td>true</td><td>Isola a página do contexto privilegiado do Electron.</td></tr>
+                <tr><td><code>nodeIntegration</code></td><td>false</td><td>Impede acesso direto do renderer às APIs Node.js.</td></tr>
+                <tr><td><code>sandbox</code></td><td>true</td><td>Reduz a superfície de ataque do processo de renderização.</td></tr>
+                <tr><td>API privilegiada</td><td><code>contextBridge</code></td><td>Expõe somente operações específicas e controladas.</td></tr>
+                <tr><td>Atualização</td><td>Sem auto-update</td><td>Mantém instalação e atualização sob controle de TI.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>6. Licenciamento e modelo comercial</h2>
+          <ul>
+            <li>Código-fonte próprio distribuído sob licença MIT.</li>
+            <li>Núcleo Rust/WASM sob dupla licença MIT/Apache-2.0.</li>
+            <li>Distribuição gratuita, sem bloqueio comercial ou validação remota de licença.</li>
+          </ul>
+          <p>Consulte a <a href="licencas.html">relação completa de licenças e componentes</a>.</p>
+        </section>
+
+        <section>
+          <h2>7. Dependências principais</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Componente</th><th>Licença</th><th>Uso</th></tr></thead>
+              <tbody>
+                <tr><td>Electron</td><td>MIT</td><td>Runtime desktop</td></tr>
+                <tr><td>Leaflet / Leaflet.Draw</td><td>BSD-2 / MIT</td><td>Mapa e desenho de ROI</td></tr>
+                <tr><td>Turf.js</td><td>MIT</td><td>Operações geoespaciais</td></tr>
+                <tr><td>PDF.js</td><td>Apache-2.0</td><td>Renderização de PDF</td></tr>
+                <tr><td>shpjs / shp-write</td><td>MIT</td><td>Leitura e exportação de Shapefile</td></tr>
+                <tr><td>PaddleOCR / PaddlePaddle</td><td>Apache-2.0</td><td>OCR e assistência local</td></tr>
+                <tr><td>ExcelJS</td><td>MIT</td><td>Exportação de planilhas</td></tr>
+                <tr><td>sharp</td><td>Apache-2.0</td><td>Processamento de imagem local</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>8. Vulnerabilidades conhecidas</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Escopo</th><th>Ferramenta</th><th>Resultado na data do dossiê</th></tr></thead>
+              <tbody>
+                <tr><td>Aplicativo principal</td><td><code>npm audit --omit=dev</code></td><td><span class="audit-status">0 vulnerabilidades</span></td></tr>
+                <tr><td>Serviço auxiliar <code>api/</code></td><td><code>npm audit --omit=dev</code></td><td><span class="audit-status">0 vulnerabilidades</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>A vulnerabilidade anteriormente associada a <code>xlsx@0.18.5</code> foi eliminada com a migração para <code>exceljs@4.4.0</code>.</p>
+        </section>
+
+        <section>
+          <h2>9. Instalação e privilégios</h2>
+          <ul>
+            <li>Instalador NSIS por usuário, sem exigir privilégios administrativos.</li>
+            <li>Pacote MSIX assinado disponível para Microsoft Store ou sideload corporativo.</li>
+            <li>Não instala serviços do Windows, tarefas agendadas ou drivers.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>10. Checklist para avaliação de TI</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table audit-check-table">
+              <thead><tr><th>Item</th><th>Situação</th></tr></thead>
+              <tbody>
+                <tr><td>Instalação e execução sem privilégios administrativos</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Somente loopback local, sem portas expostas à rede</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Comunicação externa restrita a HTTPS e destinos identificados</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Proxy corporativo resolvido pela pilha do Chromium</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Sem telemetria ou envio de arquivos ao fabricante</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Operação local sem dependência de nuvem</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Renderer isolado e em sandbox</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Sem atualização automática silenciosa</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Certificado do pacote MSIX</td><td><span class="audit-status audit-status-review">Revalidar antes da submissão</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="audit-note">
+          Este material apoia a homologação interna. Recomenda-se anexar a relação de licenças, o relatório atualizado de <code>npm audit</code> e, quando aplicável, os hashes e o certificado do instalador avaliado.
+        </aside>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-mirror" aria-hidden="true"></div>
+        <div class="footer-intro">
+          <div class="footer-brand"><span class="logo-icon">⬡</span><span>Vetorizador</span></div>
+          <p class="footer-tagline">Software desktop para acelerar produção geoespacial e documental em operações privadas.</p>
+        </div>
+        <div class="footer-column">
+          <span class="footer-heading">Legal</span>
+          <div class="footer-links">
+            <a href="index.html#inicio">Sobre</a>
+            <a href="privacy-policy.html">Política de privacidade</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom"><p class="footer-copy">© 2026 Marcos Roberto Nunes Lindolpho — Distribuído sob licença MIT</p></div>
+    </div>
+  </footer>
+</body>
+
+</html>

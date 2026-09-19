@@ -1070,6 +1070,11 @@ body {
   text-decoration: underline;
 }
 
+.compliance-audit-link {
+  display: inline-block;
+  margin-top: 14px;
+}
+
 .third-party-title {
   font-family: var(--font-display);
   font-size: 1.2rem;
@@ -1545,4 +1550,168 @@ body {
 
 .policy-card a:hover {
   text-decoration: underline;
+}
+
+.policy-page .footer-top {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1.4fr) minmax(0, 1fr);
+}
+
+.policy-page .footer-intro {
+  justify-self: center;
+}
+
+.policy-page .footer-column {
+  justify-self: end;
+}
+
+@media (max-width: 900px) {
+  .policy-page .footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .policy-page .footer-mirror {
+    display: none;
+  }
+
+  .policy-page .footer-intro,
+  .policy-page .footer-column {
+    justify-self: start;
+  }
+}
+
+/* ===== IT AUDIT PAGE ===== */
+.audit-container {
+  max-width: 1080px;
+}
+
+.audit-header {
+  max-width: 900px;
+}
+
+.audit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 18px;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+
+.audit-card section + section {
+  margin-top: 28px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.audit-card code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.88em;
+}
+
+.audit-table-wrap {
+  width: 100%;
+  margin: 14px 0 18px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.audit-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.audit-table th,
+.audit-table td {
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.audit-table th {
+  background: var(--amber-light);
+  color: var(--amber-text);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.audit-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.audit-status {
+  color: #15803d;
+  font-weight: 800;
+}
+
+.audit-status::before {
+  content: "✓ ";
+}
+
+.audit-status-review {
+  color: #a16207;
+}
+
+.audit-status-review::before {
+  content: "! ";
+}
+
+.audit-check-list li::marker {
+  color: #16a34a;
+}
+
+.audit-note {
+  margin-top: 30px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--primary);
+  background: var(--amber-light);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .audit-card {
+    padding: 22px 18px;
+  }
+
+  .audit-table {
+    min-width: 620px;
+  }
+}
+
+@media print {
+  .audit-page {
+    background: #fff;
+  }
+
+  .audit-page .policy-main {
+    padding: 0;
+  }
+
+  .audit-page .policy-back,
+  .audit-page .footer {
+    display: none;
+  }
+
+  .audit-page .policy-card {
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .audit-page .audit-table-wrap {
+    overflow: visible;
+  }
+
+  .audit-page .audit-table {
+    min-width: 0;
+  }
 }
