@@ -162,14 +162,15 @@
                 <tr><td>Operação local sem dependência de nuvem</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Renderer isolado e em sandbox</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Sem atualização automática silenciosa</td><td><span class="audit-status">Atendido</span></td></tr>
-                <tr><td>Certificado do pacote MSIX</td><td><span class="audit-status audit-status-review">Revalidar antes da submissão</span></td></tr>
+                <tr><td>Assinatura do MSIX 1.3.5.0</td><td><span class="audit-status">Válida e confiável no ambiente verificado</span></td></tr>
+                <tr><td>Pacote MSIX 1.3.x.0</td><td><span class="audit-status audit-status-review">Gerar e validar para a próxima submissão</span></td></tr>
               </tbody>
             </table>
           </div>
         </section>
 
         <aside class="audit-note">
-          Este material apoia a homologação interna. Recomenda-se anexar a relação de licenças, o relatório atualizado de <code>npm audit</code> e, quando aplicável, os hashes e o certificado do instalador avaliado.
+          O pacote <code>VetorizadorPRO_1.3.5_x64.msix</code> possui assinatura válida, Publisher compatível com o manifesto e certificado vigente até 02/08/2029. O certificado é autoassinado e está confiado no ambiente local verificado; instalações corporativas por sideload dependem da distribuição desse certificado pelas políticas de TI. Pacotes publicados pela Microsoft Store recebem a assinatura do fluxo da Store. A versão 1.3.6.0 deve repetir essa validação após ser empacotada.
         </aside>
       </article>
     </div>
