@@ -1239,45 +1239,38 @@
           <h3>Fronteira de risco assumida</h3>
               <strong>Escopo técnico:</strong> a exceção <code>wasm-unsafe-eval</code> está presente apenas para permitir a instanciação do módulo Rust/WASM local. Isso não reabre origens remotas nem reintroduz dependências CDN no runtime desktop.
         </div>
-
-        <div class="callout callout-cyan">
-          <!-- ═══ CAPÍTULO 20: ESCALA & ESTRUTURA ═══ -->
-          <section class="chapter" id="escala-estrutura">
       </section>
-            <h2>Escala & Estrutura</h2>
+
       <!-- ═══ CAPÍTULO 18: RASTREABILIDADE RF ═══ -->
       <section class="chapter" id="requisitos">
-              <h3>Estado da modularização</h3>
+        <span class="chapter-eyebrow">Capítulo 18</span>
         <h2>Rastreabilidade de Requisitos Funcionais</h2>
         <p class="chapter-lead">Referência: Setembro 2026 · <code>win-desktop-main</code></p>
 
         <div class="stat-grid">
-                      <th>Área</th>
-          <div class="stat-item"><span class="stat-num" style="color:#00e676">30</span><span
-              class="stat-label">Implementados</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#ffc107">0</span><span
-              class="stat-label">Parciais</span></div>
-          <div class="stat-item"><span class="stat-num" style="color:#ff5252">0</span><span
-              class="stat-label">Pendentes</span></div>
-                      <td>Módulos de suporte</td>
+          <div class="stat-item"><span class="stat-num">30</span><span class="stat-label">RF mapeados</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#00e676">30</span><span class="stat-label">Implementados</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#ffc107">0</span><span class="stat-label">Parciais</span></div>
+          <div class="stat-item"><span class="stat-num" style="color:#ff5252">0</span><span class="stat-label">Pendentes</span></div>
+        </div>
 
-                      <td>5 módulos com fronteira explícita ao redor de <code>app.js</code>: AppBoundaryManager, FeatureFlagManager, PresetManager,
+        <div class="table-wrap" style="margin-top: 24px;">
           <table>
             <thead>
               <tr>
-                      <td>Extração complementar</td>
+                <th>ID</th>
                 <th>Nome</th>
-                      <td>StateManager em callsites remanescentes e VectorizationPipeline com extração adicional do core por
-                        subetapas</td>
+                <th>Status</th>
+                <th>Área</th>
               </tr>
             </thead>
-                      <td>Contratos documentados</td>
+            <tbody>
               <tr>
                 <td>RF-01</td>
                 <td>Busca cartográfica</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>app.js</code> → Nominatim</td>
-                      <td>Observabilidade desktop</td>
+              </tr>
               <tr>
                 <td>RF-02</td>
                 <td>Captura de coordenada</td>
