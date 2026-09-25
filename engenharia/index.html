@@ -445,12 +445,14 @@
 
         <div class="section">
           <h3>Singleton</h3>
-          <p>Evidências: <code>app-boundary-manager.js</code> mantém estado da camada de referência em escopo de módulo;
-            <code>CONFIG</code> em <code>app.js</code> é fonte única de parâmetros; cache de módulos dinâmicos em
-            <code>_modulosDinamicos</code>.</p>
+          <p>Evidências: <code>app-context.js</code> centraliza a configuração de runtime, o registro explícito das
+            dependências de bootstrap e o cache de módulos dinâmicos; <code>app.js</code> registra
+            <code>appBoundaryManager</code> e <code>presetManager</code> no <code>AppContext</code>; 
+            <code>app-boundary-manager.js</code> encapsula o estado da camada de referência por instância de factory.</p>
           <div class="callout callout-warn">
-            <strong>Limitação:</strong> uso acoplado a variáveis globais dificulta testes isolados e injeção de
-            dependência. Melhoria recomendada: introduzir <code>AppContext</code> explícito.
+            <strong>Composição atual:</strong> o runtime opera com um singleton explícito de composição em
+            <code>AppContext</code>, enquanto <code>app.js</code> permanece como orquestrador principal do fluxo e
+            concentra parte relevante da coordenação entre módulos e das mutações de <code>CONFIG</code>.
           </div>
         </div>
 
