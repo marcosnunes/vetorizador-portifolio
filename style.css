@@ -269,6 +269,62 @@ body {
   margin-bottom: 22px;
 }
 
+.hero-security-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 700px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.28);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
+}
+
+.hero-security-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hero-security-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.hero-security-copy strong {
+  color: var(--white);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.hero-security-link,
+.section-doc-link,
+.proof-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.hero-security-link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--gradient);
+  box-shadow: 0 12px 24px rgba(239, 108, 0, 0.28);
+}
+
+.hero-security-link:hover {
+  background: var(--gradient-hover);
+}
+
 .btn-primary {
   background: var(--gradient);
   color: var(--white);
@@ -520,7 +576,7 @@ body {
 
 .proof-strip {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
 }
 
@@ -544,6 +600,17 @@ body {
   font-size: 0.86rem;
   color: rgba(255, 255, 255, 0.62);
   line-height: 1.6;
+}
+
+.proof-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: #ffd180;
+}
+
+.proof-link:hover {
+  color: #ffe7be;
+  text-decoration: underline;
 }
 
 .section {
@@ -629,6 +696,24 @@ body {
   max-width: 560px;
   margin: 0 auto;
   line-height: 1.72;
+}
+
+.section-doc-link-wrap {
+  margin-top: 16px;
+}
+
+.section-doc-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--gradient);
+  box-shadow: 0 12px 22px rgba(239, 108, 0, 0.2);
+}
+
+.section-doc-link:hover {
+  background: var(--gradient-hover);
 }
 
 .modules-grid {
@@ -1188,6 +1273,15 @@ body {
 }
 
 @media (max-width: 720px) {
+  .hero-security-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-security-link {
+    width: 100%;
+  }
+
   .engenharia-cta-section {
     padding-top: 48px;
     padding-bottom: 32px;

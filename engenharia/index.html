@@ -92,6 +92,7 @@
       <div class="sidebar-section">
         <span class="sidebar-label">Qualidade & Escala</span>
         <nav>
+          <a href="#seguranca-runtime"><span class="nav-icon">🛡️</span>Segurança Runtime</a>
           <a href="#requisitos"><span class="nav-icon">✅</span>Rastreabilidade RF</a>
           <a href="#rnf"><span class="nav-icon">📐</span>RNF</a>
           <a href="#evolucao"><span class="nav-icon">🚀</span>Evolução & Escala</a>
@@ -147,10 +148,11 @@
           <li><a href="#persistencia"><span class="toc-num">14</span>Persistência Local</a></li>
           <li><a href="#wasm-contract"><span class="toc-num">15</span>Contrato WASM</a></li>
           <li><a href="#diag"><span class="toc-num">16</span>Sistema de Diagnóstico</a></li>
-          <li><a href="#requisitos"><span class="toc-num">17</span>Rastreabilidade RF</a></li>
-          <li><a href="#rnf"><span class="toc-num">18</span>Requisitos Não Funcionais</a></li>
-          <li><a href="#evolucao"><span class="toc-num">19</span>Evolução & Escala</a></li>
-          <li><a href="#build"><span class="toc-num">20</span>Build & Runbooks</a></li>
+          <li><a href="#seguranca-runtime"><span class="toc-num">17</span>Segurança do Runtime</a></li>
+          <li><a href="#requisitos"><span class="toc-num">18</span>Rastreabilidade RF</a></li>
+          <li><a href="#rnf"><span class="toc-num">19</span>Requisitos Não Funcionais</a></li>
+          <li><a href="#evolucao"><span class="toc-num">20</span>Evolução & Escala</a></li>
+          <li><a href="#build"><span class="toc-num">21</span>Build & Runbooks</a></li>
         </ul>
       </div>
 
@@ -277,6 +279,44 @@
             <p><code>desktop/main.cjs</code>, <code>desktop/app-server.cjs</code>, <code>desktop/preload.cjs</code> —
               janela Electron, servidor HTTP local, proxies e instalador Windows.</p>
           </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="seguranca-runtime">
+        <span class="chapter-eyebrow">Capítulo 17</span>
+        <h2>Segurança do Runtime</h2>
+        <p class="chapter-lead">O Vetorizador continua sendo um shell web local em Electron, mas o runtime publicado foi endurecido para não atuar como serviço aberto reaproveitável por conteúdo externo no navegador do usuário.</p>
+
+        <div class="stat-grid">
+          <div class="stat-item"><span class="stat-num">Loopback</span><span class="stat-label">HTTP local restrito</span></div>
+          <div class="stat-item"><span class="stat-num">CSP</span><span class="stat-label">Shell com headers de segurança</span></div>
+          <div class="stat-item"><span class="stat-num">Electron</span><span class="stat-label">Renderer isolado e sandboxed</span></div>
+          <div class="stat-item"><span class="stat-num">0</span><span class="stat-label">Vulnerabilidades produtivas no audit</span></div>
+        </div>
+
+        <div class="section">
+          <h3>Controles ativos</h3>
+          <div class="card-grid">
+            <div class="card">
+              <span class="card-icon">🔐</span>
+              <h4>API local</h4>
+              <p>Servidor e runtimes auxiliares em `127.0.0.1`, validação de `Host`, `Origin`, `Referer` e `sec-fetch-site`, remoção de `CORS` aberto e limites de timeout/corpo HTTP.</p>
+            </div>
+            <div class="card">
+              <span class="card-icon">🧭</span>
+              <h4>Navegação</h4>
+              <p>Janela principal bloqueia navegação fora da origem local, nega `webview`, nega permissões de navegador e só permite abertura externa para hosts em allowlist via `https:` ou `mailto:`.</p>
+            </div>
+            <div class="card">
+              <span class="card-icon">🧪</span>
+              <h4>Console e inspeção</h4>
+              <p>DevTools fica desligado no pacote final e só pode ser reabilitado por ambiente controlado para suporte técnico. O operador comum não recebe console aberto por atalho.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Risco residual principal:</strong> ainda existem dependências frontend carregadas de CDNs HTTPS em partes do shell e do PDFSpliter. O runtime atual restringe origem, navegação e embedding, mas a direção de longo prazo continua sendo empacotar ou pinar esses assets com integridade forte.
         </div>
       </section>
 
@@ -1251,9 +1291,50 @@
         </div>
       </section>
 
-      <!-- ═══ CAPÍTULO 17: RASTREABILIDADE RF ═══ -->
-      <section class="chapter" id="requisitos">
+      <!-- ═══ CAPÍTULO 17: SEGURANÇA DO RUNTIME ═══ -->
+      <section class="chapter" id="seguranca-runtime">
         <span class="chapter-eyebrow">Capítulo 17</span>
+        <h2>Segurança do Runtime</h2>
+        <p class="chapter-lead">
+          O runtime desktop publicado foi endurecido para reduzir exposição de rede, bloquear abuso cross-site contra localhost
+          e manter o renderer Electron isolado do ambiente Node/Electron fora das pontes explicitamente expostas.
+        </p>
+
+        <div class="section">
+          <h3>Controles ativos</h3>
+          <div class="card-grid">
+            <div class="card"><span class="card-icon">🔒</span>
+              <h4>Loopback-only</h4>
+              <p>Servidor desktop e runtimes auxiliares operam em <code>127.0.0.1</code>, com validação adicional de <code>Host</code>, origem e metadados de fetch.</p>
+            </div>
+            <div class="card"><span class="card-icon">🧱</span>
+              <h4>Renderer isolado</h4>
+              <p><code>contextIsolation: true</code>, <code>nodeIntegration: false</code>, <code>sandbox: true</code>, <code>webview</code> bloqueado e permissões negadas por padrão.</p>
+            </div>
+            <div class="card"><span class="card-icon">🌐</span>
+              <h4>Shell sem CDN runtime</h4>
+              <p>Assets críticos do frontend desktop foram vendorizados localmente para evitar dependência de bibliotecas remotas em tempo de uso.</p>
+            </div>
+            <div class="card"><span class="card-icon">🛡️</span>
+              <h4>Publicação controlada</h4>
+              <p>DevTools desabilitado por padrão no app empacotado, CSP no shell local e allowlist explícita para abertura de links externos.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Fronteira de risco assumida</h3>
+          <p>O endurecimento protege o produto contra exposição acidental em LAN, navegação indevida e abuso a partir de páginas externas. Não substitui proteção contra malware já instalado com o mesmo privilégio do usuário.</p>
+        </div>
+
+        <div class="callout callout-cyan">
+          <strong>Escopo técnico atual:</strong> a exceção <code>wasm-unsafe-eval</code> foi mantida apenas para permitir a instanciação do módulo Rust/WASM local. Isso não reabre origens remotas nem reintroduz dependências CDN no runtime desktop.
+        </div>
+      </section>
+
+      <!-- ═══ CAPÍTULO 18: RASTREABILIDADE RF ═══ -->
+      <section class="chapter" id="requisitos">
+        <span class="chapter-eyebrow">Capítulo 18</span>
         <h2>Rastreabilidade de Requisitos Funcionais</h2>
         <p class="chapter-lead">Referência: Setembro 2026 · <code>win-desktop-main</code></p>
 
@@ -1463,9 +1544,9 @@
         </div>
       </section>
 
-      <!-- ═══ CAPÍTULO 18: RNF ═══ -->
+      <!-- ═══ CAPÍTULO 19: RNF ═══ -->
       <section class="chapter" id="rnf">
-        <span class="chapter-eyebrow">Capítulo 18</span>
+        <span class="chapter-eyebrow">Capítulo 19</span>
         <h2>Requisitos Não Funcionais</h2>
 
         <div class="stat-grid">
@@ -1577,9 +1658,9 @@
         </div>
       </section>
 
-      <!-- ═══ CAPÍTULO 19: EVOLUÇÃO & ESCALA ═══ -->
+      <!-- ═══ CAPÍTULO 20: EVOLUÇÃO & ESCALA ═══ -->
       <section class="chapter" id="evolucao">
-        <span class="chapter-eyebrow">Capítulo 19</span>
+        <span class="chapter-eyebrow">Capítulo 20</span>
         <h2>Evolução & Escala</h2>
 
         <div class="section">
@@ -1656,9 +1737,9 @@
         </div>
       </section>
 
-      <!-- ═══ CAPÍTULO 20: BUILD & RUNBOOKS ═══ -->
+      <!-- ═══ CAPÍTULO 21: BUILD & RUNBOOKS ═══ -->
       <section class="chapter" id="build">
-        <span class="chapter-eyebrow">Capítulo 20</span>
+        <span class="chapter-eyebrow">Capítulo 21</span>
         <h2>Build & Runbooks</h2>
 
         <div class="section">

@@ -37,6 +37,7 @@
       <ul class="nav-links">
         <li><a href="#demo">Demo</a></li>
         <li><a href="#modulos">Módulos</a></li>
+        <li><a href="#seguranca">Segurança</a></li>
         <li><a href="#pipeline">Fluxo</a></li>
         <li><a href="#tecnologia">Tecnologia</a></li>
         <li><a href="#mercado">Mercado</a></li>
@@ -61,6 +62,7 @@
             <span class="badge">Rust / WASM</span>
             <span class="badge">Base WASM + assistiva local</span>
             <span class="badge">B2B Desktop</span>
+            <span class="badge">Runtime endurecido</span>
             <span class="badge">GeoJSON · Shapefile</span>
             <span class="badge">Electron v44</span>
             <span class="badge">PaddleOCR local</span>
@@ -80,6 +82,13 @@
           <div class="hero-cta">
             <a href="https://apps.microsoft.com/store/detail/9P467C845RPP" class="btn-primary" target="_blank" rel="noopener noreferrer">Ver na Microsoft Store</a>
             <a href="mailto:marcos.nunes.lph@outlook.com?subject=Contato%20sobre%20Vetorizador%20na%20Windows%20Store" class="btn-outline">Falar com a equipe</a>
+          </div>
+          <div class="hero-security-card">
+            <div class="hero-security-copy">
+              <span class="hero-security-label">Segurança operacional</span>
+              <strong>Loopback-only, Electron isolado e bibliotecas operacionais servidas localmente no runtime publicado.</strong>
+            </div>
+            <a href="engenharia/index.html#seguranca-runtime" class="hero-security-link">Ver arquitetura de segurança</a>
           </div>
         </div>
         <div class="hero-panel">
@@ -156,6 +165,11 @@
           <span class="proof-title">Implantação</span>
           <span class="proof-copy">Desktop instalável e operação local para acelerar entrada em produção.</span>
         </div>
+        <div class="proof-item">
+          <span class="proof-title">Segurança</span>
+          <span class="proof-copy">Runtime endurecido para reduzir abuso cross-site, navegação indevida e dependência remota no shell publicado.</span>
+          <a href="engenharia/index.html#seguranca-runtime" class="proof-link">Ler documentação técnica</a>
+        </div>
       </div>
     </div>
   </section>
@@ -173,6 +187,50 @@
           <source src="assets/videos/demo-vetorizador-web.mp4" type="video/mp4" />
           Seu navegador não suporta vídeo HTML5.
         </video>
+      </div>
+    </div>
+  </section>
+
+  <section id="seguranca" class="section section-amber">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Segurança Operacional</span>
+        <h2>Runtime local endurecido para rede corporativa</h2>
+        <p>O produto roda como desktop web local, mas o runtime publicado foi endurecido para evitar que o shell local vire uma porta de entrada reutilizável por páginas externas ou por navegação indevida.</p>
+        <p class="section-doc-link-wrap"><a href="engenharia/index.html#seguranca-runtime" class="section-doc-link">Abrir documentação técnica de segurança</a></p>
+      </div>
+      <div class="modules-grid">
+        <article class="module-card module-primary">
+          <div class="module-icon">🔒</div>
+          <h3>Servidor local fechado em loopback</h3>
+          <p class="module-desc">O HTTP embarcado e os runtimes auxiliares operam em `127.0.0.1`, com validação adicional de `Host`, `Origin`, `Referer` e metadados de fetch para bloquear abuso cross-site contra localhost.</p>
+          <ul class="module-features">
+            <li>Sem bind em `0.0.0.0`</li>
+            <li>Sem `CORS` aberto nas rotas proxy</li>
+            <li>Timeouts e limite de corpo HTTP configurados</li>
+          </ul>
+        </article>
+        <article class="module-card">
+          <div class="module-icon">🧱</div>
+          <h3>Electron com fronteiras explícitas</h3>
+          <p class="module-desc">O renderer roda isolado, sem integração Node, com sandbox, bloqueio de `webview`, permissões negadas por padrão e navegação restrita à origem local do app.</p>
+          <ul class="module-features">
+            <li>`contextIsolation: true`</li>
+            <li>`nodeIntegration: false`</li>
+            <li>Allowlist estrita para links externos</li>
+          </ul>
+        </article>
+        <article class="module-card">
+          <div class="module-icon">🛡️</div>
+          <h3>Publicação sem console aberto por padrão</h3>
+          <p class="module-desc">DevTools e atalhos clássicos de inspeção ficam desabilitados no pacote final, com reabertura apenas por variável de ambiente controlada para suporte técnico. Os assets operacionais do shell desktop também foram vendorizados localmente.</p>
+          <ul class="module-features">
+            <li>Bloqueio de `F12` e `Ctrl+Shift+I/J/C`</li>
+            <li>CSP e headers de segurança no shell local</li>
+            <li>Bibliotecas frontend críticas servidas de `vendor/` local</li>
+            <li>Auditoria produtiva de dependências sem vulnerabilidades conhecidas</li>
+          </ul>
+        </article>
       </div>
     </div>
   </section>
