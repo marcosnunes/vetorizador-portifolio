@@ -26,7 +26,7 @@
         <div class="audit-meta" aria-label="Identificação do dossiê">
           <span><strong>Versão:</strong> 1.3.6</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
-          <span><strong>Atualizado:</strong> 19/09/2026</span>
+          <span><strong>Atualizado:</strong> 24/09/2026</span>
         </div>
       </header>
 
@@ -67,6 +67,7 @@
             <li>Imagens, PDFs, shapefiles e geometrias vetorizadas não são enviados a esses serviços.</li>
             <li>O servidor local não é acessível por outras máquinas da rede.</li>
             <li>Não há analytics, telemetria, crash reporting ou verificação remota de licença.</li>
+            <li>As rotas locais <code>/api/*</code> validam origem e rejeitam chamadas cross-site típicas contra localhost.</li>
           </ul>
         </section>
 
@@ -90,10 +91,23 @@
                 <tr><td><code>nodeIntegration</code></td><td>false</td><td>Impede acesso direto do renderer às APIs Node.js.</td></tr>
                 <tr><td><code>sandbox</code></td><td>true</td><td>Reduz a superfície de ataque do processo de renderização.</td></tr>
                 <tr><td>API privilegiada</td><td><code>contextBridge</code></td><td>Expõe somente operações específicas e controladas.</td></tr>
+                <tr><td>Navegação externa</td><td>Allowlist explícita</td><td>Bloqueia navegação arbitrária e abertura irrestrita de janelas externas.</td></tr>
+                <tr><td>DevTools em produção</td><td>Desabilitado por padrão</td><td>Evita console aberto no pacote final, com reabertura apenas por variável de ambiente controlada.</td></tr>
+                <tr><td><code>webview</code> e permissões</td><td>Bloqueados/negados</td><td>Reduz capacidades não necessárias no renderer publicado.</td></tr>
                 <tr><td>Atualização</td><td>Sem auto-update</td><td>Mantém instalação e atualização sob controle de TI.</td></tr>
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section>
+          <h2>5.1 Controles adicionais do shell local</h2>
+          <ul>
+            <li>Respostas HTML locais incluem <code>Content-Security-Policy</code>, <code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy</code>, <code>X-Frame-Options</code>, <code>Cross-Origin-Opener-Policy</code> e <code>Cross-Origin-Resource-Policy</code>.</li>
+            <li>A diretiva <code>wasm-unsafe-eval</code> está presente apenas para permitir a instanciação do módulo Rust/WebAssembly local; isso não amplia origens remotas permitidas.</li>
+            <li>Bibliotecas operacionais críticas do shell desktop são servidas localmente a partir de <code>vendor/</code>, sem dependência de CDN em tempo de uso.</li>
+            <li>Fluxos de DOM com dados externos em pontos sensíveis evitam interpolação direta com <code>innerHTML</code>.</li>
+          </ul>
         </section>
 
         <section>
@@ -160,6 +174,9 @@
                 <tr><td>Sem telemetria ou envio de arquivos ao fabricante</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Operação local sem dependência de nuvem</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Renderer isolado e em sandbox</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Bloqueio de abuso cross-site contra localhost</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>Assets operacionais servidos localmente, sem CDN runtime</td><td><span class="audit-status">Atendido</span></td></tr>
+                <tr><td>DevTools fechadas por padrão no pacote final</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Sem atualização automática silenciosa</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Assinatura do MSIX 1.3.5.0</td><td><span class="audit-status">Válida e confiável no ambiente verificado</span></td></tr>
                 <tr><td>Pacote MSIX 1.3.x.0</td><td><span class="audit-status audit-status-review">Gerar e validar para a próxima submissão</span></td></tr>
