@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
-    content="Engenharia do Vetorizador — documentação técnica completa: arquitetura, módulos, pipeline, contratos e evolução." />
+    content="Engenharia do Vetorizador — documentação técnica completa: arquitetura, módulos, pipeline e contratos." />
   <title>Engenharia | Vetorizador</title>
   <link rel="icon" href="../favicon.ico" sizes="any" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -95,7 +95,7 @@
           <a href="#seguranca-runtime"><span class="nav-icon">🛡️</span>Segurança Runtime</a>
           <a href="#requisitos"><span class="nav-icon">✅</span>Rastreabilidade RF</a>
           <a href="#rnf"><span class="nav-icon">📐</span>RNF</a>
-          <a href="#evolucao"><span class="nav-icon">🚀</span>Evolução & Escala</a>
+          <a href="#escala-estrutura"><span class="nav-icon">🚀</span>Escala & Estrutura</a>
           <a href="#build"><span class="nav-icon">🔨</span>Build & Runbooks</a>
         </nav>
       </div>
@@ -116,7 +116,7 @@
         <span class="cover-kicker">Documentação Técnica Completa</span>
         <h1>Engenharia do<br /><span>Vetorizador</span></h1>
         <p class="cover-desc">
-          Uma revista técnica sobre a arquitetura, módulos, contratos e evolução do Vetorizador —
+          Uma revista técnica sobre a arquitetura, módulos, pipeline e contratos do Vetorizador —
           software desktop para produção geoespacial e documental com núcleo determinístico Rust/WASM.
         </p>
         <div class="cover-meta">
@@ -151,7 +151,7 @@
           <li><a href="#seguranca-runtime"><span class="toc-num">17</span>Segurança do Runtime</a></li>
           <li><a href="#requisitos"><span class="toc-num">18</span>Rastreabilidade RF</a></li>
           <li><a href="#rnf"><span class="toc-num">19</span>Requisitos Não Funcionais</a></li>
-          <li><a href="#evolucao"><span class="toc-num">20</span>Evolução & Escala</a></li>
+          <li><a href="#escala-estrutura"><span class="toc-num">20</span>Escala & Estrutura</a></li>
           <li><a href="#build"><span class="toc-num">21</span>Build & Runbooks</a></li>
         </ul>
       </div>
@@ -282,44 +282,6 @@
         </div>
       </section>
 
-      <section class="chapter" id="seguranca-runtime">
-        <span class="chapter-eyebrow">Capítulo 17</span>
-        <h2>Segurança do Runtime</h2>
-        <p class="chapter-lead">O Vetorizador continua sendo um shell web local em Electron, mas o runtime publicado foi endurecido para não atuar como serviço aberto reaproveitável por conteúdo externo no navegador do usuário.</p>
-
-        <div class="stat-grid">
-          <div class="stat-item"><span class="stat-num">Loopback</span><span class="stat-label">HTTP local restrito</span></div>
-          <div class="stat-item"><span class="stat-num">CSP</span><span class="stat-label">Shell com headers de segurança</span></div>
-          <div class="stat-item"><span class="stat-num">Electron</span><span class="stat-label">Renderer isolado e sandboxed</span></div>
-          <div class="stat-item"><span class="stat-num">0</span><span class="stat-label">Vulnerabilidades produtivas no audit</span></div>
-        </div>
-
-        <div class="section">
-          <h3>Controles ativos</h3>
-          <div class="card-grid">
-            <div class="card">
-              <span class="card-icon">🔐</span>
-              <h4>API local</h4>
-              <p>Servidor e runtimes auxiliares em `127.0.0.1`, validação de `Host`, `Origin`, `Referer` e `sec-fetch-site`, remoção de `CORS` aberto e limites de timeout/corpo HTTP.</p>
-            </div>
-            <div class="card">
-              <span class="card-icon">🧭</span>
-              <h4>Navegação</h4>
-              <p>Janela principal bloqueia navegação fora da origem local, nega `webview`, nega permissões de navegador e só permite abertura externa para hosts em allowlist via `https:` ou `mailto:`.</p>
-            </div>
-            <div class="card">
-              <span class="card-icon">🧪</span>
-              <h4>Console e inspeção</h4>
-              <p>DevTools fica desligado no pacote final e só pode ser reabilitado por ambiente controlado para suporte técnico. O operador comum não recebe console aberto por atalho.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="callout">
-          <strong>Risco residual principal:</strong> ainda existem dependências frontend carregadas de CDNs HTTPS em partes do shell e do PDFSpliter. O runtime atual restringe origem, navegação e embedding, mas a direção de longo prazo continua sendo empacotar ou pinar esses assets com integridade forte.
-        </div>
-      </section>
-
       <!-- ═══ CAPÍTULO 3: PIPELINE DE SELEÇÃO ═══ -->
       <section class="chapter" id="pipeline-selecao">
         <span class="chapter-eyebrow">Capítulo 03</span>
@@ -356,7 +318,7 @@
         </div>
 
         <div class="section">
-          <h3>Helpers do pipeline <span class="h3-tag">novos</span></h3>
+          <h3>Helpers do pipeline</h3>
           <div class="table-wrap">
             <table>
               <thead>
@@ -414,13 +376,13 @@
 
         <div class="boundary-card">
           <h4>🦀 Fronteira 1 — WASM soberano</h4>
-          <p><code>vetorizar_imagem</code> continua sendo a única fonte de extração geométrica. O fluxo ativo permanece
+          <p><code>vetorizar_imagem</code> é a única fonte de extração geométrica. O fluxo ativo é
             determinístico (WASM-only). Saída obrigatória: GeoJSON <code>Polygon</code> com anel fechado, coordenadas
             normalizadas em pixels [0.0, 1.0].</p>
         </div>
         <div class="boundary-card">
           <h4>💾 Fronteira 2 — Camada de referência local por instalação</h4>
-          <p>A camada de referência topográfica (APP) permanece local no desktop. No fluxo de memorial SIGEF, exatamente
+          <p>A camada de referência topográfica (APP) é local no desktop. No fluxo de memorial SIGEF, exatamente
             1 polígono de referência é escolhido por clique (com desambiguação se necessário), com candidatos das 4
             fontes disponíveis no mapa.</p>
         </div>
@@ -433,7 +395,7 @@
         <div class="boundary-card">
           <h4>🖥️ Fronteira 4 — Desktop como produto de primeira classe</h4>
           <p>O instalador Windows não é acessório. O build desktop carrega frontend compilado, endpoints locais e
-            artefatos WASM. Firebase/Firestore foram removidos; toda persistência é local-first.</p>
+            artefatos WASM. Toda persistência operacional é local-first.</p>
         </div>
       </section>
 
@@ -450,9 +412,9 @@
             <code>appBoundaryManager</code> e <code>presetManager</code> no <code>AppContext</code>; 
             <code>app-boundary-manager.js</code> encapsula o estado da camada de referência por instância de factory.</p>
           <div class="callout callout-warn">
-            <strong>Composição atual:</strong> o runtime opera com um singleton explícito de composição em
-            <code>AppContext</code>, enquanto <code>app.js</code> permanece como orquestrador principal do fluxo e
-            concentra parte relevante da coordenação entre módulos e das mutações de <code>CONFIG</code>.
+            <strong>Composição:</strong> o runtime opera com um singleton explícito de composição em
+            <code>AppContext</code>. O módulo <code>app.js</code> atua como orquestrador principal do fluxo e concentra
+            parte relevante da coordenação entre módulos e das mutações de <code>CONFIG</code>.
           </div>
         </div>
 
@@ -461,8 +423,8 @@
           <p>Evidências: seleção de comportamento por preset (<code>cobertura</code>, <code>uso_solo</code>,
             <code>manual</code>); guardrails por cenário em <code>geo-postprocess.js</code>; pontuação de cena em
             <code>scene-classifier.js</code>.</p>
-          <p>Status de melhoria: <code>PresetManager</code> já extraído com contrato estável. Estratégias de pipeline
-            ainda espalhadas como condicionais em <code>app.js</code>.</p>
+          <p><code>PresetManager</code> concentra o contrato estável de presets. Estratégias de pipeline seguem
+            distribuídas em condicionais dentro de <code>app.js</code>.</p>
         </div>
 
         <div class="section">
@@ -497,7 +459,7 @@
           <span class="module-name">app.js</span>
           <h4>Orquestrador principal</h4>
           <p>Inicialização do shell, estado global, pipeline de configuração, integração mapa-WASM-persistência.
-            Pipeline de seleção unificado para 4 fontes. Helpers novos: <code>aplicarSelecaoCandidataNoMapa</code>,
+            Pipeline de seleção unificado para 4 fontes. Helpers do pipeline: <code>aplicarSelecaoCandidataNoMapa</code>,
             <code>aplicarSelecaoSigefNoMapa</code>, <code>_buscarLayerPorFeatureId</code>.</p>
           <div class="module-tags">
             <span class="tag tag-amber">crítico</span>
@@ -584,7 +546,7 @@
           <h4>Fronteira explícita do pipeline</h4>
           <p>Factory <code>createVectorizationPipeline({ executeCore })</code>. Expõe
             <code>processarAreaDesenhada</code> delegando a implementação core para <code>executeCore</code> injetado.
-            Permite evolução do desacoplamento interno sem quebrar a interface pública.</p>
+            Mantém a interface pública estável e explicita a fronteira de execução do pipeline.</p>
           <div class="module-tags"><span class="tag">factory</span><span class="tag tag-green">fronteira limpa</span>
           </div>
         </div>
@@ -1298,7 +1260,7 @@
         <span class="chapter-eyebrow">Capítulo 17</span>
         <h2>Segurança do Runtime</h2>
         <p class="chapter-lead">
-          O runtime desktop publicado foi endurecido para reduzir exposição de rede, bloquear abuso cross-site contra localhost
+          O runtime desktop publicado reduz exposição de rede, bloqueia abuso cross-site contra localhost
           e manter o renderer Electron isolado do ambiente Node/Electron fora das pontes explicitamente expostas.
         </p>
 
@@ -1315,7 +1277,7 @@
             </div>
             <div class="card"><span class="card-icon">🌐</span>
               <h4>Shell sem CDN runtime</h4>
-              <p>Assets críticos do frontend desktop foram vendorizados localmente para evitar dependência de bibliotecas remotas em tempo de uso.</p>
+              <p>Assets críticos do frontend desktop são servidos localmente para evitar dependência de bibliotecas remotas em tempo de uso.</p>
             </div>
             <div class="card"><span class="card-icon">🛡️</span>
               <h4>Publicação controlada</h4>
@@ -1326,47 +1288,47 @@
 
         <div class="section">
           <h3>Fronteira de risco assumida</h3>
-          <p>O endurecimento protege o produto contra exposição acidental em LAN, navegação indevida e abuso a partir de páginas externas. Não substitui proteção contra malware já instalado com o mesmo privilégio do usuário.</p>
+              <strong>Escopo técnico:</strong> a exceção <code>wasm-unsafe-eval</code> está presente apenas para permitir a instanciação do módulo Rust/WASM local. Isso não reabre origens remotas nem reintroduz dependências CDN no runtime desktop.
         </div>
 
         <div class="callout callout-cyan">
-          <strong>Escopo técnico atual:</strong> a exceção <code>wasm-unsafe-eval</code> foi mantida apenas para permitir a instanciação do módulo Rust/WASM local. Isso não reabre origens remotas nem reintroduz dependências CDN no runtime desktop.
-        </div>
+          <!-- ═══ CAPÍTULO 20: ESCALA & ESTRUTURA ═══ -->
+          <section class="chapter" id="escala-estrutura">
       </section>
-
+            <h2>Escala & Estrutura</h2>
       <!-- ═══ CAPÍTULO 18: RASTREABILIDADE RF ═══ -->
       <section class="chapter" id="requisitos">
-        <span class="chapter-eyebrow">Capítulo 18</span>
+              <h3>Estado da modularização</h3>
         <h2>Rastreabilidade de Requisitos Funcionais</h2>
         <p class="chapter-lead">Referência: Setembro 2026 · <code>win-desktop-main</code></p>
 
         <div class="stat-grid">
-          <div class="stat-item"><span class="stat-num">30</span><span class="stat-label">RF mapeados</span></div>
+                      <th>Área</th>
           <div class="stat-item"><span class="stat-num" style="color:#00e676">30</span><span
               class="stat-label">Implementados</span></div>
           <div class="stat-item"><span class="stat-num" style="color:#ffc107">0</span><span
               class="stat-label">Parciais</span></div>
           <div class="stat-item"><span class="stat-num" style="color:#ff5252">0</span><span
               class="stat-label">Pendentes</span></div>
-        </div>
+                      <td>Módulos de suporte</td>
 
-        <div class="table-wrap" style="margin-top: 24px;">
+                      <td>5 módulos com fronteira explícita ao redor de <code>app.js</code>: AppBoundaryManager, FeatureFlagManager, PresetManager,
           <table>
             <thead>
               <tr>
-                <th>ID</th>
+                      <td>Extração complementar</td>
                 <th>Nome</th>
-                <th>Status</th>
-                <th>Módulo</th>
+                      <td>StateManager em callsites remanescentes e VectorizationPipeline com extração adicional do core por
+                        subetapas</td>
               </tr>
             </thead>
-            <tbody>
+                      <td>Contratos documentados</td>
               <tr>
                 <td>RF-01</td>
                 <td>Busca cartográfica</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>app.js</code> → Nominatim</td>
-              </tr>
+                      <td>Observabilidade desktop</td>
               <tr>
                 <td>RF-02</td>
                 <td>Captura de coordenada</td>
@@ -1660,13 +1622,13 @@
         </div>
       </section>
 
-      <!-- ═══ CAPÍTULO 20: EVOLUÇÃO & ESCALA ═══ -->
-      <section class="chapter" id="evolucao">
+      <!-- ═══ CAPÍTULO 20: ESCALA & ESTRUTURA ═══ -->
+      <section class="chapter" id="escala-estrutura">
         <span class="chapter-eyebrow">Capítulo 20</span>
-        <h2>Evolução & Escala</h2>
+        <h2>Escala & Estrutura</h2>
 
         <div class="section">
-          <h3>Etapas de modularização</h3>
+          <h3>Estado da modularização</h3>
           <div class="table-wrap">
             <table>
               <thead>
@@ -1711,12 +1673,12 @@
           <div class="card-grid">
             <div class="card"><span class="card-icon">🦀</span>
               <h4>WASM soberano</h4>
-              <p>O pipeline principal precisa continuar operável e auditável com o WASM como fonte de extração
+              <p>O pipeline principal opera de forma auditável com o WASM como fonte de extração
                 geométrica.</p>
             </div>
             <div class="card"><span class="card-icon">🖥️</span>
               <h4>Desktop relevante</h4>
-              <p>Canal de distribuição ativo. Build desktop deve continuar levando WASM + frontend + APIs locais.</p>
+              <p>Canal de distribuição ativo com build desktop levando WASM + frontend + APIs locais.</p>
             </div>
             <div class="card"><span class="card-icon">💾</span>
               <h4>Local-first</h4>
@@ -1733,8 +1695,7 @@
         <div class="section">
           <h3>Principais passivos arquiteturais</h3>
           <div class="callout callout-warn">
-            <strong>Evolução arquitetural contínua.</strong> O produto segue em modularização progressiva para manter
-            previsibilidade operacional, contratos claros por subsistema e menor acoplamento entre camadas.
+            <strong>Estado arquitetural.</strong> O produto opera com modularização parcial, contratos claros por subsistema e concentração relevante de orquestração em <code>app.js</code>.
           </div>
         </div>
       </section>
