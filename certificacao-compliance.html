@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Certificação Microsoft Store e compliance operacional do Vetorizador PRO." />
+  <meta name="theme-color" content="#ff9800" />
+  <title>Certificação & Compliance | Vetorizador</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="policy-page audit-page">
+  <main class="policy-main">
+    <div class="container policy-container audit-container">
+      <a class="policy-back" href="index.html">← Voltar ao portfólio</a>
+
+      <header class="policy-header audit-header">
+        <span class="policy-kicker">Compliance de publicação</span>
+        <h1>Certificação Microsoft Store & Compliance</h1>
+        <p>Registro de conformidade do Vetorizador PRO para publicação Windows, empacotamento, requisitos da Store e controles de segurança do runtime publicado.</p>
+        <div class="audit-meta" aria-label="Identificação do dossiê">
+          <span><strong>Versão:</strong> 1.3.7</span>
+          <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
+          <span><strong>Atualizado:</strong> 25/09/2026</span>
+        </div>
+      </header>
+
+      <article class="policy-card audit-card">
+        <section>
+          <h2>1. Status atual</h2>
+          <ul>
+            <li><strong>Produto:</strong> Vetorizador PRO (v1.3.7)</li>
+            <li><strong>Plataforma:</strong> Windows 10/11 (x64)</li>
+            <li><strong>Status geral:</strong> Em conformidade</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>2. Conformidade regulatória</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Policy</th><th>Requisito</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><code>10.1.1.11</code></td><td>Ícones únicos para tiles</td><td><span class="audit-status">Conforme</span></td></tr>
+                <tr><td><code>10.1.2</code></td><td>Metadata completa</td><td><span class="audit-status">Conforme</span></td></tr>
+                <tr><td><code>10.1.3</code></td><td>Categorização correta</td><td><span class="audit-status">Conforme</span></td></tr>
+                <tr><td><code>10.1.4</code></td><td>Certificação segura</td><td><span class="audit-status">Conforme</span></td></tr>
+                <tr><td><code>10.1.7</code></td><td>Descrição precisa</td><td><span class="audit-status">Conforme</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>3. Windows App SDK & pacote</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Requisito</th><th>Status</th><th>Detalhes</th></tr></thead>
+              <tbody>
+                <tr><td>SDK Instalado</td><td><span class="audit-status">Conforme</span></td><td>Windows App SDK 2.2.0</td></tr>
+                <tr><td>Package Identity</td><td><span class="audit-status">Conforme</span></td><td>CN=A72FE73A-3E4B-4A02-BA11-61A5278E9134</td></tr>
+                <tr><td>MSIX suportado</td><td><span class="audit-status">Conforme</span></td><td>Fluxo via WinApp CLI</td></tr>
+                <tr><td>Capacidades</td><td><span class="audit-status">Conforme</span></td><td><code>runFullTrust</code>, rede, arquivo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>4. Controles de segurança do runtime publicado</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Controle</th><th>Status</th><th>Detalhes</th></tr></thead>
+              <tbody>
+                <tr><td>Servidor local loopback-only</td><td><span class="audit-status">Ativo</span></td><td>Endpoints locais publicados apenas em <code>127.0.0.1</code>.</td></tr>
+                <tr><td>Validação anti-abuso cross-site</td><td><span class="audit-status">Ativo</span></td><td>Rotas <code>/api/*</code> validam <code>Host</code>, <code>Origin</code>, <code>Referer</code> e metadados de fetch.</td></tr>
+                <tr><td>Renderer Electron isolado</td><td><span class="audit-status">Ativo</span></td><td><code>contextIsolation: true</code>, <code>nodeIntegration: false</code>, <code>sandbox: true</code>, <code>webview</code> bloqueado.</td></tr>
+                <tr><td>Navegação externa controlada</td><td><span class="audit-status">Ativo</span></td><td>Navegação restrita à origem local e abertura externa por allowlist explícita.</td></tr>
+                <tr><td>DevTools controlado</td><td><span class="audit-status">Ativo</span></td><td>Desabilitado por padrão no pacote publicado, com habilitação apenas por variável de ambiente controlada.</td></tr>
+                <tr><td>Shell sem dependência remota em runtime</td><td><span class="audit-status">Ativo</span></td><td>Assets críticos do frontend desktop são servidos localmente no pacote publicado.</td></tr>
+                <tr><td>Headers de segurança locais</td><td><span class="audit-status">Ativo</span></td><td>CSP, <code>nosniff</code>, <code>Referrer-Policy</code>, <code>X-Frame-Options</code>, <code>COOP</code> e <code>CORP</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>5. Assets de tile</h2>
+          <p>Todos os tamanhos de tile exigidos pela Store possuem ícone próprio, gerado a partir do logo oficial do Vetorizador.</p>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Slot</th><th>Tamanho</th><th>Asset</th></tr></thead>
+              <tbody>
+                <tr><td>Lista de apps</td><td>44×44 / 88×88 / 24×24</td><td><code>Assets/AppList*.png</code></td></tr>
+                <tr><td>Tile pequeno</td><td>71×71 / 142×142</td><td><code>Assets/SmallTile*.png</code></td></tr>
+                <tr><td>Tile médio</td><td>150×150 / 300×300</td><td><code>Assets/MedTile*.png</code></td></tr>
+                <tr><td>Tile largo</td><td>310×150 / 620×300</td><td><code>Assets/WideTile*.png</code></td></tr>
+                <tr><td>Tile grande</td><td>310×310 / 620×620</td><td><code>Assets/LargeTile*.png</code></td></tr>
+                <tr><td>Loja</td><td>50×50</td><td><code>Assets/StoreLogo.png</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>6. Build e empacotamento</h2>
+          <pre class="license-pre">npm run dist:win        # Instalador NSIS (distribuição técnica local)
+npm run dist:win:store  # Pacote MSIX assinado (fluxo Microsoft Store)</pre>
+          <ul>
+            <li>Instalador NSIS por usuário, sem exigir privilégios de administrador.</li>
+            <li>Pacote MSIX assinado digitalmente via <code>winapp sign</code>, com validação por <code>Get-AuthenticodeSignature</code>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>7. Segurança operacional para homologação</h2>
+          <ul>
+            <li>O aplicativo opera com persistência local-first e não envia arquivos operacionais ao fabricante.</li>
+            <li>O shell desktop publicado não depende de bibliotecas remotas para sua operação principal em runtime.</li>
+            <li>A exceção <code>wasm-unsafe-eval</code> existe apenas para a instanciação do módulo Rust/WebAssembly local.</li>
+            <li>O escopo de risco assumido exclui malware já instalado com o mesmo privilégio do usuário.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>8. Documentação relacionada</h2>
+          <ul>
+            <li><a href="../docs/WINDOWS_STORE_GUIDE.md">docs/WINDOWS_STORE_GUIDE.md</a> — fluxo completo de build para a Windows Store.</li>
+            <li><a href="../docs/WINUI_COMPARISON.md">docs/WINUI_COMPARISON.md</a> — comparativa arquitetural Electron vs WinUI 3.</li>
+            <li><a href="../docs/licencas.md">docs/licencas.md</a> — licenças do produto e de dependências de terceiros.</li>
+            <li><a href="../docs/engenharia-software/seguranca-superficie-de-ataque.md">docs/engenharia-software/seguranca-superficie-de-ataque.md</a> — superfície de ataque e controles ativos do runtime desktop.</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-mirror" aria-hidden="true"></div>
+        <div class="footer-intro">
+          <div class="footer-brand"><span class="logo-icon">⬡</span><span>Vetorizador</span></div>
+          <p class="footer-tagline">Software desktop para acelerar produção geoespacial e documental em operações privadas.</p>
+        </div>
+        <div class="footer-column">
+          <span class="footer-heading">Legal</span>
+          <div class="footer-links">
+            <a href="index.html#inicio">Sobre</a>
+            <a href="privacy-policy.html">Política de privacidade</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom"><p class="footer-copy">© 2026 Marcos Roberto Nunes Lindolpho — Distribuído sob licença MIT</p></div>
+    </div>
+  </footer>
+</body>
+
+</html>
