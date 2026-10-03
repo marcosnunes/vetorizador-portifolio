@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Avaliação documental indicativa da maturidade CMM, evidências legais e plano de evolução do Vetorizador PRO." />
+  <meta name="theme-color" content="#ff9800" />
+  <title>CMMI-DEV e Conformidade | Vetorizador</title>
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="policy-page audit-page">
+  <main class="policy-main">
+    <div class="container policy-container audit-container">
+      <a class="policy-back" href="auditoria-ti.html">← Voltar ao dossiê de TI</a>
+
+      <header class="policy-header audit-header">
+        <span class="policy-kicker">Maturidade e conformidade</span>
+        <h1>CMMI-DEV e evidências de conformidade</h1>
+        <p>Triagem documental do Vetorizador PRO. A avaliação CMMI-DEV ainda não foi realizada; esta página não declara maturity level nem conformidade legal.</p>
+        <div class="audit-meta" aria-label="Identificação da avaliação">
+          <span><strong>Versão avaliada:</strong> 1.3.7</span>
+          <span><strong>Data:</strong> 03/10/2026</span>
+          <span><strong>Escopo:</strong> evidências do repositório e documentação mantida</span>
+        </div>
+      </header>
+
+      <article class="policy-card audit-card">
+        <section>
+          <h2>1. Resultado executivo</h2>
+          <p>O Vetorizador é um produto desktop <strong>local-first e assistivo-local</strong>, com extração-base determinística em Rust/WASM e fallback local. A persistência local reduz exposição remota, mas não elimina obrigações que dependam dos dados tratados ou da forma de distribuição.</p>
+          <p>Esta é uma triagem documental preliminar: não é appraisal CMMI, auditoria independente, certificação do produto ou parecer jurídico. Ela não confirma como os processos são executados fora das evidências revisadas.</p>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Dimensão</th><th>Resultado indicativo</th><th>Interpretação</th></tr></thead>
+              <tbody>
+                <tr><td>Maturity level CMMI-DEV</td><td><strong>Ainda não avaliado</strong></td><td>A rubrica documental anterior não foi mapeada às Practice Areas e aos requisitos da versão oficial escolhida; nenhum maturity level CMMI foi estabelecido.</td></tr>
+                <tr><td>Conformidade legal</td><td><strong>Não atestada; evidência parcial por tema</strong></td><td>Há documentação de licenças e controles técnicos, mas não foi localizada matriz jurídica completa nem evidência de avaliação profissional abrangente.</td></tr>
+                <tr><td>Microsoft Store</td><td><strong>Controles documentados; aprovação externa não confirmada</strong></td><td>A existência de um pacote MSIX e de uma tabela de políticas não comprova, por si só, submissão aprovada ou certificação vigente.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside class="audit-note"><strong>Conclusão:</strong> não há maturity level CMMI-DEV estabelecido para o Vetorizador ou para uma unidade organizacional. A prioridade é construir uma baseline contra a versão oficial selecionada antes de afirmar maturidade.</aside>
+        </section>
+
+        <section>
+          <h2>2. Método e limites</h2>
+          <p>A análise documental anterior à escolha do CMMI-DEV usou uma rubrica exploratória de dez áreas. Ela não avalia o SW-CMM v1.1 nem o CMMI-DEV e não permite inferir maturity level, capability level ou prontidão para appraisal. A baseline deverá ser reconstruída contra a versão e a visão oficiais selecionadas.</p>
+          <p>As dez áreas recebem uma pontuação de evidência: <strong>0</strong> = não localizada; <strong>1</strong> = parcial (documento, requisito, controle ou script sem execução consistente demonstrada); <strong>2</strong> = demonstrada (processo definido, execução recorrente, responsável e resultado verificável).</p>
+          <p>A pontuação anterior foi uma ferramenta documental exploratória. <strong>10/20 não é percentual de conformidade, nota de qualidade nem conversão para maturity level CMMI.</strong> Uma área sem evidência revisada não prova que a prática inexista.</p>
+        </section>
+
+        <section>
+          <h2>3. Diagnóstico por área de processo</h2>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Área</th><th>Evidência observada</th><th>Pontos</th><th>Lacuna principal</th></tr></thead>
+              <tbody>
+                <tr><td>Requisitos e rastreabilidade</td><td>SRS, requisitos funcionais/não funcionais, alocação e painel de métricas. O painel informa que parte dos status foi inferida por análise reversa.</td><td>1/2</td><td>Vincular requisitos críticos a teste executável, resultado, versão e aprovador.</td></tr>
+                <tr><td>Planejamento e acompanhamento</td><td>Runbooks, estratégia de evolução e scripts de prontidão.</td><td>1/2</td><td>Demonstrar baseline de plano, acompanhamento de prazo/risco e registro de desvios e ações.</td></tr>
+                <tr><td>Definição institucional do processo</td><td>Padrões técnicos e documentação de arquitetura, operação e dados.</td><td>1/2</td><td>Definir ciclo de vida comum, papéis, critérios de entrada/saída e gestão de exceções.</td></tr>
+                <tr><td>Configuração e mudanças</td><td>Git, versionamento do pacote, build e scripts de empacotamento.</td><td>1/2</td><td>Demonstrar revisão obrigatória, proteção de branch, rastreabilidade e gates aplicados às releases.</td></tr>
+                <tr><td>Verificação e validação</td><td>Verificações de vetorização, benchmark, persistência, runtime assistivo, PDFtoArcGIS e saúde desktop.</td><td>1/2</td><td>Manter regressão sistemática de todos os fluxos críticos e histórico de resultados por release.</td></tr>
+                <tr><td>Medição e análise</td><td>Metas de F1 ≥ 0,70, IoU ≥ 0,60 e até 60 s em cenários avaliados.</td><td>1/2</td><td>Produzir baseline versionado, amostras representativas, séries temporais e tratamento de desvios.</td></tr>
+                <tr><td>Riscos e segurança</td><td>Superfície de ataque, controles do Electron, servidor local e verificações de dependências documentados.</td><td>1/2</td><td>Preservar evidências reproduzíveis por release; atribuir responsáveis e revisão periódica aos riscos residuais.</td></tr>
+                <tr><td>Fornecedores e licenças</td><td>Documento de licenças e inventário de dependências diretas.</td><td>1/2</td><td>Gerar SBOM de transitivas e runtimes distribuídos e automatizar a verificação de avisos por pacote.</td></tr>
+                <tr><td>Privacidade e obrigações legais</td><td>Persistência local-first descrita; não foi localizada análise abrangente de dados pessoais ou direitos.</td><td>1/2</td><td>Mapear aplicabilidade, dados, responsabilidades, retenção, transparência, atendimento e evidências jurídicas.</td></tr>
+                <tr><td>Melhoria contínua</td><td>Lacunas e scripts QA registrados; metas técnicas disponíveis.</td><td>1/2</td><td>Demonstrar ciclos de causa-raiz, experimento, medição antes/depois e eficácia.</td></tr>
+                <tr><td><strong>Rubrica documental anterior</strong></td><td>10 áreas avaliadas</td><td><strong>10/20</strong></td><td>Pontuação exploratória sem relação matemática ou normativa com níveis CMMI.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>Interpretação histórica — não usar para declarar CMMI-DEV</h3>
+          <ul>
+            <li>A rubrica anterior descreveu práticas documentais como “em transição para nível 2”; essa interpretação não é uma conclusão CMMI-DEV.</li>
+            <li>Maturity level CMMI-DEV: <strong>não determinado</strong> até que uma unidade e versão do modelo sejam definidas e avaliadas contra seus requisitos.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>4. Conformidade legal e regulatória</h2>
+          <p>O modelo desktop/local-first não cria isenção legal automática. A aplicabilidade depende dos dados tratados, forma de distribuição, público, contratos e papel de cada agente. A tabela abaixo é uma triagem documental, não uma conclusão jurídica.</p>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Tema</th><th>Aplicabilidade a confirmar</th><th>Evidência e situação</th><th>Próximo passo</th></tr></thead>
+              <tbody>
+                <tr><td><strong>LGPD — Lei nº 13.709/2018</strong></td><td>Quando o produto ou operadores tratarem dados pessoais. Arquivos, logs, telemetria local e dados geográficos dependem de avaliação contextual.</td><td>Há descrição de IndexedDB e localStorage local-first. Não foi localizada análise de dados pessoais, bases legais, aviso de privacidade ou fluxo de direitos. <strong>Não atestada.</strong></td><td>Inventariar dados/finalidades e papéis; definir base legal, minimização, retenção/exclusão, transparência, direitos, segurança e resposta a incidentes; obter revisão jurídica.</td></tr>
+                <tr><td><strong>Marco Civil — Lei nº 12.965/2014</strong></td><td>Avaliar conforme serviços de conexão/aplicações de Internet realmente ofertados. API loopback não deve ser presumida serviço público de Internet.</td><td>Há API local e proxies descritos, mas não foi localizada análise formal de aplicabilidade. <strong>Aplicabilidade não determinada.</strong></td><td>Mapear serviços externos, conexões e dados; confirmar obrigações aplicáveis com avaliação jurídica.</td></tr>
+                <tr><td><strong>Lei do Software — 9.609/1998 e Direitos Autorais — 9.610/1998</strong></td><td>Titularidade, licenças e redistribuição de código, bibliotecas e ativos.</td><td>Licenças MIT e MIT/Apache-2.0 e dependências são documentadas. Isso não comprova inventário completo de transitivas ou notices no pacote. <strong>Parcialmente documentada.</strong></td><td>Gerar SBOM incluindo runtimes Python; verificar textos de licença, notices, origem/titularidade e conteúdo dos pacotes NSIS/MSIX.</td></tr>
+                <tr><td><strong>CDC — Lei nº 8.078/1990</strong></td><td>Conforme oferta/fornecimento em relação de consumo e forma de comercialização.</td><td>Há documentação de produto e empacotamento; não foi localizada revisão das comunicações ao consumidor. <strong>Não atestada.</strong></td><td>Revisar descrições, suporte, limitações e termos com assessoria jurídica antes de oferta comercial.</td></tr>
+                <tr><td><strong>Lei Brasileira de Inclusão — 13.146/2015</strong></td><td>A obrigação depende do serviço, público, contratos e canais; acessibilidade também é critério de qualidade.</td><td>Não foi localizada auditoria de acessibilidade nem resultados de teclado, leitor de tela e contraste. <strong>Não demonstrada.</strong></td><td>Definir padrão aplicável e auditar fluxos prioritários, incluindo mapas e PDFSpliter; registrar barreiras e correções.</td></tr>
+                <tr><td><strong>Microsoft Store / Windows</strong></td><td>Aplicável ao pacote e submissão, se essa distribuição for usada.</td><td>Há documentação de controles e build MSIX. Pacote não comprova aprovação externa. <strong>Controles documentados; aprovação não confirmada.</strong></td><td>Anexar resultado oficial de submissão/certificação com data, identidade e versão publicada.</td></tr>
+                <tr><td><strong>Regras INCRA/SIGEF</strong></td><td>Condicionais ao uso dos resultados como produto cadastral ou certificável.</td><td>Há integração e exportação geoespacial; não foi localizada validação externa de aptidão cadastral. <strong>Não atestada para uso oficial.</strong></td><td>Delimitar usos suportados e validar requisitos técnicos vigentes antes de alegar compatibilidade para certificação cadastral.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>5. Inconsistências e ressalvas identificadas</h2>
+          <ol>
+            <li><code>CERTIFICATION_AND_COMPLIANCE.md</code> declara “Em conformidade”, enquanto o índice da documentação alerta que MSIX não comprova aprovação. Sem comprovante oficial, tratar como controles descritos, não como aprovação externa confirmada.</li>
+            <li>O índice interno declara versão 1.2.5, diferente da versão 1.3.7 encontrada no <code>package.json</code> avaliado. Corrigir a divergência para melhorar rastreabilidade.</li>
+            <li>O painel de métricas informa que alguns status foram inferidos por análise reversa e há lacunas de benchmark/cobertura. Metas não são resultados de testes nem certificação sem artefatos associados.</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>6. Próximas etapas de avaliação</h2>
+          <p>O maturity level CMMI-DEV permanece não avaliado. Uma avaliação válida depende de definir a unidade organizacional e o escopo, selecionar a versão e a visão oficiais do modelo e examinar evidências frente aos requisitos aplicáveis. Não há nesta página uma declaração de nível ou prazo para alcançá-lo.</p>
+          <p>O plano de trabalho detalhado e a sprint de melhoria são documentos internos e não fazem parte deste dossiê público.</p>
+        </section>
+
+        <section>
+          <h2>7. Evidências a preservar por release</h2>
+          <ul>
+            <li>Commit/tag, versão, ambiente e dependências resolvidas.</li>
+            <li>Resultados de lint, build e scripts QA aplicáveis, com código de saída.</li>
+            <li>Resultados do benchmark e identificação/versionamento das amostras.</li>
+            <li>SBOM, avisos de licença, assinatura/verificação e hashes dos artefatos.</li>
+            <li>Aprovação de release, exceções, riscos aceitos e comprovante da Store, quando aplicável.</li>
+            <li>Revisão da matriz legal e registro de incidentes ou ações corretivas relevantes.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>8. Referências</h2>
+          <h3>Documentação do portfólio</h3>
+          <ul>
+            <li><a href="auditoria-ti.html">Dossiê de auditoria para homologação de TI</a>.</li>
+            <li><a href="certificacao-compliance.html">Certificação Microsoft Store e compliance operacional</a>.</li>
+            <li><a href="licencas.html">Licenças do produto e componentes</a>.</li>
+          </ul>
+          <h3>Legislação e modelo</h3>
+          <ul>
+            <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener noreferrer">Lei nº 13.709/2018 — LGPD</a>.</li>
+            <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2014/lei/l12965.htm" target="_blank" rel="noopener noreferrer">Lei nº 12.965/2014 — Marco Civil da Internet</a>.</li>
+            <li><a href="https://www.planalto.gov.br/ccivil_03/leis/l9609.htm" target="_blank" rel="noopener noreferrer">Lei nº 9.609/1998 — programa de computador</a>.</li>
+            <li><a href="https://www.planalto.gov.br/ccivil_03/leis/l9610.htm" target="_blank" rel="noopener noreferrer">Lei nº 9.610/1998 — direitos autorais</a>.</li>
+            <li><a href="https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm" target="_blank" rel="noopener noreferrer">Lei nº 8.078/1990 — Código de Defesa do Consumidor</a>.</li>
+            <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm" target="_blank" rel="noopener noreferrer">Lei nº 13.146/2015 — Lei Brasileira de Inclusão</a>.</li>
+            <li><a href="https://cmmiinstitute.com/" target="_blank" rel="noopener noreferrer">CMMI Institute — visão geral do modelo CMMI</a>.</li>
+          </ul>
+          <p><strong>Nota:</strong> fontes legais são disponibilizadas para consulta. Incidência, obrigações e suficiência das medidas devem ser confirmadas por assessoria jurídica com acesso ao contexto real de operação e distribuição.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-mirror" aria-hidden="true"></div>
+        <div class="footer-intro">
+          <div class="footer-brand"><span class="logo-icon">⬡</span><span>Vetorizador</span></div>
+          <p class="footer-tagline">Software desktop para acelerar produção geoespacial e documental em operações privadas.</p>
+        </div>
+        <div class="footer-column">
+          <span class="footer-heading">Auditoria</span>
+          <div class="footer-links">
+            <a href="auditoria-ti.html">Dossiê de TI</a>
+            <a href="certificacao-compliance.html">Certificação e compliance</a>
+            <a href="privacy-policy.html">Política de privacidade</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom"><p class="footer-copy">© 2026 Marcos Roberto Nunes Lindolpho — Distribuído sob licença MIT</p></div>
+    </div>
+  </footer>
+</body>
+
+</html>
