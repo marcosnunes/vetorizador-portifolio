@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dossiê técnico de segurança, arquitetura e conformidade do Vetorizador PRO para homologação de TI." />
+  <meta name="description" content="Dossiê técnico de segurança, arquitetura e conformidade do Vetorizador Inteligente para homologação de TI." />
   <meta name="theme-color" content="#ff9800" />
   <title>Auditoria de TI | Vetorizador</title>
   <link rel="icon" href="./favicon.ico" sizes="any" />
@@ -22,9 +22,9 @@
       <header class="policy-header audit-header">
         <span class="policy-kicker">Segurança e conformidade</span>
         <h1>Dossiê de Auditoria para Homologação de TI</h1>
-        <p>Informações técnicas para avaliação corporativa da arquitetura, superfície de rede, persistência, segurança, licenciamento e instalação do Vetorizador PRO.</p>
+        <p>Informações técnicas para avaliação corporativa da arquitetura, superfície de rede, persistência, segurança, licenciamento e instalação do Vetorizador Inteligente.</p>
         <div class="audit-meta" aria-label="Identificação do dossiê">
-          <span><strong>Versão:</strong> 1.3.7</span>
+          <span><strong>Versão:</strong> 1.3.8</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
           <span><strong>Atualizado:</strong> 25/09/2026</span>
         </div>
@@ -37,7 +37,7 @@
       <article class="policy-card audit-card">
         <section>
           <h2>1. Sumário executivo</h2>
-          <p>O Vetorizador PRO é um aplicativo desktop para Windows, construído sobre Electron, que auxilia na extração assistida de polígonos a partir de imagens de mapa, PDFs de matrícula e shapefiles, com apoio de um núcleo determinístico em Rust/WebAssembly.</p>
+          <p>O Vetorizador Inteligente é um aplicativo desktop para Windows, construído sobre Electron, que auxilia na extração assistida de polígonos a partir de imagens de mapa, PDFs de matrícula e shapefiles, com apoio de um núcleo determinístico em Rust/WebAssembly.</p>
           <p>A aplicação adota persistência local-first: não há backend em nuvem próprio, telemetria enviada ao fabricante nem sincronização remota dos dados do usuário. As comunicações externas são chamadas pontuais a serviços públicos governamentais e de geocodificação, detalhadas na Seção 3.</p>
         </section>
 
@@ -182,15 +182,15 @@
                 <tr><td>Assets operacionais servidos localmente, sem CDN runtime</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>DevTools fechadas por padrão no pacote final</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Sem atualização automática silenciosa</td><td><span class="audit-status">Atendido</span></td></tr>
-                <tr><td>Assinatura do MSIX 1.3.5.0</td><td><span class="audit-status">Válida e confiável no ambiente verificado</span></td></tr>
-                <tr><td>Pacote MSIX 1.3.x.0</td><td><span class="audit-status audit-status-review">Gerar e validar para a próxima submissão</span></td></tr>
+                <tr><td>Assinatura do MSIX 1.3.8.0</td><td><span class="audit-status audit-status-review">Pacote de submissão sem assinatura local; assinado pela Microsoft Store após a certificação</span></td></tr>
+                <tr><td>Pacote MSIX 1.3.8.0</td><td><span class="audit-status audit-status-review">Gerado; validar com WACK e Smart App Control antes da submissão</span></td></tr>
               </tbody>
             </table>
           </div>
         </section>
 
         <aside class="audit-note">
-          O pacote <code>VetorizadorPRO_1.3.5_x64.msix</code> possui assinatura válida, Publisher compatível com o manifesto e certificado vigente até 02/08/2029. O certificado é autoassinado e está confiado no ambiente local verificado; instalações corporativas por sideload dependem da distribuição desse certificado pelas políticas de TI. Pacotes publicados pela Microsoft Store recebem a assinatura do fluxo da Store. A versão 1.3.6.0 deve repetir essa validação após ser empacotada.
+          O pacote <code>VetorizadorInteligente_1.3.8_x64.msix</code> usa a identidade <code>9694MarcosNunes.VetorizadorInteligente</code> (Publisher <code>CN=73B8D02F-B8A7-4931-B83C-70AFB7116E85</code>) e é enviado sem assinatura local; a Microsoft Store o assina após a certificação. Instalações de teste por sideload exigem pacote assinado com certificado confiado pelas políticas de TI.
         </aside>
       </article>
     </div>
