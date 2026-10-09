@@ -686,7 +686,7 @@
             <div class="step-num">01</div>
             <div class="step-body">
               <h4>Localizar e carregar ortofoto</h4>
-              <p>Busca por endereço (Nominatim) ou coordenada no mapa de referência OpenStreetMap. A ortofoto é selecionada por IPC (<code>ortho-select</code>) e lida por <code>ortho-loader.js</code> (geotiff.js + proj4, reamostragem para grade WGS84). Desenho da ROI com Leaflet.Draw; a ROI é extraída da ortofoto (<code>capturarRoiOrtofoto</code>), com limites de 4096 px por ROI, 160 MP em JPEG/PNG e 1,5 GiB por arquivo, e aviso quando a resolução é pior que 0,5 m/pixel.</p>
+              <p>Busca por endereço (Nominatim) ou coordenada no mapa de referência OpenStreetMap. A ortofoto é selecionada por IPC (<code>ortho-select</code>) e lida por <code>ortho-loader.js</code> (geotiff.js + proj4, reamostragem para grade WGS84). Desenho da ROI com Leaflet.Draw; a ROI é extraída da ortofoto (<code>capturarRoiOrtofoto</code>), com limites de 4096 px por ROI, 160 MP em JPEG/PNG e 1,5 GiB por arquivo, e aviso quando a resolução é pior que 0,5 m/pixel. Também aceita servidores remotos sem login (WMS, ArcGIS ImageServer/MapServer, WMTS, XYZ) com tiles em paralelo e retentativa, catálogo de fontes recomendadas (USGS, IGN, PDOK) e bloqueio da vetorização para fontes de uso não comercial (<code>ortho-license.js</code>, heurística por domínio).</p>
             </div>
           </div>
           <div class="pipeline-step">

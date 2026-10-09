@@ -250,7 +250,7 @@
           <h3>GeoDoc Vetorizador</h3>
           <p class="module-desc">Onde o ganho operacional aparece primeiro: menos vetorização repetitiva, revisão mais rápida e arquivos de saída prontos para seguir no fluxo do cliente.</p>
           <ul class="module-features">
-            <li>Vetorização sobre ortofotos locais do próprio usuário (GeoTIFF, JPEG/PNG com world file)</li>
+            <li>Vetorização sobre ortofotos locais do próprio usuário (GeoTIFF, JPEG/PNG com world file) ou servidores públicos (WMS, ArcGIS, WMTS, XYZ), com fontes recomendadas de uso comercial (USGS, IGN, PDOK) e bloqueio por licença</li>
             <li>Seleção de ROI sobre mapa de referência OpenStreetMap (Leaflet)</li>
             <li>Núcleo determinístico em Rust/WASM</li>
             <li>Partição espacial por cor com cobertura integral da ROI</li>
@@ -375,7 +375,7 @@
         <div class="cap-card">
           <span class="cap-icon">🛰️</span>
           <h4>Ortofotos locais</h4>
-          <p>A vetorização roda sobre ortofotos carregadas de pastas do Windows, com leitura de georreferência e aviso de resolução. O app não baixa imagery de terceiros; os direitos de uso das ortofotos são do usuário.</p>
+          <p>A vetorização roda sobre ortofotos carregadas de pastas do Windows, com leitura de georreferência e aviso de resolução. Servidores remotos só são usados quando o usuário informa a URL; fontes de uso não comercial têm a vetorização bloqueada. Os direitos de uso das ortofotos são do usuário; não há fonte brasileira aberta verificada.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">✏️</span>
