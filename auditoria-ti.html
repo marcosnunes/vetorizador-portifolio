@@ -37,7 +37,7 @@
       <article class="policy-card audit-card">
         <section>
           <h2>1. Sumário executivo</h2>
-          <p>O Vetorizador Inteligente é um aplicativo desktop para Windows, construído sobre Electron, que auxilia na extração assistida de polígonos a partir de imagens de mapa, PDFs de matrícula e shapefiles, com apoio de um núcleo determinístico em Rust/WebAssembly.</p>
+          <p>O Vetorizador Inteligente é um aplicativo desktop para Windows, construído sobre Electron, que auxilia na extração assistida de polígonos a partir de ortofotos carregadas localmente pelo usuário (mapa OpenStreetMap apenas como referência), PDFs de matrícula e shapefiles, com apoio de um núcleo determinístico em Rust/WebAssembly.</p>
           <p>A aplicação adota persistência local-first: não há backend em nuvem próprio, telemetria enviada ao fabricante nem sincronização remota dos dados do usuário. As comunicações externas são chamadas pontuais a serviços públicos governamentais e de geocodificação, detalhadas na Seção 3.</p>
         </section>
 
@@ -132,6 +132,7 @@
               <tbody>
                 <tr><td>Electron</td><td>MIT</td><td>Runtime desktop</td></tr>
                 <tr><td>Leaflet / Leaflet.Draw</td><td>BSD-2 / MIT</td><td>Mapa e desenho de ROI</td></tr>
+                <tr><td>geotiff.js / proj4js</td><td>MIT / MIT</td><td>Leitura e reprojeção de ortofotos locais</td></tr>
                 <tr><td>Turf.js</td><td>MIT</td><td>Operações geoespaciais</td></tr>
                 <tr><td>PDF.js</td><td>Apache-2.0</td><td>Renderização de PDF</td></tr>
                 <tr><td>shpjs / shp-write</td><td>MIT</td><td>Leitura e exportação de Shapefile</td></tr>

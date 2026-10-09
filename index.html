@@ -250,7 +250,8 @@
           <h3>GeoDoc Vetorizador</h3>
           <p class="module-desc">Onde o ganho operacional aparece primeiro: menos vetorização repetitiva, revisão mais rápida e arquivos de saída prontos para seguir no fluxo do cliente.</p>
           <ul class="module-features">
-            <li>Seleção de ROI sobre mapa interativo Leaflet</li>
+            <li>Vetorização sobre ortofotos locais do próprio usuário (GeoTIFF, JPEG/PNG com world file)</li>
+            <li>Seleção de ROI sobre mapa de referência OpenStreetMap (Leaflet)</li>
             <li>Núcleo determinístico em Rust/WASM</li>
             <li>Partição espacial por cor com cobertura integral da ROI</li>
             <li>Refino de contorno por diferença de vizinhança (bordas mais fiéis)</li>
@@ -317,8 +318,8 @@
         <div class="pipeline-step">
           <div class="step-num">01</div>
           <div class="step-body">
-            <h4>Localizar e capturar</h4>
-            <p>Busca por endereço ou coordenada. Desenho da área de interesse no mapa.</p>
+            <h4>Localizar e carregar ortofoto</h4>
+            <p>Busca por endereço ou coordenada no mapa de referência. Carregamento da ortofoto de uma pasta local e desenho da área de interesse sobre ela.</p>
           </div>
         </div>
         <div class="pipeline-arrow">→</div>
@@ -369,7 +370,12 @@
         <div class="cap-card">
           <span class="cap-icon">🎯</span>
           <h4>Busca cartográfica</h4>
-          <p>Pesquisa por endereço ou coordenada para posicionamento do mapa.</p>
+          <p>Pesquisa por endereço ou coordenada para posicionamento do mapa de referência (OpenStreetMap).</p>
+        </div>
+        <div class="cap-card">
+          <span class="cap-icon">🛰️</span>
+          <h4>Ortofotos locais</h4>
+          <p>A vetorização roda sobre ortofotos carregadas de pastas do Windows, com leitura de georreferência e aviso de resolução. O app não baixa imagery de terceiros; os direitos de uso das ortofotos são do usuário.</p>
         </div>
         <div class="cap-card">
           <span class="cap-icon">✏️</span>
@@ -486,6 +492,8 @@
             <span class="pill pill-neutral">JavaScript ES2022</span>
             <span class="pill pill-neutral">Leaflet</span>
             <span class="pill pill-neutral">Leaflet.Draw</span>
+            <span class="pill pill-neutral">geotiff.js</span>
+            <span class="pill pill-neutral">proj4js</span>
             <span class="pill pill-neutral">Turf.js</span>
           </div>
           <p>Shell cartográfico Leaflet com painel de controle paramétrico e layers de resultado GeoJSON, organizado por modularização incremental com helpers especializados (selection-policy, flow-diagnostics, app-boundary-manager) e políticas de UX centralizadas.</p>
@@ -684,6 +692,8 @@
           <tbody>
             <tr><td>Leaflet</td><td><span class="lic-badge bsd">BSD-2</span></td><td>Mapa interativo</td></tr>
             <tr><td>Leaflet.Draw</td><td><span class="lic-badge mit">MIT</span></td><td>Desenho de ROI no mapa</td></tr>
+            <tr><td>geotiff.js</td><td><span class="lic-badge mit">MIT</span></td><td>Leitura de ortofotos GeoTIFF locais</td></tr>
+            <tr><td>proj4js</td><td><span class="lic-badge mit">MIT</span></td><td>Reprojeção das ortofotos</td></tr>
             <tr><td>Turf.js</td><td><span class="lic-badge mit">MIT</span></td><td>Operações geoespaciais</td></tr>
             <tr><td>PaddleOCR / PaddlePaddle</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>OCR local compartilhado</td></tr>
             <tr><td>PDF.js</td><td><span class="lic-badge apache">Apache-2.0</span></td><td>Renderização de PDF</td></tr>

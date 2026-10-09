@@ -685,8 +685,8 @@
           <div class="pipeline-step">
             <div class="step-num">01</div>
             <div class="step-body">
-              <h4>Localizar e capturar</h4>
-              <p>Busca por endereço (Nominatim) ou coordenada. Desenho da ROI com Leaflet.Draw.</p>
+              <h4>Localizar e carregar ortofoto</h4>
+              <p>Busca por endereço (Nominatim) ou coordenada no mapa de referência OpenStreetMap. A ortofoto é selecionada por IPC (<code>ortho-select</code>) e lida por <code>ortho-loader.js</code> (geotiff.js + proj4, reamostragem para grade WGS84). Desenho da ROI com Leaflet.Draw; a ROI é extraída da ortofoto (<code>capturarRoiOrtofoto</code>), com limites de 4096 px por ROI, 160 MP em JPEG/PNG e 1,5 GiB por arquivo, e aviso quando a resolução é pior que 0,5 m/pixel.</p>
             </div>
           </div>
           <div class="pipeline-step">
