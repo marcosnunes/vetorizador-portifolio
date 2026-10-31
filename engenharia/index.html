@@ -30,7 +30,7 @@
       <span class="topbar-title">Engenharia</span>
     </div>
     <div class="topbar-right">
-      <span class="topbar-badge">Setembro 2026</span>
+      <span class="topbar-badge">31/10/2026 · v1.3.9</span>
     </div>
   </header>
 
@@ -72,6 +72,7 @@
           <a href="#seguranca-runtime"><span class="nav-icon">🛡️</span>Segurança Runtime</a>
           <a href="#requisitos"><span class="nav-icon">✅</span>Rastreabilidade RF</a>
           <a href="#rnf"><span class="nav-icon">📐</span>RNF</a>
+          <a href="#fechamento-qa"><span class="nav-icon">🔬</span>Validação do ciclo</a>
           <a href="#escala-estrutura"><span class="nav-icon">🚀</span>Escala & Estrutura</a>
           <a href="#build"><span class="nav-icon">🔨</span>Build & Runbooks</a>
         </nav>
@@ -97,10 +98,10 @@
           software desktop para produção geoespacial e documental com núcleo determinístico Rust/WASM.
         </p>
         <div class="cover-meta">
-          <div class="cover-meta-item"><span>📅</span><span>Setembro 2026</span></div>
-          <div class="cover-meta-item"><span>🌿</span><span>win-desktop-main</span></div>
+          <div class="cover-meta-item"><span>📅</span><span>31 de outubro de 2026</span></div>
+          <div class="cover-meta-item"><span>📦</span><span>Baseline 1.3.9</span></div>
           <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
-          <div class="cover-meta-item"><span>⚡</span><span>Electron v43 + Vite 8</span></div>
+          <div class="cover-meta-item"><span>⚡</span><span>Electron 45 + Vite 8</span></div>
           <div class="cover-meta-item"><span>📦</span><span>33 módulos catalogados</span></div>
         </div>
       </div>
@@ -130,6 +131,7 @@
           <li><a href="#rnf"><span class="toc-num">19</span>Requisitos Não Funcionais</a></li>
           <li><a href="#escala-estrutura"><span class="toc-num">20</span>Escala & Estrutura</a></li>
           <li><a href="#build"><span class="toc-num">21</span>Build & Runbooks</a></li>
+          <li><a href="#fechamento-qa"><span class="toc-num">22</span>Fechamento de Validação</a></li>
         </ul>
       </div>
 
@@ -170,7 +172,7 @@
             <div class="pipeline-step">
               <div class="step-num">3</div>
               <div class="step-body">
-                <h4>vetoriza_imagem (Rust/WASM)</h4>
+                <h4>vetorizar_imagem (Rust/WASM)</h4>
                 <p>Núcleo determinístico converte imagem em polígonos GeoJSON.</p>
               </div>
             </div>
@@ -185,9 +187,9 @@
             <div class="pipeline-step">
               <div class="step-num">4A</div>
               <div class="step-body">
-                <h4>Cobertura integral da ROI</h4>
-                <p>Após a geração base (inalterada), uma etapa complementar fecha lacunas residuais em qualquer preset,
-                  com processamento assíncrono em fatias para manter a UI fluida mesmo em ROIs grandes.</p>
+                <h4>Topologia específica por preset</h4>
+                <p>Uso do Solo verifica e completa a partição da ROI. Cobertura recorta edificações e subtrai
+                  sobreposições por confiança, sem preencher o terreno. Processamento cooperativo cede à interface.</p>
               </div>
             </div>
             <div class="pipeline-step">
@@ -202,13 +204,14 @@
         </div>
 
         <div class="callout">
-          <strong>Princípio central:</strong> todo o fluxo ativo de vetorização é deterministico e WASM-only — sem
-          dependência de inferência externa no caminho principal de geração de polígonos.
+          <strong>Princípio central:</strong> operação assistiva local com base determinística Rust/WASM.
+          Uso do Solo usa partição raster por cor como rota geométrica principal, com fallback por máscara/WASM.
+          Revisão de contornos, classes e complementação manual fazem parte do trabalho profissional.
         </div>
         <div class="callout callout-cyan">
-          <strong>Contrato de cobertura da ROI:</strong> a saída final deve cobrir 100% da ROI em qualquer preset,
-          preservando a lógica atual da geração base de polígonos e aplicando apenas preenchimento complementar de
-          lacunas com execução cooperativa para evitar travamento da interface.
+          <strong>Contrato de cobertura da ROI:</strong> partição total é exclusiva de Uso do Solo.
+          Cobertura não cria polígonos artificiais para ocupar espaços entre edificações.
+          Acurácia da detecção e validade topológica são verificações distintas.
         </div>
       </section>
 
@@ -352,14 +355,15 @@
         <p class="chapter-lead">Contratos que devem ser preservados em qualquer refatoração ou extensão do sistema.</p>
 
         <div class="boundary-card">
-          <h4>🦀 Fronteira 1 — WASM soberano</h4>
-          <p><code>vetorizar_imagem</code> é a única fonte de extração geométrica. O fluxo ativo é
-            determinístico (WASM-only). Saída obrigatória: GeoJSON <code>Polygon</code> com anel fechado, coordenadas
-            normalizadas em pixels [0.0, 1.0].</p>
+          <h4>🦀 Fronteira 1 — Base determinística e rotas por origem</h4>
+          <p><code>vetorizar_imagem</code> extrai contornos de imagem no núcleo Rust; Uso do Solo prioriza a
+            partição raster local. PDF usa parsing e SHP usa normalização, sem passagem obrigatória pelo WASM.
+            Saída base Rust: <code>Polygon</code> fechado em coordenadas de pixel; saída operacional:
+            coordenadas geográficas, furos preservados e todas as partes resultantes.</p>
         </div>
         <div class="boundary-card">
           <h4>💾 Fronteira 2 — Camada de referência local por instalação</h4>
-          <p>A camada de referência topográfica (APP) é local no desktop. No fluxo de memorial SIGEF, exatamente
+          <p>APP (Área de Preservação Permanente) e camada de referência são locais no desktop. No fluxo de memorial SIGEF, exatamente
             1 polígono de referência é escolhido por clique (com desambiguação se necessário), com candidatos das 4
             fontes disponíveis no mapa.</p>
         </div>
@@ -479,8 +483,8 @@
 
         <div class="module-card">
           <span class="module-name">app-boundary-manager.js</span>
-          <h4>Gerenciador da camada de referência (APP)</h4>
-          <p>Concentra o ciclo de vida da camada de referência topográfica por instalação. Normaliza GeoJSON, persiste
+          <h4>Gerenciador local de APP e camada de referência</h4>
+          <p>Concentra o ciclo de vida local de APP (Área de Preservação Permanente) e da camada de referência. Normaliza GeoJSON, persiste
             cache em localStorage (<code>vetorizador_app_boundary_v2</code>), exibe no mapa. O callback
             <code>onFeatureClick</code> delega para <code>lidarCliquePoligono</code> tornando a camada participante da
             desambiguação global.</p>
@@ -490,10 +494,10 @@
         <div class="module-card">
           <span class="module-name">feature-flag-manager.js</span>
           <h4>Gerenciador de feature flags</h4>
-          <p>Flags persistidas em localStorage, guardrails WASM-only, auditoria operacional,
+          <p>Flags persistidas em localStorage, guardrails de assistência local, auditoria operacional,
             <code>BENCHMARK_APROVACAO_PRESET</code> por preset. Inicialização:
             <code>initFeatureFlagManager({ syncConfigField })</code>.</p>
-          <div class="module-tags"><span class="tag tag-cyan">wasm-only guardrail</span><span
+          <div class="module-tags"><span class="tag tag-cyan">assistive-local guardrail</span><span
               class="tag">auditoria</span></div>
         </div>
 
@@ -574,7 +578,7 @@
         <h2>Desktop & APIs Auxiliares</h2>
 
         <div class="section">
-          <h3>Runtime desktop (Electron v43)</h3>
+          <h3>Runtime desktop (Electron 45)</h3>
           <div class="card-grid">
             <div class="card">
               <span class="card-icon">🚀</span>
@@ -702,15 +706,18 @@
             <div class="step-num">03</div>
             <div class="step-body">
               <h4>vetorizar_imagem (WASM)</h4>
-              <p>Base64 PNG → núcleo Rust → <code>FeatureCollection</code> GeoJSON em pixel-space [0,1].</p>
+              <p>Base64 PNG → núcleo Rust → <code>FeatureCollection</code> GeoJSON em coordenadas de pixel da
+                imagem, ainda sem georreferenciamento.</p>
             </div>
           </div>
           <div class="pipeline-step">
             <div class="step-num">04</div>
             <div class="step-body">
               <h4>Pós-processamento geométrico</h4>
-              <p><code>geo-postprocess.js</code>: NMS, filtro por área/bbox/IoU, guardrails por preset, simplificação,
-                regularização e orçamento para evitar etapas topológicas caras em lote.</p>
+              <p>Para Cobertura: filtros, NMS e regularização, seguidos de recorte final pela ROI e subtração de
+                sobreposições por prioridade estável de confiança. Preservam-se todas as partes e anéis internos;
+                métricas são recalculadas. A partição raster de Uso do Solo evita filtros de edificações,
+                inferência geométrica, fusão multiperfil e pós-processamento destrutivo.</p>
             </div>
           </div>
           <div class="pipeline-step">
@@ -732,8 +739,19 @@
 
         <div class="callout callout-warn">
           <strong>preset uso_solo</strong> executa rota classMap como caminho principal: K-means + calibração por paleta
-          RGB + ajuste por vizinhança de cor + tesselação direta. Fallback por máscara/WASM é apenas de contingência e a
-          topologia pesada só roda dentro do orçamento de tempo/features.
+          RGB + ajuste por vizinhança de cor + tesselação direta em qualquer tamanho de ROI. Contornos dirigidos
+          preservam furos e contatos diagonais; ruído é reclassificado no raster, não apagado. Suavização compartilha
+          vértices e fixa junções e moldura. Recorte usa 12 casas decimais; fallback geométrico conserva 9.
+          Cobertura final é verificada com preenchimento residual, sem consolidação automática final de classes.
+        </div>
+        <div class="section">
+          <h3>Revisão e desenho manual</h3>
+          <p>Classificação e confirmação da edição atualizam o mapa antes da captura diferida de feedback.
+            Exclusão resolve novamente o ID após a confirmação e limpa camadas e seleção. Edição preserva furos;
+            cancelar restaura a geometria anterior. O checklist interativo de desenhar, classificar, editar,
+            cancelar, excluir e redesenhar permanece necessário para homologação.</p>
+          <p>Complementar edificações não detectadas e corrigir classes ou limites de Uso do Solo são atividades
+            esperadas do operador, não uma promessa de autonomia completa da vetorização automática.</p>
         </div>
       </section>
 
@@ -1120,7 +1138,8 @@
                 <tr>
                   <td><code>base64_png</code></td>
                   <td>string</td>
-                  <td>PNG codificado Base64, sem prefixo data URI. Deve ser escala de cinza, sem alpha, pré-processado.
+                  <td>Fluxo JS fornece PNG pré-processado em Base64, sem prefixo data URI. Rust decodifica a imagem,
+                    converte para luminância de 8 bits e aplica limiar binário interno de 128.
                   </td>
                 </tr>
               </tbody>
@@ -1130,15 +1149,18 @@
 
         <div class="section">
           <h3>Saída — FeatureCollection GeoJSON</h3>
+          <p>Falhas de decodificação retornam texto de erro, não uma FeatureCollection vazia de sucesso.
+            O chamador deve tratar falha de parsing e comunicar o erro. Propriedades operacionais
+            como ID, classe, área e confiança são adicionadas no JavaScript, após a saída base.</p>
           <pre>{
   <span class="str">"type"</span>: <span class="str">"FeatureCollection"</span>,
   <span class="str">"features"</span>: [{
     <span class="str">"type"</span>: <span class="str">"Feature"</span>,
     <span class="str">"geometry"</span>: {
       <span class="str">"type"</span>: <span class="str">"Polygon"</span>,
-      <span class="str">"coordinates"</span>: [[[<span class="num">lon</span>, <span class="num">lat</span>], ..., [<span class="num">lon</span>, <span class="num">lat</span>]]]
+      <span class="str">"coordinates"</span>: [[[<span class="num">x_pixel</span>, <span class="num">y_pixel</span>], ..., [<span class="num">x_pixel</span>, <span class="num">y_pixel</span>]]]
     },
-    <span class="str">"properties"</span>: {}
+    <span class="str">"properties"</span>: null
   }]
 }</pre>
         </div>
@@ -1151,12 +1173,14 @@
               <p>Último ponto = primeiro ponto. Sempre.</p>
             </div>
             <div class="card"><span class="card-icon">📐</span>
-              <h4>Sem furos</h4>
-              <p>Cada <code>Polygon</code> tem exatamente um anel externo.</p>
+              <h4>Anéis internos no produto final</h4>
+              <p>A extração base e a saída operacional são contratos distintos. Furos gerados pela partição raster
+                ou diferença espacial devem ser preservados; cada parte permanece <code>Polygon</code>.</p>
             </div>
             <div class="card"><span class="card-icon">📏</span>
-              <h4>Pixel-space [0, 1]</h4>
-              <p>Coordenadas normalizadas. Conversão para lat/lng em <code>app.js</code>.</p>
+              <h4>Pixel-space da imagem</h4>
+              <p>Rust emite x/y de pixel; <code>app.js</code> converte para lat/lng. Compatibilidade legada
+                com coordenadas normalizadas não redefine a saída atual do núcleo.</p>
             </div>
           </div>
         </div>
@@ -1198,7 +1222,9 @@
             </div>
             <div class="card"><span class="card-icon">📤</span>
               <h4>Exportação consolidada</h4>
-              <p>Botão único exporta: buffer + archive + contexto expandido em JSON auditável offline.</p>
+              <p>Exporta buffer, archive e contexto em partes JSON/Blob, sem truncar dados. No desktop, IPC aceita
+                chunks para escrita em disco; botão ocupado e erros são informados. O contexto completo ainda ocupa
+                memória e a cópia para clipboard mantém serialização integral.</p>
             </div>
           </div>
         </div>
@@ -1271,6 +1297,9 @@
 
       <!-- ═══ CAPÍTULO 18: RASTREABILIDADE RF ═══ -->
       <section class="chapter" id="requisitos">
+        <p>Os status deste catálogo descrevem mecanismos presentes no código, não aprovação de teste ponta a
+          ponta de cada requisito. A evidência executada e as pendências do ciclo estão no
+          <a href="#fechamento-qa">fechamento de validação</a>.</p>
         <span class="chapter-eyebrow">Capítulo 18</span>
         <h2>Rastreabilidade de Requisitos Funcionais</h2>
         <p class="chapter-lead">Referência: Setembro 2026 · <code>win-desktop-main</code></p>
@@ -1367,7 +1396,7 @@
               </tr>
               <tr>
                 <td>RF-13</td>
-                <td>Operação WASM-only</td>
+                <td>Operação assistiva local com fallback determinístico</td>
                 <td><span class="badge-impl">Implementado</span></td>
                 <td><code>feature-flag-manager.js</code>, <code>app.js</code>, <code>vetoriza/src/lib.rs</code></td>
               </tr>
@@ -1482,6 +1511,8 @@
       <section class="chapter" id="rnf">
         <span class="chapter-eyebrow">Capítulo 19</span>
         <h2>Requisitos Não Funcionais</h2>
+        <p>“Implementado” indica mecanismo identificado, não certificação nem garantia em toda ROI/dispositivo.
+          Desempenho e acurácia precisam de benchmark real; o QA manual e o pacote final têm gates próprios.</p>
 
         <div class="stat-grid">
           <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">RNF mapeados</span></div>
@@ -1506,13 +1537,13 @@
                 <td>RNF-01</td>
                 <td>Consistência geométrica</td>
                 <td><span class="badge-impl">Implementado</span></td>
-                <td>Polígonos fechados garantidos pelo WASM</td>
+                <td>Anéis fechados, furos preservados e validade topológica verificada nos dois presets; ver evidências do ciclo.</td>
               </tr>
               <tr>
                 <td>RNF-02</td>
                 <td>Determinismo do núcleo</td>
                 <td><span class="badge-impl">Implementado</span></td>
-                <td>WASM como única fonte de extração</td>
+                <td>Base determinística WASM; Uso do Solo usa partição raster local por cor.</td>
               </tr>
               <tr>
                 <td>RNF-03</td>
@@ -1524,7 +1555,8 @@
                 <td>RNF-04</td>
                 <td>Qualidade mínima</td>
                 <td><span class="badge-partial">Parcial</span></td>
-                <td>F1 ≥ 0,70 e IoU ≥ 0,60 definidos; sem regressão automatizada</td>
+                <td>F1 ≥ 0,70 e IoU ≥ 0,60 são metas de benchmark ainda sem referências reais suficientes.
+                  Regressões topológicas existem; não comprovam acurácia temática.</td>
               </tr>
               <tr>
                 <td>RNF-05</td>
@@ -1657,7 +1689,7 @@
             </div>
             <div class="card"><span class="card-icon">📂</span>
               <h4>APP por instalação</h4>
-              <p>Camada de referência topográfica permanece local por instalação no desktop.</p>
+              <p>APP (Área de Preservação Permanente) e camada de referência permanecem locais por instalação desktop.</p>
             </div>
           </div>
         </div>
@@ -1685,6 +1717,10 @@
 <span class="fn">npm run desktop:dev</span>   <span class="cm"># Electron + Vite em desenvolvimento</span>
 <span class="fn">npm run desktop:start</span> <span class="cm"># Electron sobre build existente</span>
 <span class="fn">npm run dist:win</span>      <span class="cm"># empacotamento Windows (.exe)</span></pre>
+          <p><code>npm run dist:win:store</code> gera o MSIX de submissão; o manifesto usa
+            <code>1.3.9.0</code>. Este fechamento não gerou novo pacote nem realizou submissão.
+            Build não atualiza uma instalação existente; assinatura, WACK e Smart App Control exigem
+            homologação separada do artefato final.</p>
         </div>
 
         <div class="section">
@@ -1732,12 +1768,59 @@
         </div>
       </section>
 
+      <section class="chapter" id="fechamento-qa">
+        <span class="chapter-eyebrow">Capítulo 22 · 31/10/2026</span>
+        <h2>Fechamento de Validação — 1.3.9</h2>
+        <p class="chapter-lead">Segmentação estabilizada após aprovação visual do usuário para uso assistivo em
+          escritório. Esta conclusão não implica detecção completa, classificação infalível ou certificação externa.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Escopo</th><th>Evidência observada</th><th>Conclusão</th></tr></thead>
+            <tbody>
+              <tr><td>Cobertura</td><td>Execução <code>run_1793467145186_c2714a</code>: 132 candidatos → 134 partes;
+                zero inválidos, auto-interseções ou anéis abertos. Sobreposição residual ≈ 4,87 × 10⁻⁹ m²;
+                área fora da ROI ≈ 1,68 × 10⁻¹¹ m².</td><td>Topologia verificada no export real.
+                A divisão de partes não representa novas edificações detectadas.</td></tr>
+              <tr><td>Tempo da correção</td><td>176,8 ms na mesma execução; duração total 14,28 s,
+                WASM 87,8 ms.</td><td>Medição dessa ROI/dispositivo, não garantia de desempenho universal.</td></tr>
+              <tr><td>Uso do Solo</td><td>Execução <code>run_1793465688203_ai58f7</code>: 180 polígonos,
+                cobertura 99,9999999139%, zero inválidos/auto-interseções.</td><td>Visual aprovada e
+                cobertura/topologia verificadas; revisão temática manual continua necessária.</td></tr>
+              <tr><td>Calibração estrita</td><td>Uso do Solo: 3 de 17 critérios reprovados
+                (confiança, fragmentação, alta qualidade).</td><td>Sem aprovação integral da Fase 2.
+                Limiares não foram reduzidos para produzir PASS.</td></tr>
+              <tr><td>Regressões</td><td>Topologia dos dois presets, NMS, exportação de diagnóstico;
+                lint e build aprovados no ciclo.</td><td>Não substituem benchmark real, QA manual interativa
+                ou homologação do instalador final.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="section">
+          <h3>Contratos e reprodução do QA</h3>
+          <p>Cobertura limpa nós degenerados e só aceita reparo de distância zero se a diferença simétrica da área
+            for finita e ≤ 0,000001 m². Todas as partes são revalidadas. Falha mantém os originais com aviso na
+            interface e diagnóstico, sem aplicar resultado parcial.</p>
+          <pre>npm run qa:uso-solo:topology
+npm run qa:cobertura:topology
+node .\scripts\verify-diagnostic-export.mjs
+npm run qa:geo-postprocess:nms
+npm run qa:cobertura:topology -- --geojson="CAMINHO" --diag="CAMINHO"
+npm run qa:uso-solo:calibration -- --strict=1 --geojson="CAMINHO" --diag="CAMINHO"</pre>
+          <p>Diagnóstico e GeoJSON devem corresponder ao mesmo <code>runId</code>. O teste de Cobertura usa o Turf
+            vendorizado que acompanha o aplicativo. Interseções são geométricas reais, não sobreposição de bboxes;
+            fragmentos de Uso do Solo são medidos por área ≤ 24 m², não por número de vértices.</p>
+          <p>Próximos gates: referências reais versionadas para benchmark, QA interativa do fluxo manual e
+            homologação do pacote final. Não ajustar segmentação aprovada apenas para perseguir scores heurísticos.
+            Código atualizado localmente não significa portfólio publicado.</p>
+        </div>
+      </section>
+
     </main>
   </div>
 
   <!-- FOOTER -->
   <footer class="mag-footer">
-    <p>Vetorizador · Documentação de Engenharia · Setembro 2026</p>
+    <p>Vetorizador · Documentação de Engenharia · 31/10/2026 · v1.3.9</p>
     <p><a href="../index.html">← Voltar ao portfólio</a> · Copyright © 2026 Marcos Roberto Nunes Lindolpho</p>
   </footer>
 

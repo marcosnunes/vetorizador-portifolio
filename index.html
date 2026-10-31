@@ -64,11 +64,11 @@
             <span class="badge">B2B Desktop</span>
             <span class="badge">Runtime endurecido</span>
             <span class="badge">GeoJSON · Shapefile</span>
-            <span class="badge">Electron v44</span>
+            <span class="badge">Electron 45</span>
             <span class="badge">PaddleOCR local</span>
             <span class="badge">WinApp CLI</span>
             <span class="badge">NSIS + MSIX</span>
-            <span class="badge">Atualizado em setembro/2026</span>
+            <span class="badge">Baseline 1.3.9 · outubro/2026</span>
           </div>
           <p class="hero-kicker">Software operacional para times privados que precisam entregar mais</p>
           <h1 class="hero-title">
@@ -78,6 +78,8 @@
           <p class="hero-sub">
             O Vetorizador reduz tempo de processamento entre mapa, shapefile e documento técnico, padroniza saída para GIS e encurta o caminho entre captura, revisão e entrega faturável.
             A pilha roda localmente, simplifica implantação e preserva controle operacional em ambientes corporativos.
+            A automação auxilia o trabalho: revisão de contornos, correção de classes e complementação manual fazem
+            parte da entrega, tanto em Cobertura quanto em Uso do Solo.
           </p>
           <div class="hero-cta">
             <a href="https://apps.microsoft.com/detail/9N5XPHPBCLB4" class="btn-primary" target="_blank" rel="noopener noreferrer">Ver na Microsoft Store</a>
@@ -138,8 +140,8 @@
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
-          <span class="meta-num">2+1</span>
-          <span class="meta-label">presets ativos (cobertura, uso_solo + perfil manual)</span>
+          <span class="meta-num">2</span>
+          <span class="meta-label">presets visíveis: Cobertura e Uso do Solo; desenho manual complementar</span>
         </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
@@ -339,8 +341,8 @@
         <div class="pipeline-step">
           <div class="step-num">03</div>
           <div class="step-body">
-            <h4>Vetorizar (WASM)</h4>
-            <p>Núcleo Rust/WASM converte imagem processada em polígonos GeoJSON determinísticos.</p>
+            <h4>Vetorizar por preset</h4>
+            <p>Base Rust/WASM para extração; Uso do Solo prioriza partição raster por cor com contornos e vértices compartilhados.</p>
           </div>
         </div>
         <div class="pipeline-arrow">→</div>
@@ -348,7 +350,7 @@
           <div class="step-num">04</div>
           <div class="step-body">
             <h4>Selecionar, revisar e desambiguar</h4>
-            <p>Guardrails por preset, regularização geométrica e revisão visual. Clique em sobreposição abre modal de desambiguação entre fontes e o popup só é exibido após a escolha do polígono. Shift+clique para multi-seleção cruzada sem abrir popup.</p>
+            <p>Cobertura recorta edificações pela ROI e remove sobreposições; Uso do Solo preserva a partição e verifica cobertura total. O operador revisa, classifica, edita e desenha os complementos. Clique em sobreposição abre desambiguação; Shift+clique faz multi-seleção.</p>
           </div>
         </div>
         <div class="pipeline-arrow">→</div>
@@ -512,7 +514,7 @@
             <span class="pill pill-neutral">Guard clauses e try/catch</span>
             <span class="pill pill-neutral">Padrão modular incremental</span>
           </div>
-          <p>Diagnóstico em tempo real com categorias estruturadas (APP, FLOW, NET, BOUNDARY, PRESET, SCENE, GEO). Trilha de fluxo com start/success/error. Padrão de seleção centralizado: clique simples abre popup, Shift+clique faz multi-seleção sem popup, desambiguação explícita em sobreposições. Tolerância a falhas com guard clauses no início das funções e try/catch em fronteiras externas. Telemetria arquivada em IndexedDB com limpeza automática ao encerramento desktop.</p>
+          <p>Diagnóstico local estruturado e exportação de JSON por partes, sem truncar os dados. Logs e GeoJSON identificam a execução para QA. Sessões grandes ainda exigem memória para o contexto completo; erros de exportação e topologia são informados ao operador.</p>
         </div>
         <div class="tech-layer">
           <h4 class="tech-layer-title">Processamento geoespacial</h4>
@@ -527,8 +529,8 @@
         <div class="tech-layer">
           <h4 class="tech-layer-title">Desktop e Backend</h4>
           <div class="tech-pills">
-            <span class="pill pill-electron">Electron v44</span>
-            <span class="pill pill-neutral">Node.js 20</span>
+            <span class="pill pill-electron">Electron 45</span>
+            <span class="pill pill-neutral">Node.js ≥20 e &lt;25 (tooling)</span>
             <span class="pill pill-neutral">HTTP local</span>
             <span class="pill pill-neutral">APIs auxiliares</span>
           </div>
@@ -654,7 +656,8 @@
         <div class="diff-card">
           <div class="diff-num">05</div>
           <h4>Presets especializados por cenário</h4>
-          <p>Presets ajudam a encurtar curva de uso e tornam a entrega mais consistente entre operadores e contratos distintos.</p>
+          <p>Cobertura detecta edificações sem preencher o terreno; Uso do Solo particiona a ROI por regiões de cor.
+            Ambos apoiam revisão e complementação manual, sem promessa de acurácia temática integral.</p>
         </div>
         <div class="diff-card">
           <div class="diff-num">06</div>
@@ -666,6 +669,35 @@
   </section>
 
   <!-- ===== LICENÇAS ===== -->
+  <section id="validacao" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Fechamento de engenharia · 31/10/2026</span>
+        <h2>Automação assistiva, revisão profissional</h2>
+        <p>A versão 1.3.9 estabiliza os resultados visuais aprovados para uso em escritório. Ajustar contornos,
+          corrigir classes e acrescentar feições manualmente são parte esperada do fluxo.</p>
+      </div>
+      <div class="diff-grid">
+        <div class="diff-card">
+          <h4>Cobertura: topologia verificada</h4>
+          <p>Na última execução avaliada: 134 polígonos válidos, sem auto-interseções ou anéis abertos,
+            sobreposição e área fora da ROI praticamente zero. Resultado dessa amostra, não garantia de detecção completa.</p>
+        </div>
+        <div class="diff-card">
+          <h4>Uso do Solo: partição preservada</h4>
+          <p>Na amostra aprovada visualmente: 180 polígonos e cobertura da ROI de 99,9999999139%.
+            Furos e limites compartilhados são preservados; classes podem exigir revisão manual.</p>
+        </div>
+        <div class="diff-card">
+          <h4>Qualidade sem atalhos</h4>
+          <p>Regressões, lint e build aprovados. Benchmark real de acurácia e QA manual interativa permanecem
+            pendentes; aprovação visual/topológica não é aprovação integral da Fase 2 nem certificação Store.</p>
+        </div>
+      </div>
+      <p><a href="engenharia/index.html#fechamento-qa" class="license-link">Ver evidências, contratos e limites da validação →</a></p>
+    </div>
+  </section>
+
   <section id="licencas" class="section">
     <div class="container">
       <div class="section-header">

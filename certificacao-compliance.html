@@ -24,9 +24,9 @@
         <h1>Certificação Microsoft Store & Compliance</h1>
         <p>Registro de conformidade do Vetorizador Inteligente para publicação Windows, empacotamento, requisitos da Store e controles de segurança do runtime publicado.</p>
         <div class="audit-meta" aria-label="Identificação do dossiê">
-          <span><strong>Versão:</strong> 1.3.8</span>
+          <span><strong>Versão de engenharia:</strong> 1.3.9</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
-          <span><strong>Atualizado:</strong> 25/09/2026</span>
+          <span><strong>Atualizado:</strong> 31/10/2026</span>
         </div>
       </header>
 
@@ -34,10 +34,13 @@
         <section>
           <h2>1. Status atual</h2>
           <ul>
-            <li><strong>Produto:</strong> Vetorizador Inteligente (v1.3.8)</li>
+            <li><strong>Produto:</strong> Vetorizador Inteligente (v1.3.9; manifesto 1.3.9.0)</li>
             <li><strong>Plataforma:</strong> Windows 10/11 (x64)</li>
-            <li><strong>Status geral:</strong> Em conformidade</li>
+            <li><strong>Status geral:</strong> Empacotamento configurado; novo pacote e homologação pendentes.</li>
           </ul>
+          <p>O ciclo atual validou topologia de amostras, regressões e build. Não realizou nova submissão ou
+            certificação Store. Assinatura confiável dos runtimes e teste em Smart App Control enforced
+            permanecem gates separados.</p>
         </section>
 
         <section>
@@ -49,7 +52,7 @@
                 <tr><td><code>10.1.1.11</code></td><td>Ícones únicos para tiles</td><td><span class="audit-status">Conforme</span></td></tr>
                 <tr><td><code>10.1.2</code></td><td>Metadata completa</td><td><span class="audit-status">Conforme</span></td></tr>
                 <tr><td><code>10.1.3</code></td><td>Categorização correta</td><td><span class="audit-status">Conforme</span></td></tr>
-                <tr><td><code>10.1.4</code></td><td>Certificação segura</td><td><span class="audit-status">Conforme</span></td></tr>
+                <tr><td><code>10.1.4</code></td><td>Certificação segura</td><td><span class="audit-status audit-status-review">Pendente de homologação do pacote final</span></td></tr>
                 <tr><td><code>10.1.7</code></td><td>Descrição precisa</td><td><span class="audit-status">Conforme</span></td></tr>
               </tbody>
             </table>
@@ -63,7 +66,7 @@
               <thead><tr><th>Requisito</th><th>Status</th><th>Detalhes</th></tr></thead>
               <tbody>
                 <tr><td>SDK Instalado</td><td><span class="audit-status">Conforme</span></td><td>Windows App SDK 2.2.0</td></tr>
-                <tr><td>Package Identity</td><td><span class="audit-status">Conforme</span></td><td>CN=A72FE73A-3E4B-4A02-BA11-61A5278E9134</td></tr>
+                <tr><td>Package Identity</td><td><span class="audit-status">Configurada</span></td><td><code>9694MarcosNunes.VetorizadorInteligente</code>; Publisher <code>CN=73B8D02F-B8A7-4931-B83C-70AFB7116E85</code></td></tr>
                 <tr><td>MSIX suportado</td><td><span class="audit-status">Conforme</span></td><td>Fluxo via WinApp CLI</td></tr>
                 <tr><td>Capacidades</td><td><span class="audit-status">Conforme</span></td><td><code>runFullTrust</code>, rede, arquivo</td></tr>
               </tbody>

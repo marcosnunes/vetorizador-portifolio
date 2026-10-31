@@ -64,12 +64,14 @@
 
     <main class="main">
       <section class="cover" id="capa">
-        <span class="cover-kicker">Árvore Binária de Busca</span>
+        <span class="cover-kicker">Fluxos de decisão · 31/10/2026 · v1.3.9</span>
         <h1>ABB do<br /><span>PDFtoArcGIS & Vetorizador</span></h1>
         <p class="cover-desc">
           Fluxos de decisão para leitura de PDF, reconhecimento de coordenadas, parsing de SHP,
           assistência local e consolidação do pipeline de extração geométrica.
         </p>
+        <p>ABB é o nome histórico desta representação de decisões, não uma estrutura de busca binária
+          implementada. PDF/SHP usam parsing e normalização; não passam obrigatoriamente pelo motor WASM de imagens.</p>
         <div class="cover-meta">
           <div class="cover-meta-item"><span>🧭</span><span>PDF/SHP</span></div>
           <div class="cover-meta-item"><span>⚡</span><span>OCR + IA</span></div>
@@ -161,6 +163,9 @@
         <div class="code-block">
 <pre><code>Vetorizador
 └── Arquivo de entrada
+    ├── Ortofoto → ROI
+    │   ├── Cobertura → WASM + filtros → recorte e de-overlap
+    │   └── Uso do Solo → partição raster → verificação de cobertura
     ├── PDF → PDFtoArcGIS
     │   ├── OCR frontend
     │   ├── parser/layout + fallback
@@ -205,6 +210,8 @@
         <div class="callout">
           <strong>Contrato:</strong> a saída central é GeoJSON Polygon fechado com anel de coordenadas,
           com o processamento de referência deixando o OCR no frontend e o parser normalizador no backend local.
+          Furos e partes de recorte são preservados. Revisão e complementação manual são previstas nos dois
+          presets; topologia validada em amostras não equivale a benchmark de acurácia aprovado.
         </div>
       </section>
     </main>

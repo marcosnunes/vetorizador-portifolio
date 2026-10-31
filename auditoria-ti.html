@@ -24,9 +24,9 @@
         <h1>Dossiê de Auditoria para Homologação de TI</h1>
         <p>Informações técnicas para avaliação corporativa da arquitetura, superfície de rede, persistência, segurança, licenciamento e instalação do Vetorizador Inteligente.</p>
         <div class="audit-meta" aria-label="Identificação do dossiê">
-          <span><strong>Versão:</strong> 1.3.8</span>
+          <span><strong>Versão de engenharia:</strong> 1.3.9</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
-          <span><strong>Atualizado:</strong> 25/09/2026</span>
+          <span><strong>Atualizado:</strong> 31/10/2026</span>
         </div>
       </header>
 
@@ -44,7 +44,7 @@
         <section>
           <h2>2. Arquitetura da solução</h2>
           <ul>
-            <li><strong>Runtime:</strong> Electron 44.x, com Chromium e Node.js empacotados.</li>
+            <li><strong>Runtime:</strong> Electron 45.x, com Chromium e Node.js empacotados.</li>
             <li><strong>Frontend:</strong> HTML, CSS e JavaScript compilados via Vite, com <code>contextIsolation: true</code>, <code>nodeIntegration: false</code> e <code>sandbox: true</code>.</li>
             <li><strong>Núcleo geométrico:</strong> módulo Rust compilado para WebAssembly, executado localmente.</li>
             <li><strong>Backend embarcado:</strong> servidor HTTP Node.js vinculado somente a <code>127.0.0.1</code>, sem exposição à rede.</li>
@@ -150,18 +150,20 @@
             <table class="audit-table">
               <thead><tr><th>Escopo</th><th>Ferramenta</th><th>Resultado na data do dossiê</th></tr></thead>
               <tbody>
-                <tr><td>Aplicativo principal</td><td><code>npm audit --omit=dev</code></td><td><span class="audit-status">0 vulnerabilidades</span></td></tr>
-                <tr><td>Serviço auxiliar <code>api/</code></td><td><code>npm audit --omit=dev</code></td><td><span class="audit-status">0 vulnerabilidades</span></td></tr>
+                <tr><td>Aplicativo principal</td><td><code>npm audit</code></td><td><span class="audit-status">0 vulnerabilidades na verificação de dependências do ciclo</span></td></tr>
+                <tr><td>Serviço auxiliar <code>api/</code></td><td><code>npm --prefix .\api audit</code></td><td><span class="audit-status">0 vulnerabilidades na verificação de dependências do ciclo</span></td></tr>
               </tbody>
             </table>
           </div>
+          <p>Resultado pontual da base de advisories consultada, não garantia de ausência de vulnerabilidades
+            no código, nos assets vendorizados ou nos runtimes Python. Repetir a verificação antes da distribuição.</p>
         </section>
 
         <section>
           <h2>9. Instalação e privilégios</h2>
           <ul>
             <li>Instalador NSIS por usuário, sem exigir privilégios administrativos.</li>
-            <li>Pacote MSIX assinado disponível para Microsoft Store ou sideload corporativo.</li>
+            <li>Fluxo MSIX para Microsoft Store ou teste local; novo pacote 1.3.9 não foi gerado neste fechamento.</li>
             <li>Não instala serviços do Windows, tarefas agendadas ou drivers.</li>
           </ul>
         </section>
@@ -183,15 +185,19 @@
                 <tr><td>Assets operacionais servidos localmente, sem CDN runtime</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>DevTools fechadas por padrão no pacote final</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Sem atualização automática silenciosa</td><td><span class="audit-status">Atendido</span></td></tr>
-                <tr><td>Assinatura do MSIX 1.3.8.0</td><td><span class="audit-status audit-status-review">Pacote de submissão sem assinatura local; assinado pela Microsoft Store após a certificação</span></td></tr>
-                <tr><td>Pacote MSIX 1.3.8.0</td><td><span class="audit-status audit-status-review">Gerado; validar com WACK e Smart App Control antes da submissão</span></td></tr>
+                <tr><td>Assinatura do MSIX 1.3.9.0</td><td><span class="audit-status audit-status-review">Submissão sem assinatura local; assinatura Store depende da certificação</span></td></tr>
+                <tr><td>Pacote MSIX 1.3.9.0</td><td><span class="audit-status audit-status-review">Manifesto atualizado; geração, WACK e teste Smart App Control pendentes neste ciclo</span></td></tr>
               </tbody>
             </table>
           </div>
         </section>
 
         <aside class="audit-note">
-          O pacote <code>VetorizadorInteligente_1.3.8_x64.msix</code> usa a identidade <code>9694MarcosNunes.VetorizadorInteligente</code> (Publisher <code>CN=73B8D02F-B8A7-4931-B83C-70AFB7116E85</code>) e é enviado sem assinatura local; a Microsoft Store o assina após a certificação. Instalações de teste por sideload exigem pacote assinado com certificado confiado pelas políticas de TI.
+          A configuração de empacotamento usa a identidade <code>9694MarcosNunes.VetorizadorInteligente</code>
+          (Publisher <code>CN=73B8D02F-B8A7-4931-B83C-70AFB7116E85</code>). O pacote de submissão é enviado sem
+          assinatura local; a Microsoft Store o assina após a certificação. Instalações de teste por sideload
+          exigem certificado confiado pelas políticas de TI. Aprovação topológica das amostras não substitui
+          homologação de segurança, benchmark real ou QA manual interativa.
         </aside>
       </article>
     </div>
