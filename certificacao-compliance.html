@@ -24,23 +24,58 @@
         <h1>Certificação Microsoft Store & Compliance</h1>
         <p>Registro de conformidade do Vetorizador Inteligente para publicação Windows, empacotamento, requisitos da Store e controles de segurança do runtime publicado.</p>
         <div class="audit-meta" aria-label="Identificação do dossiê">
-          <span><strong>Versão de engenharia:</strong> 1.3.9</span>
+          <span><strong>Versão de engenharia:</strong> 1.4.0</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
-          <span><strong>Atualizado:</strong> 31/10/2026</span>
+          <span><strong>Atualizado:</strong> 07/11/2026</span>
         </div>
       </header>
 
       <article class="policy-card audit-card">
-        <section>
+        <section id="validacao-140">
           <h2>1. Status atual</h2>
           <ul>
-            <li><strong>Produto:</strong> Vetorizador Inteligente (v1.3.9; manifesto 1.3.9.0)</li>
+            <li><strong>Produto:</strong> Vetorizador Inteligente (v1.4.0; revisão Windows 1.4.0.2)</li>
             <li><strong>Plataforma:</strong> Windows 10/11 (x64)</li>
-            <li><strong>Status geral:</strong> Empacotamento configurado; novo pacote e homologação pendentes.</li>
+            <li><strong>Status geral:</strong> Pacote de teste instalado, WACK geral PASS e inferência local verificada com SAC enforced; certificação de distribuição pendente.</li>
           </ul>
-          <p>O ciclo atual validou topologia de amostras, regressões e build. Não realizou nova submissão ou
-            certificação Store. Assinatura confiável dos runtimes e teste em Smart App Control enforced
-            permanecem gates separados.</p>
+          <p>O reteste de 07/11 concluiu lint, build, dez testes Node e quatro casos de preflight.
+            O pacote foi instalado por atualização da mesma identidade, sem desinstalação.
+            Os 428 componentes nativos foram verificados com assinatura local e o MSIX recebeu status
+            <code>Valid</code>. Não houve nova submissão ou certificação Microsoft Store.</p>
+          <div class="audit-table-wrap">
+            <table class="audit-table">
+              <thead><tr><th>Verificação</th><th>Resultado e alcance</th></tr></thead>
+              <tbody>
+                <tr><td>WACK 10.0.18362.1</td><td><code>OVERALL_RESULT=PASS</code>, execução completa, 22/24 verificações aprovadas. Executor estrito retorna 1 pelas duas pendências opcionais.</td></tr>
+                <tr><td>Primeira inferência de cobertura</td><td><code>vision-real-yolo</code>, sem fallback, 8.245 ms. Frontend espera até 125 s; proxy de visão até 120 s, evitando os limites anteriores de 7/9 s.</td></tr>
+                <tr><td>Uso do solo</td><td><code>vision-real-yolo-landuse</code>, sem fallback, 230 ms. Polígonos com anéis fechados e metadados do modelo.</td></tr>
+                <tr><td>OCR</td><td>PaddleOCR local: 23 linhas e 655 caracteres extraídos de uma captura local.</td></tr>
+                <tr><td>Memorial</td><td><code>llama-server</code> carregou o modelo e gerou tokens. Smoke test não avalia qualidade documental ou obediência ao prompt.</td></tr>
+                <tr><td>Smart App Control</td><td>CiTool confirmou <code>VerifiedAndReputableDesktop</code> enforced; nenhum evento CodeIntegrity correspondente ao produto entre 16:50 e 17:25:48.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>O certificado de desenvolvimento havia sido confiado neste computador. A execução local não
+            comprova reputação do certificado nem compatibilidade em outros dispositivos. Nenhuma política SAC
+            foi desativada na retomada. Capturas de mapa e smoke tests não são benchmark de acurácia.</p>
+          <h3>Duas pendências opcionais do WACK</h3>
+          <ul>
+            <li><strong>Uso de arquivo morto:</strong> três arquivos compactados de dados (fusos horários dateutil,
+              grafos NetworkX e vocabulário MMSeg), preservados porque têm consumidores produtivos.</li>
+            <li><strong>Executáveis bloqueados:</strong> 67 mensagens de referências a APIs de início de processos,
+              como <code>CreateProcessW</code>, nos componentes distribuídos. Referência estática não significa
+              bloqueio observado durante os testes nem reprovação do teste obrigatório de APIs compatíveis.</li>
+          </ul>
+          <p>Ambas estão marcadas <code>OPTIONAL=TRUE</code> no relatório. O resultado geral PASS não significa
+            24/24 aprovados e não substitui a decisão de certificação da Store.</p>
+          <h3>Identificação das evidências</h3>
+          <p>MSIX de teste 1.4.0.2: 6.259.758.000 bytes. SHA-256:
+            <code>9CAF5D254680DFB9F11B4F56A6FE9715DF99FE67E4397282C0D2B51AD41083AE</code>.</p>
+          <p>Relatórios preservados no projeto desktop em
+            <code>release/packaging-audit/resume-1402-20261107-1652/</code>:
+            <code>verified-msix.json</code>, <code>final-signing.log</code>, <code>wack-1402.xml</code>,
+            <code>installed-runtime-tests.json</code>, <code>ci-policies.json</code> e <code>ci-runtime-events.json</code>.
+            Este portfólio resume as evidências; não hospeda o pacote nem os logs locais.</p>
         </section>
 
         <section>
@@ -113,10 +148,14 @@
         <section>
           <h2>6. Build e empacotamento</h2>
           <pre class="license-pre">npm run dist:win        # Instalador NSIS (distribuição técnica local)
-npm run dist:win:store  # Pacote MSIX assinado (fluxo Microsoft Store)</pre>
+npm run dist:win:store  # MSIX sem assinatura local para submissão
+npm run dist:win:store:test  # MSIX assinado para teste local</pre>
           <ul>
             <li>Instalador NSIS por usuário, sem exigir privilégios de administrador.</li>
-            <li>Pacote MSIX assinado digitalmente via <code>winapp sign</code>, com validação por <code>Get-AuthenticodeSignature</code>.</li>
+            <li>Pacote de teste assinado localmente, verificado por <code>Get-AuthenticodeSignature</code>.
+              O pacote de submissão recebe assinatura Microsoft após certificação, não o certificado de desenvolvimento.</li>
+            <li>Para reconstruir o manifesto atual em PowerShell, definir <code>$env:VETORIZADOR_APPX_REVISION = '2'</code>
+              antes de <code>npm run dist:win:store:audit -- -Test</code>. A versão de engenharia permanece 1.4.0.</li>
           </ul>
         </section>
 

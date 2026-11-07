@@ -24,9 +24,9 @@
         <h1>Dossiê de Auditoria para Homologação de TI</h1>
         <p>Informações técnicas para avaliação corporativa da arquitetura, superfície de rede, persistência, segurança, licenciamento e instalação do Vetorizador Inteligente.</p>
         <div class="audit-meta" aria-label="Identificação do dossiê">
-          <span><strong>Versão de engenharia:</strong> 1.3.9</span>
+          <span><strong>Versão de engenharia:</strong> 1.4.0</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
-          <span><strong>Atualizado:</strong> 31/10/2026</span>
+          <span><strong>Atualizado:</strong> 07/11/2026</span>
         </div>
       </header>
 
@@ -163,7 +163,8 @@
           <h2>9. Instalação e privilégios</h2>
           <ul>
             <li>Instalador NSIS por usuário, sem exigir privilégios administrativos.</li>
-            <li>Fluxo MSIX para Microsoft Store ou teste local; novo pacote 1.3.9 não foi gerado neste fechamento.</li>
+            <li>MSIX de teste 1.4.0.2 gerado e instalado por atualização da mesma família, sem desinstalação.
+              A versão de engenharia permanece 1.4.0; a certificação Store é um gate separado.</li>
             <li>Não instala serviços do Windows, tarefas agendadas ou drivers.</li>
           </ul>
         </section>
@@ -185,8 +186,10 @@
                 <tr><td>Assets operacionais servidos localmente, sem CDN runtime</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>DevTools fechadas por padrão no pacote final</td><td><span class="audit-status">Atendido</span></td></tr>
                 <tr><td>Sem atualização automática silenciosa</td><td><span class="audit-status">Atendido</span></td></tr>
-                <tr><td>Assinatura do MSIX 1.3.9.0</td><td><span class="audit-status audit-status-review">Submissão sem assinatura local; assinatura Store depende da certificação</span></td></tr>
-                <tr><td>Pacote MSIX 1.3.9.0</td><td><span class="audit-status audit-status-review">Manifesto atualizado; geração, WACK e teste Smart App Control pendentes neste ciclo</span></td></tr>
+                <tr><td>Assinatura do MSIX de teste 1.4.0.2</td><td><span class="audit-status">Valid no dispositivo de desenvolvimento; 428 componentes nativos verificados</span></td></tr>
+                <tr><td>WACK do MSIX 1.4.0.2</td><td><span class="audit-status audit-status-review">PASS geral, 22/24 testes; arquivos compactados e referências a APIs de início de processos são pendências opcionais</span></td></tr>
+                <tr><td>Runtime com Smart App Control enforced</td><td><span class="audit-status">Visão, OCR e memorial executaram inferência real no dispositivo testado</span></td></tr>
+                <tr><td>Certificação de distribuição</td><td><span class="audit-status audit-status-review">Aprovação Store e validação do pacote de distribuição em outros dispositivos permanecem separadas</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -196,7 +199,10 @@
           A configuração de empacotamento usa a identidade <code>9694MarcosNunes.VetorizadorInteligente</code>
           (Publisher <code>CN=73B8D02F-B8A7-4931-B83C-70AFB7116E85</code>). O pacote de submissão é enviado sem
           assinatura local; a Microsoft Store o assina após a certificação. Instalações de teste por sideload
-          exigem certificado confiado pelas políticas de TI. Aprovação topológica das amostras não substitui
+          exigem certificado confiado pelas políticas de TI. O teste SAC local utilizou certificado de
+          desenvolvimento previamente confiado; não prova reputação ou compatibilidade universal.
+          Consulte <a href="certificacao-compliance.html#validacao-140">resultados e limites da revisão 1.4.0.2</a>.
+          Aprovação topológica das amostras não substitui
           homologação de segurança, benchmark real ou QA manual interativa.
         </aside>
       </article>

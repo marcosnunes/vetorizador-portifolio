@@ -68,7 +68,7 @@
             <span class="badge">PaddleOCR local</span>
             <span class="badge">WinApp CLI</span>
             <span class="badge">NSIS + MSIX</span>
-            <span class="badge">Baseline 1.3.9 · outubro/2026</span>
+            <span class="badge">Engenharia 1.4.0 · novembro/2026</span>
           </div>
           <p class="hero-kicker">Software operacional para times privados que precisam entregar mais</p>
           <h1 class="hero-title">
@@ -672,21 +672,28 @@
   <section id="validacao" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Fechamento de engenharia · 31/10/2026</span>
+        <span class="section-tag">Validação local · 07/11/2026</span>
         <h2>Automação assistiva, revisão profissional</h2>
-        <p>A versão 1.3.9 estabiliza os resultados visuais aprovados para uso em escritório. Ajustar contornos,
+        <p>A versão 1.4.0 mantém os resultados visuais avaliados no ciclo de outubro e conclui os testes locais
+          do pacote Windows 1.4.0.2. Ajustar contornos,
           corrigir classes e acrescentar feições manualmente são parte esperada do fluxo.</p>
       </div>
       <div class="diff-grid">
         <div class="diff-card">
           <h4>Cobertura: topologia verificada</h4>
-          <p>Na última execução avaliada: 134 polígonos válidos, sem auto-interseções ou anéis abertos,
+          <p>Na amostra avaliada em 31/10: 134 polígonos válidos, sem auto-interseções ou anéis abertos,
             sobreposição e área fora da ROI praticamente zero. Resultado dessa amostra, não garantia de detecção completa.</p>
         </div>
         <div class="diff-card">
           <h4>Uso do Solo: partição preservada</h4>
-          <p>Na amostra aprovada visualmente: 180 polígonos e cobertura da ROI de 99,9999999139%.
+          <p>Na amostra aprovada visualmente em 31/10: 180 polígonos e cobertura da ROI de 99,9999999139%.
             Furos e limites compartilhados são preservados; classes podem exigir revisão manual.</p>
+        </div>
+        <div class="diff-card">
+          <h4>Pacote Windows e runtime local</h4>
+          <p>Revisão 1.4.0.2 instalada por atualização. WACK geral PASS (22/24 verificações, duas pendências
+            opcionais). Visão, OCR e memorial executaram inferência real com Smart App Control ativo neste
+            dispositivo de desenvolvimento; não é certificação Store nem garantia em outros computadores.</p>
         </div>
         <div class="diff-card">
           <h4>Qualidade sem atalhos</h4>
@@ -695,6 +702,7 @@
         </div>
       </div>
       <p><a href="engenharia/index.html#fechamento-qa" class="license-link">Ver evidências, contratos e limites da validação →</a></p>
+      <p><a href="certificacao-compliance.html#validacao-140" class="license-link">Consultar o reteste Windows 1.4.0 e as pendências opcionais →</a></p>
     </div>
   </section>
 

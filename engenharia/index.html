@@ -30,7 +30,7 @@
       <span class="topbar-title">Engenharia</span>
     </div>
     <div class="topbar-right">
-      <span class="topbar-badge">31/10/2026 · v1.3.9</span>
+      <span class="topbar-badge">07/11/2026 · v1.4.0</span>
     </div>
   </header>
 
@@ -99,7 +99,7 @@
         </p>
         <div class="cover-meta">
           <div class="cover-meta-item"><span>📅</span><span>31 de outubro de 2026</span></div>
-          <div class="cover-meta-item"><span>📦</span><span>Baseline 1.3.9</span></div>
+          <div class="cover-meta-item"><span>📦</span><span>Engenharia 1.4.0 · MSIX 1.4.0.2</span></div>
           <div class="cover-meta-item"><span>🦀</span><span>Rust + WASM</span></div>
           <div class="cover-meta-item"><span>⚡</span><span>Electron 45 + Vite 8</span></div>
           <div class="cover-meta-item"><span>📦</span><span>33 módulos catalogados</span></div>
@@ -1718,9 +1718,14 @@
 <span class="fn">npm run desktop:start</span> <span class="cm"># Electron sobre build existente</span>
 <span class="fn">npm run dist:win</span>      <span class="cm"># empacotamento Windows (.exe)</span></pre>
           <p><code>npm run dist:win:store</code> gera o MSIX de submissão; o manifesto usa
-            <code>1.3.9.0</code>. Este fechamento não gerou novo pacote nem realizou submissão.
-            Build não atualiza uma instalação existente; assinatura, WACK e Smart App Control exigem
-            homologação separada do artefato final.</p>
+            <code>1.4.0.2</code> (engenharia 1.4.0). O reteste de 07/11 gerou e instalou o pacote de teste
+            por atualização, obteve WACK geral PASS (22/24, duas pendências opcionais) e inferência real
+            de visão, OCR e memorial com SAC enforced neste dispositivo. Não realizou certificação Store.
+            Build sozinho não atualiza uma instalação existente. Detalhes em
+            <a href="../certificacao-compliance.html#validacao-140">validação Windows 1.4.0</a>.</p>
+          <p>Para reconstruir esta revisão em PowerShell: definir <code>$env:VETORIZADOR_APPX_REVISION = '2'</code>
+            e executar <code>npm run dist:win:store:audit -- -Test</code>.
+            O ciclo topológico de 31/10 abaixo permanece um registro histórico das amostras, não um novo benchmark.</p>
         </div>
 
         <div class="section">
@@ -1820,7 +1825,7 @@ npm run qa:uso-solo:calibration -- --strict=1 --geojson="CAMINHO" --diag="CAMINH
 
   <!-- FOOTER -->
   <footer class="mag-footer">
-    <p>Vetorizador · Documentação de Engenharia · 31/10/2026 · v1.3.9</p>
+    <p>Vetorizador · Documentação de Engenharia · 07/11/2026 · v1.4.0</p>
     <p><a href="../index.html">← Voltar ao portfólio</a> · Copyright © 2026 Marcos Roberto Nunes Lindolpho</p>
   </footer>
 
