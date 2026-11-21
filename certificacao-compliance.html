@@ -24,9 +24,9 @@
         <h1>Certificação Microsoft Store & Compliance</h1>
         <p>Registro de conformidade do Vetorizador Inteligente para publicação Windows, empacotamento, requisitos da Store e controles de segurança do runtime publicado.</p>
         <div class="audit-meta" aria-label="Identificação do dossiê">
-          <span><strong>Versão de engenharia:</strong> 1.4.0</span>
+          <span><strong>Versão atual:</strong> 1.4.7 / manifesto 1.4.7.0</span>
           <span><strong>Plataforma:</strong> Windows 10/11 x64</span>
-          <span><strong>Atualizado:</strong> 07/11/2026</span>
+          <span><strong>Atualizado:</strong> 21/11/2026</span>
         </div>
       </header>
 
@@ -34,7 +34,8 @@
         <section id="validacao-140">
           <h2>1. Status atual</h2>
           <ul>
-            <li><strong>Produto:</strong> Vetorizador Inteligente (v1.4.0; revisão Windows 1.4.0.2)</li>
+            <li><strong>Produto atual:</strong> Vetorizador Inteligente (v1.4.7; manifesto Windows 1.4.7.0)</li>
+            <li><strong>Evidência histórica:</strong> pacote de teste 1.4.0.2, retestado em 07/11/2026</li>
             <li><strong>Plataforma:</strong> Windows 10/11 (x64)</li>
             <li><strong>Status geral:</strong> Pacote de teste instalado, WACK geral PASS e inferência local verificada com SAC enforced; certificação de distribuição pendente.</li>
           </ul>
@@ -154,8 +155,8 @@ npm run dist:win:store:test  # MSIX assinado para teste local</pre>
             <li>Instalador NSIS por usuário, sem exigir privilégios de administrador.</li>
             <li>Pacote de teste assinado localmente, verificado por <code>Get-AuthenticodeSignature</code>.
               O pacote de submissão recebe assinatura Microsoft após certificação, não o certificado de desenvolvimento.</li>
-            <li>Para reconstruir o manifesto atual em PowerShell, definir <code>$env:VETORIZADOR_APPX_REVISION = '2'</code>
-              antes de <code>npm run dist:win:store:audit -- -Test</code>. A versão de engenharia permanece 1.4.0.</li>
+            <li>Para construir uma revisão MSIX do manifesto atual, use <code>npm run dist:win:store:audit -- -Test</code>
+              e mantenha a revisão/versionamento definidos pelo pipeline. A versão atual declarada é 1.4.7.0.</li>
           </ul>
         </section>
 
